@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+# in case we are developing
+$: << '../lib' 
+$: << 'lib'
+
+require 'enhancerepo/cli.rb'
