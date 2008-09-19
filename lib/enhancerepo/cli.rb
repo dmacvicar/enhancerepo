@@ -65,6 +65,6 @@ config.dir = dir
 repomd = RepoMd.new(dir)
 repomd.add_products(config.products)
 repomd.add_keywords(config.keywords)
-repomd.write($stdout)
+repomd.write
 
 
