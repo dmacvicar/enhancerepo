@@ -19,27 +19,17 @@ class RepoMdIndex
   attr_accessor :products, :keywords
 
   # constructor
+  # repomd - repository
   def initialize
     @resources = []
     @products = Set.new
     @keywords = Set.new
   end
 
-  # add a resource from physical file
-  # if the type is not given, then it
-  # is figured out from the filename
-  def add_file_resource(path, type=nil)
-    r = RepoMdResource.new
-    r.type = type
-    # figure out the type of resource
-    r.type = File.basename(path, File.extname(path)) if r.type.nil?
-    r.location = path
-    r.checksum = Digest::SHA1.hexdigest(path)
-    r.openchecksum = r.checksum
-    r.timestamp = File.mtime(path).to_s
-  end
-
-  def add_file_resource(path, type=nil)
+  # add a file resource. Takes care of setting
+  # all the metadata.
+  
+  def add_file_resource(abspath, path, type=nil)
     r = RepoMdResource.new
     r.type = type
     # figure out the type of resource
@@ -55,8 +45,8 @@ class RepoMdIndex
     end
       
     r.type = base if r.type.nil?
-    r.location = path
-    r.timestamp = File.mtime(path).to_s
+    r.location = abspath
+    r.timestamp = File.mtime(path).to_i.to_s
     r.checksum = Digest::SHA1.hexdigest(File.new(path).read)
     r.openchecksum = r.checksum
     if File.extname(path) == '.gz'
@@ -272,7 +262,7 @@ class RepoMd
       gz.close
       # add it to the index
       STDERR.puts "Adding #{susedfile} to #{repomdfile} index"
-      @index.add_file_resource(susedfile)
+      @index.add_file_resource("#{SUSEDATA_FILE}.gz", susedfile)
     end
 
     # now write the index
