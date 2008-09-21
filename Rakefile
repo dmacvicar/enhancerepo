@@ -8,6 +8,8 @@ task :test do
     require File.dirname(__FILE__) + '/test/all_tests.rb'  
 end
 
+TESTDATADIR = File.dirname(__FILE__) + '/test/data'
+
 version = File.new('VERSION').read.chomp
 
 Rake::PackageTask.new('enhancerepo', version) do |package|
