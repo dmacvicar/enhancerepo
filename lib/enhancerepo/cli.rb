@@ -1,22 +1,3 @@
-# == Synopsis
-#
-# enhancerepo: adds extra data to a repomd repository
-#
-# == Usage
-#
-# enhancerepo [OPTION] ... DIR
-#
-# -h, --help:
-#    show help
-#
-# --repeat x, -n x:
-#    repeat x times
-#
-# --name [name]:
-#    greet user by name, if name not supplied default is John
-#
-# DIR: The repo base directory ( where repodata/ directory is located )
-
 require 'getoptlong'
 require 'rdoc/usage'
 require 'enhancerepo/configopts'
@@ -25,6 +6,7 @@ require 'enhancerepo/constants'
 
 opts = GetoptLong.new(
          [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+         [ '--sign', '-s', GetoptLong::REQUIRED_ARGUMENT ],
          [ '--product', '-p', GetoptLong::REQUIRED_ARGUMENT ],
          [ '--keyword', '-k', GetoptLong::REQUIRED_ARGUMENT ]             
         )
@@ -34,11 +16,14 @@ config = ConfigOpts.new
 dir = nil
 name = nil
 repetitions = 1
+sign = nil
 
 opts.each do |opt, arg|
   case opt
   when '--help'
     RDoc::usage
+  when '--sign'
+    config.signkey = arg
   when '--product'
     config.products << arg
   when '--keyword'
@@ -67,4 +52,6 @@ repomd.add_products(config.products)
 repomd.add_keywords(config.keywords)
 repomd.write
 
-
+if not config.signkey.nil?
+  repomd.sign(config.signkey)
+end

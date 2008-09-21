@@ -248,7 +248,34 @@ class RepoMd
       @index.keywords.add k
     end
   end
-  
+
+  def sign(keyid)
+    # check if the index is written to disk
+    repomdfile = File.join(@dir, REPOMD_FILE)
+    if not File.exists?(repomdfile)
+      raise "#{repomdfile} does not exist."
+    end
+    # call gpg to sign the repository
+    `gpg -sab -u #{keyid} -o #{repomdfile}.asc #{repomdfile}`
+    if not File.exists?("#{repomdfile}.asc")
+      STDERR.puts "Could't not generate signature #{repomdfile}.asc"
+      exit(1)
+    else
+      STDERR.puts "#{repomdfile}.asc signature generated"
+    end
+
+    # now export the public key
+    `gpg --export -a -o #{repomdfile}.key #{keyid}`
+
+    if not File.exists?("#{repomdfile}.key")
+      STDERR.puts "Could't not generate public key #{repomdfile}.key"
+      exit(1)
+    else
+      STDERR.puts "#{repomdfile}.key public key generated"
+    end
+  end
+
+  # write back the metadata
   def write
     repomdfile = File.join(@dir, REPOMD_FILE)
     susedfile = "#{File.join(@dir, SUSEDATA_FILE)}.gz"

@@ -7,9 +7,11 @@ class ConfigOpts
   attr_accessor :products
   attr_accessor :keywords
   attr_accessor :dir
+  attr_accessor :signkey
   
   def initialize
     @products = []
     @keywords = []
+    @signkey = nil
   end
 end

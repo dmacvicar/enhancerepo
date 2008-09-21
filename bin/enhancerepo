@@ -1,6 +1,37 @@
 #!/usr/bin/env ruby
+# == Synopsis
+#
+# enhancerepo: adds extra data to a repomd repository
+#
+# Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
+#
+# == Usage
+#
+# enhancerepo [OPTION] ... DIR
+#
+# -h, --help:
+#    show help
+#
+# --sign keyid
+#    Generates signature for the repository
+#    using key keyid
+#
+# === SUSE specific repository data:
+#
+# --product [prodname]:
+#    Adds product compatibility information
+#    WARNING: repomd incompatible
+# --keyword [keyword]
+#    Tags repository with keyword
+#    WARNING: repomd incompatible
+#
+# === SUSE specific package data
+#
+# Drop packagename.eula files and the attributes
+# will be added to susedata.xml
+#
+# DIR: The repo base directory ( where repodata/ directory is located )
 
-# in case we are developing
 $: << '../lib' 
 $: << 'lib'
 
