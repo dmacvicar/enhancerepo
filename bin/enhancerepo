@@ -19,25 +19,24 @@
 #    Add updates from *.updates files
 #    and generate updateinfo.xml
 #
-# === SUSE specific repository data:
+# === SUSE specific repository data (suseinfo.xml):
 #
 # --expire time
 #   Set repository expiration hint
 #   (Can be used to detect dead mirrors)
 # --product prodname:
 #    Adds product compatibility information
-#    WARNING: repomd incompatible
 # --keyword keyword
 #    Tags repository with keyword
-#    WARNING: repomd incompatible
 #
-# === SUSE specific package data
+# === SUSE specific package data (susedata.xml)
 #
 # --eulas
 #    Drop packagename.eula files and
 #    the attributes will be added to susedata.xml
 #
 # DIR: The repo base directory ( where repodata/ directory is located )
+#
 
 $: << '../lib' 
 $: << 'lib'

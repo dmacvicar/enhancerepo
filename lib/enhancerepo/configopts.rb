@@ -13,8 +13,8 @@ class ConfigOpts
   attr_accessor :eulas
   
   def initialize
-    @products = []
-    @keywords = []
+    @products = Set.new
+    @keywords = Set.new
     @signkey = nil
     @updates = false
     @eulas = false

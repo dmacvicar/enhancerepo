@@ -54,8 +54,10 @@ end
 config.dir = dir
 
 repomd = RepoMd.new(dir)
-repomd.add_products(config.products)
-repomd.add_keywords(config.keywords)
+
+# merge keywords and products to suseinfo
+repomd.suseinfo.products.merge(config.products)
+repomd.suseinfo.keywords.merge(config.keywords)
 
 if config.eulas
   repomd.susedata.add_eulas

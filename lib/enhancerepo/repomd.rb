@@ -12,19 +12,25 @@ include REXML
 class RepoMdResource
   attr_accessor :type
   attr_accessor :location, :checksum, :timestamp, :openchecksum
+
+  # define equality based on the location
+  # as it has no sense to have two resources for the
+  #same location
+  def ==(other)
+    return (location == other.location) if other.is_a?(RepoMdResource)
+    false
+  end
+  
 end
 
 # represents the repomd index
 class RepoMdIndex
-  attr_accessor :resources
   attr_accessor :products, :keywords
 
   # constructor
   # repomd - repository
   def initialize
     @resources = []
-    @products = Set.new
-    @keywords = Set.new
   end
 
   # add a file resource. Takes care of setting
@@ -54,9 +60,25 @@ class RepoMdIndex
       # we have a different openchecksum
       r.openchecksum = Digest::SHA1.hexdigest(Zlib::GzipReader.new(File.new(path)).read)
     end
-    @resources << r
+    add_resource(r)
+    
   end
 
+  # add resource
+  # any resource of the same location
+  # is overwritten
+  def add_resource(r)
+    # first check if this resource is already in
+    # if yes then override it
+    if (index = @resources.index(r)).nil?
+      # add it
+      @resources << r
+    else
+      # replace it
+      STDERR.puts("#{r.location} already exists. Replacing.")
+      @resources[index] = r
+    end
+  end
   
   # read data from a file
   def read_file(file)
@@ -78,7 +100,7 @@ class RepoMdIndex
             raise "unknown tag #{attrel.name}"
         end # case
       end # iterate over data subelements
-      @resources << resource
+      add_resource(resource)
     end # iterate over data elements
   end
   
@@ -95,39 +117,11 @@ class RepoMdIndex
           b.tag!('open-checksum', resource.openchecksum, 'type' => 'sha')
         end
       end
-
-      # only add the metadata tag if there are products or keywords
-      if has_metadata?
-        b.metadata do |b|
-          # only show product tag if there are products
-          if not @products.empty?
-            b.products do |b|
-              @products.each do |product|
-                b.id product
-              end
-            end
-          end
-          # only show keyword tags if there are keywords
-          if not @keywords.empty?
-            b.keywords do |b|
-             @keywords.each do |keyword|
-                b.k keyword
-              end
-            end
-          end
-          # done with metadata
-        end #close metadata tag
-      end # has_metadata?
+      
     end #builder
     
   end
-  
-  # true if the index has metadata (non standard)
-  # like products, keywords, etc
-  def has_metadata?
-    return !@products.empty? || !@keywords.empty?
-  end
-  
+    
 end
 
 class PackageId
@@ -203,20 +197,43 @@ class SuseInfo
   # still calculated from repomd.xml
   # resources
   attr_accessor :expire
+  attr_accessor :products
+  attr_accessor :keywords
   
   def initialize(dir)
     @dir = dir
+    @keywords = Set.new
+    @products = Set.new
   end
 
   def empty?
-    @expire.empty?
+    @expire.nil? and @products.empty? and @keywords.empty?
   end
   
   def write(file)
     builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
     builder.instruct!
     xml = builder.suseinfo do |b|
+
+      # add expire tag
       b.expire(@expire.to_i.to_s)
+
+      if not @keywords.empty?
+        b.keywords do |b|
+          @keywords.each do |k|
+            b.k(k)
+          end
+        end
+      end
+
+      if not @products.empty?
+        b.products do |b|
+          @products.each do |p|
+            b.id(p)
+          end
+        end
+      end
+
     end
   end
 end
@@ -241,8 +258,6 @@ class SuseData < ExtraPrimaryData
           eulacontent = File.new(eulafile).read
           add_attribute(pkgid, 'eula', eulacontent)
           STDERR.puts "Adding eula: #{eulafile.to_s}"
-        else
-          STDERR.puts "discarding eula #{eulafile} : #{pkgid.to_s}"
         end
       end
     end
@@ -324,22 +339,6 @@ class RepoMd
     @susedata = SuseData.new(dir)
     @updateinfo = UpdateInfo.new(dir)
     @suseinfo = SuseInfo.new(dir)
-  end
-
-  # add supported products to the
-  # repository metadata
-  def add_products(products)
-    products.each do |p|
-      @index.products.add p
-    end
-  end
-
-  # add keywords to the repository
-  # metadata
-  def add_keywords(keywords)   
-    keywords.each do |k|
-      @index.keywords.add k
-    end
   end
 
   def sign(keyid)
