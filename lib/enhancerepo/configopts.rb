@@ -8,10 +8,15 @@ class ConfigOpts
   attr_accessor :keywords
   attr_accessor :dir
   attr_accessor :signkey
+  attr_accessor :expire
+  attr_accessor :updates
+  attr_accessor :eulas
   
   def initialize
     @products = []
     @keywords = []
     @signkey = nil
+    @updates = false
+    @eulas = false
   end
 end

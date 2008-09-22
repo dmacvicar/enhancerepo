@@ -7,6 +7,9 @@ require 'enhancerepo/constants'
 opts = GetoptLong.new(
          [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
          [ '--sign', '-s', GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--expire', '-e', GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--updates', '-u', GetoptLong::NO_ARGUMENT ],
+         [ '--eulas', '-l', GetoptLong::NO_ARGUMENT ],
          [ '--product', '-p', GetoptLong::REQUIRED_ARGUMENT ],
          [ '--keyword', '-k', GetoptLong::REQUIRED_ARGUMENT ]             
         )
@@ -14,9 +17,6 @@ opts = GetoptLong.new(
 config = ConfigOpts.new
 
 dir = nil
-name = nil
-repetitions = 1
-sign = nil
 
 opts.each do |opt, arg|
   case opt
@@ -28,6 +28,12 @@ opts.each do |opt, arg|
     config.products << arg
   when '--keyword'
     config.keywords << arg
+  when '--expire'
+    config.expire = arg
+  when '--updates'
+    config.updates = true
+  when '--eulas'
+    config.eulas = true
   end
 end
 
@@ -50,6 +56,20 @@ config.dir = dir
 repomd = RepoMd.new(dir)
 repomd.add_products(config.products)
 repomd.add_keywords(config.keywords)
+
+if config.eulas
+  repomd.susedata.add_eulas
+end
+
+if config.updates
+  repomd.updateinfo.add_updates
+end
+
+# add expiration date
+if not config.expire.nil?
+  repomd.suseinfo.expire = config.expire
+end
+
 repomd.write
 
 if not config.signkey.nil?

@@ -15,20 +15,27 @@
 # --sign keyid
 #    Generates signature for the repository
 #    using key keyid
+# --updates
+#    Add updates from *.updates files
+#    and generate updateinfo.xml
 #
 # === SUSE specific repository data:
 #
-# --product [prodname]:
+# --expire time
+#   Set repository expiration hint
+#   (Can be used to detect dead mirrors)
+# --product prodname:
 #    Adds product compatibility information
 #    WARNING: repomd incompatible
-# --keyword [keyword]
+# --keyword keyword
 #    Tags repository with keyword
 #    WARNING: repomd incompatible
 #
 # === SUSE specific package data
 #
-# Drop packagename.eula files and the attributes
-# will be added to susedata.xml
+# --eulas
+#    Drop packagename.eula files and
+#    the attributes will be added to susedata.xml
 #
 # DIR: The repo base directory ( where repodata/ directory is located )
 

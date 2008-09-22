@@ -4,6 +4,7 @@ require 'rexml/document'
 require 'digest/sha1'
 require 'enhancerepo/constants'
 require 'zlib'
+require 'yaml'
 
 include REXML
 
@@ -174,7 +175,8 @@ class ExtraPrimaryData
   def empty?
     @properties.empty?
   end
-  
+
+  # write an extension file like other.xml
   def write(file)
     builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
     builder.instruct!
@@ -192,6 +194,35 @@ class ExtraPrimaryData
   
 end
 
+# represents SUSE extensions to repository
+# metadata (not associated with packages)
+class SuseInfo
+
+  # expiration time
+  # the generated value is
+  # still calculated from repomd.xml
+  # resources
+  attr_accessor :expire
+  
+  def initialize(dir)
+    @dir = dir
+  end
+
+  def empty?
+    @expire.empty?
+  end
+  
+  def write(file)
+    builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+    builder.instruct!
+    xml = builder.suseinfo do |b|
+      b.expire(@expire.to_i.to_s)
+    end
+  end
+end
+
+# represents SUSE extensions to
+# primary data
 class SuseData < ExtraPrimaryData
 
   def initialize(dir)
@@ -220,9 +251,70 @@ class SuseData < ExtraPrimaryData
   
 end
 
+class UpdateInfo
+
+  def initialize(dir)
+    @dir = dir
+    @nodes = []
+  end
+
+  def empty?
+    return @nodes.empty?
+  end
+  
+  def add_updates
+    Dir["#{@dir}/**/*.update"].each do |updatefile|
+      node = YAML.load(File.new(updatefile).read)
+      STDERR.puts("Adding update #{updatefile}")
+      @nodes << node
+    end
+    # end of directory iteration
+  end
+
+  # write a update out
+  def write(file)
+    builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+    builder.instruct!
+    xml = builder.updates do |b|
+      @nodes.each do |updates|
+        updates.each do |k, v|
+          # k is update here
+          # v are the attributes
+          # default patch issuer
+          puts v.inspect
+          from = "#{ENV['USER']}@#{ENV['HOST']}"
+          type = "optional"
+          version = "1"
+          from = v['from'] ? v['from'] : from
+          type = v['type'] if not v['type'].nil?
+          version = v['version'] if not v['version'].nil?
+          
+          b.update('status' => 'stable', 'from' => from, 'version' => version, 'type' => type) do |b|
+            b.title(v['summary'])
+            b.id(v['id'] ? v['id'] : "no-id")
+            b.issued(v['issued'] ? v['issued'] : Time.now.to_i.to_s )
+            b.release(v['release'])
+            b.description(v['description'])
+            b.references do |b|
+              v['references'].each do |k,v|
+                b.reference(v)
+              end   
+            end
+          end
+        end
+      end
+    end #done builder
+
+  end
+end
+
+
 class RepoMd
 
   attr_accessor :index
+
+  # extensions
+  attr_reader :susedata, :suseinfo
   
   def initialize(dir)
     @index = RepoMdIndex.new
@@ -230,7 +322,8 @@ class RepoMd
     @index.read_file(File.new(File.join(dir, REPOMD_FILE)))    
     @dir = dir
     @susedata = SuseData.new(dir)
-    @susedata.add_eulas
+    @updateinfo = UpdateInfo.new(dir)
+    @suseinfo = SuseInfo.new(dir)
   end
 
   # add supported products to the
@@ -279,23 +372,35 @@ class RepoMd
   def write
     repomdfile = File.join(@dir, REPOMD_FILE)
     susedfile = "#{File.join(@dir, SUSEDATA_FILE)}.gz"
+    updateinfofile = "#{File.join(@dir, UPDATEINFO_FILE)}.gz"
+    suseinfofile = "#{File.join(@dir, SUSEINFO_FILE)}.gz"
    
-    if not @susedata.empty?
-      STDERR.puts "Saving #{susedfile} .."
-      f = File.open(susedfile, 'w')
-      # compress the output
-      gz = Zlib::GzipWriter.new(f)
-      @susedata.write(gz)
-      gz.close
-      # add it to the index
-      STDERR.puts "Adding #{susedfile} to #{repomdfile} index"
-      @index.add_file_resource("#{SUSEDATA_FILE}.gz", susedfile)
-    end
-
+    write_gz_extension_file(@updateinfo, updateinfofile, UPDATEINFO_FILE)
+    write_gz_extension_file(@susedata, susedfile, SUSEDATA_FILE)
+    write_gz_extension_file(@suseinfo, suseinfofile, SUSEINFO_FILE)
+    
     # now write the index
     f = File.open(File.join(@dir, REPOMD_FILE), 'w')
     STDERR.puts "Saving #{repomdfile} .."
     @index.write(f)
     
-  end  
+  end
+
+  # writes an extension to an xml filename if
+  # the extension is not empty
+  def write_gz_extension_file(extension, filename, relfilename)
+    if not extension.empty?
+      repomdfile = File.join(@dir, REPOMD_FILE)
+      STDERR.puts "Saving #{filename} .."
+      f = File.open(filename, 'w')
+      # compress the output
+      gz = Zlib::GzipWriter.new(f)
+      extension.write(gz)
+      gz.close
+      # add it to the index
+      STDERR.puts "Adding #{filename} to #{repomdfile} index"
+      @index.add_file_resource("#{relfilename}.gz", filename)
+    end
+  end
+  
 end
