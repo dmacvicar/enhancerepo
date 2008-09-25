@@ -19,6 +19,7 @@ Rake::PackageTask.new('enhancerepo', version) do |package|
     '[A-Z]*',
     'lib/**',
     'lib/enhancerepo/**',
+    'lib/enhancerepo/rpmmd/**',
     'bin/**',
     'test/**'
   )
