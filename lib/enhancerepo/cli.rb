@@ -5,13 +5,15 @@ require 'enhancerepo/repomd'
 require 'enhancerepo/constants'
 
 opts = GetoptLong.new(
-         [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
-         [ '--sign', '-s', GetoptLong::REQUIRED_ARGUMENT ],
-         [ '--expire', '-e', GetoptLong::REQUIRED_ARGUMENT ],
-         [ '--updates', '-u', GetoptLong::NO_ARGUMENT ],
-         [ '--eulas', '-l', GetoptLong::NO_ARGUMENT ],
-         [ '--product', '-p', GetoptLong::REQUIRED_ARGUMENT ],
-         [ '--keyword', '-k', GetoptLong::REQUIRED_ARGUMENT ]             
+         [ '--help', '-h',     GetoptLong::NO_ARGUMENT ],
+         [ '--sign', '-s',     GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--expire', '-e',   GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--updates', '-u',  GetoptLong::NO_ARGUMENT ],
+         [ '--eulas', '-l',    GetoptLong::NO_ARGUMENT ],
+         [ '--keywords', '-k', GetoptLong::NO_ARGUMENT ],
+         [ '--disk-usage', '-d', GetoptLong::NO_ARGUMENT ],
+         [ '--repo-product',   GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--repo-keyword',   GetoptLong::REQUIRED_ARGUMENT ]             
         )
 
 config = ConfigOpts.new
@@ -24,16 +26,20 @@ opts.each do |opt, arg|
     RDoc::usage
   when '--sign'
     config.signkey = arg
-  when '--product'
-    config.products << arg
-  when '--keyword'
-    config.keywords << arg
+  when '--repo-product'
+    config.repoproducts << arg
+  when '--repo-keyword'
+    config.repokeywords << arg
   when '--expire'
     config.expire = arg
   when '--updates'
     config.updates = true
   when '--eulas'
     config.eulas = true
+  when '--keywords'
+    config.keywords = true
+  when '--disk-usage'
+    config.diskusage = true
   end
 end
 
@@ -56,11 +62,19 @@ config.dir = dir
 repomd = RepoMd.new(dir)
 
 # merge keywords and products to suseinfo
-repomd.suseinfo.products.merge(config.products)
-repomd.suseinfo.keywords.merge(config.keywords)
+repomd.suseinfo.products.merge(config.repoproducts)
+repomd.suseinfo.keywords.merge(config.repokeywords)
 
 if config.eulas
   repomd.susedata.add_eulas
+end
+
+if config.keywords
+  repomd.susedata.add_keywords
+end
+
+if config.diskusage
+  repomd.susedata.add_disk_usage
 end
 
 if config.updates

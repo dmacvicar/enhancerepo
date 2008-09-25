@@ -24,9 +24,9 @@
 # --expire time
 #   Set repository expiration hint
 #   (Can be used to detect dead mirrors)
-# --product prodname:
+# --repo-product prodname:
 #    Adds product compatibility information
-# --keyword keyword
+# --repo-keyword keyword
 #    Tags repository with keyword
 #
 # === SUSE specific package data (susedata.xml)
@@ -34,6 +34,20 @@
 # --eulas
 #    Drop packagename.eula files and
 #    the attributes will be added to susedata.xml
+#
+# --keywords
+#    Drop packagename.keywords files and
+#    the attributes will be added to susedata.xml
+#
+# --disk-usage
+#    Add disk usage information
+#    the attributes will be added to susedata.xml
+#
+# Note: your .eula or .keywords file will be added to
+# a package if it matches its name. If you want to add
+# the attributes to a specific package, name the file
+# name-version, name-version-release or
+# name-version-release.arch
 #
 # DIR: The repo base directory ( where repodata/ directory is located )
 #
