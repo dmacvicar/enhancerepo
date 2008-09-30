@@ -13,6 +13,11 @@ class ConfigOpts
   attr_accessor :eulas
   attr_accessor :keywords
   attr_accessor :diskusage
+  # wether to create delta rpm files
+  # and how many
+  attr_accessor :create_deltas
+  # whether to index delta rpms
+  attr_accessor :deltas
   
   def initialize
     @repoproducts = Set.new

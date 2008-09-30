@@ -7,3 +7,4 @@ Reference implementation for future rpmmd extensions
 
 For more visit: http://en.opensuse.org/Enhancerepo
 
+requires ruby-rpm.

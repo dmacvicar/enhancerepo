@@ -13,8 +13,10 @@ opts = GetoptLong.new(
          [ '--keywords', '-k', GetoptLong::NO_ARGUMENT ],
          [ '--disk-usage', '-d', GetoptLong::NO_ARGUMENT ],
          [ '--repo-product',   GetoptLong::REQUIRED_ARGUMENT ],
-         [ '--repo-keyword',   GetoptLong::REQUIRED_ARGUMENT ]             
-        )
+         [ '--repo-keyword',   GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--create-deltas',  GetoptLong::OPTIONAL_ARGUMENT ],
+         [ '--deltas',  GetoptLong::NO_ARGUMENT ]             
+          )
 
 config = ConfigOpts.new
 
@@ -40,6 +42,14 @@ opts.each do |opt, arg|
     config.keywords = true
   when '--disk-usage'
     config.diskusage = true
+  when '--create-deltas'
+    if arg == ''
+      config.create_deltas = 1
+    else
+      config.create_deltas = arg.to_i
+    end
+  when '--deltas'
+    config.deltas = true
   end
 end
 
@@ -80,6 +90,15 @@ end
 if config.updates
   repomd.updateinfo.add_updates
 end
+
+if config.create_deltas
+  repomd.deltainfo.create_deltas(config.create_deltas)
+end
+
+if config.deltas
+    repomd.deltainfo.add_deltas
+end
+
 
 # add expiration date
 if not config.expire.nil?

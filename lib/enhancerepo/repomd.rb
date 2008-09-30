@@ -10,6 +10,7 @@ require 'enhancerepo/packageid'
 require 'enhancerepo/rpmmd/updateinfo'
 require 'enhancerepo/rpmmd/suseinfo'
 require 'enhancerepo/rpmmd/susedata'
+require 'enhancerepo/rpmmd/deltainfo'
 
 include REXML
 
@@ -134,7 +135,7 @@ class RepoMd
   attr_accessor :index
 
   # extensions
-  attr_reader :susedata, :suseinfo
+  attr_reader :susedata, :suseinfo, :deltainfo
   
   def initialize(dir)
     @index = RepoMdIndex.new
@@ -144,6 +145,7 @@ class RepoMd
     @susedata = SuseData.new(dir)
     @updateinfo = UpdateInfo.new(dir)
     @suseinfo = SuseInfo.new(dir)
+    @deltainfo = DeltaInfo.new(dir)
   end
 
   def sign(keyid)
@@ -178,10 +180,12 @@ class RepoMd
     susedfile = "#{File.join(@dir, SUSEDATA_FILE)}.gz"
     updateinfofile = "#{File.join(@dir, UPDATEINFO_FILE)}.gz"
     suseinfofile = "#{File.join(@dir, SUSEINFO_FILE)}.gz"
+    deltainfofile = "#{File.join(@dir, DELTAINFO_FILE)}.gz"
    
     write_gz_extension_file(@updateinfo, updateinfofile, UPDATEINFO_FILE)
     write_gz_extension_file(@susedata, susedfile, SUSEDATA_FILE)
     write_gz_extension_file(@suseinfo, suseinfofile, SUSEINFO_FILE)
+    write_gz_extension_file(@deltainfo, deltainfofile, DELTAINFO_FILE)
     
     # now write the index
     f = File.open(File.join(@dir, REPOMD_FILE), 'w')

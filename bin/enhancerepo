@@ -49,6 +49,19 @@
 # name-version, name-version-release or
 # name-version-release.arch
 #
+# === Package deltas support
+#
+# --create-deltas[=num] (default 1)
+#   Create [num] deltas for different versions of a package.
+#   If there is foo-1.rpm, foo-2.rpm, foo-3.rpm, foo-4.rpm
+#   num=1 will create a delta to go from version 3 to 4, while
+#   num=2 will create one from 2 to 4 too.
+#   This does not index the deltas. Use --deltas for that.
+#
+# --deltas
+#   Add package deltas metadata to deltainfo.xml. This indexes existing
+#   deltas, but don't create them. See --create-deltas for creation.
+#
 # DIR: The repo base directory ( where repodata/ directory is located )
 #
 
