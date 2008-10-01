@@ -46,7 +46,7 @@ class DeltaInfo
   end
 
   def empty?
-    return false
+    return @deltas.empty?
   end
 
   # Create delta rpms for the last
