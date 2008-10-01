@@ -19,6 +19,10 @@
 #    Add updates from *.updates files
 #    and generate updateinfo.xml
 #
+# --generate-update pkg1,pkg2,...
+#   Generates an update from the package list
+#   (using last versions)
+#
 # === SUSE specific repository data (suseinfo.xml):
 #
 # --expire time

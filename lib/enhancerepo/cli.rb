@@ -15,6 +15,7 @@ opts = GetoptLong.new(
          [ '--repo-product',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--repo-keyword',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--create-deltas',  GetoptLong::OPTIONAL_ARGUMENT ],
+         [ '--generate-update', GetoptLong::REQUIRED_ARGUMENT ],                      
          [ '--deltas',  GetoptLong::NO_ARGUMENT ]             
           )
 
@@ -36,6 +37,9 @@ opts.each do |opt, arg|
     config.expire = arg
   when '--updates'
     config.updates = true
+  when '--generate-update'
+    packages = arg.split(",")
+    config.generate_update = packages
   when '--eulas'
     config.eulas = true
   when '--keywords'
@@ -89,6 +93,10 @@ end
 
 if config.updates
   repomd.updateinfo.add_updates
+end
+
+if not config.generate_update.nil?
+  repomd.updateinfo.generate_update(config.generate_update)
 end
 
 if config.create_deltas

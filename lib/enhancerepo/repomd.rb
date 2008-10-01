@@ -135,7 +135,7 @@ class RepoMd
   attr_accessor :index
 
   # extensions
-  attr_reader :susedata, :suseinfo, :deltainfo
+  attr_reader :susedata, :suseinfo, :deltainfo, :updateinfo
   
   def initialize(dir)
     @index = RepoMdIndex.new

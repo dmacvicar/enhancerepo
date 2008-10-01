@@ -10,6 +10,7 @@ class ConfigOpts
   attr_accessor :signkey
   attr_accessor :expire
   attr_accessor :updates
+  attr_accessor :generate_update
   attr_accessor :eulas
   attr_accessor :keywords
   attr_accessor :diskusage
@@ -27,5 +28,8 @@ class ConfigOpts
     @eulas = false
     @keywords = false
     @diskusage = false
+    @deltas = false
+    @create_deltas = false
+    
   end
 end
