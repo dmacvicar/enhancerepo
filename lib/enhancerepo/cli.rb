@@ -42,7 +42,7 @@ opts.each do |opt, arg|
     packages = arg.split(",")
     config.generate_update = packages
   when '--updates-base-dir'
-    config.updates_base_dir = arg
+    config.updatesbasedir = arg
   when '--eulas'
     config.eulas = true
   when '--keywords'
@@ -76,7 +76,7 @@ end
 
 config.dir = dir
 
-repomd = RepoMd.new(dir)
+repomd = RepoMd.new(config)
 
 # merge keywords and products to suseinfo
 repomd.suseinfo.products.merge(config.repoproducts)
@@ -94,12 +94,12 @@ if config.diskusage
   repomd.susedata.add_disk_usage
 end
 
-if config.updates
-  repomd.updateinfo.add_updates
+if not config.generate_update.nil?
+  repomd.updateinfo.generate_update(config.generate_update, config.dir)
 end
 
-if not config.generate_update.nil?
-  repomd.updateinfo.generate_update(config.generate_update)
+if config.updates
+  repomd.updateinfo.add_updates
 end
 
 if config.create_deltas

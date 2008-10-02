@@ -137,15 +137,15 @@ class RepoMd
   # extensions
   attr_reader :susedata, :suseinfo, :deltainfo, :updateinfo
   
-  def initialize(dir)
+  def initialize(config)
     @index = RepoMdIndex.new
     # populate the index
-    @index.read_file(File.new(File.join(dir, REPOMD_FILE)))    
-    @dir = dir
-    @susedata = SuseData.new(dir)
-    @updateinfo = UpdateInfo.new(dir)
-    @suseinfo = SuseInfo.new(dir)
-    @deltainfo = DeltaInfo.new(dir)
+    @index.read_file(File.new(File.join(config.dir, REPOMD_FILE)))    
+    @dir = config.dir
+    @susedata = SuseData.new(config.dir)
+    @updateinfo = UpdateInfo.new(config)
+    @suseinfo = SuseInfo.new(config.dir)
+    @deltainfo = DeltaInfo.new(config.dir)
   end
 
   def sign(keyid)

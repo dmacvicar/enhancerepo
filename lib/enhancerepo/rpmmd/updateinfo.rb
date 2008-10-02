@@ -36,11 +36,11 @@ class Update
   
   def initialize
     # some default sane values
-    @updateid = "update"
+    @updateid = "unknown"
     @status = "stable"
     @from = "#{ENV['USER']}@#{ENV['HOST']}"
     @type = "optional"
-    @version = "1"
+    @version = 1
     @release = "no release"
     @issued = Time.now.to_i
     @references = []
@@ -49,6 +49,16 @@ class Update
     @packages = []
   end
 
+  # an update is not empty if it
+  # updates something
+  def empty?
+    @packages.empty?
+  end
+
+  def suggested_filename
+    "update-#{@updateid}-#{@version}"
+  end
+  
   # automatically set empty fields
   # needs the description to be set to
   # be somehow smart
@@ -60,14 +70,14 @@ class Update
       @type = 'recommended' if description =~ /fix|bnc#|bug|crash/
     end
 
-    @title << "#{@type} update #{@version}"
+    @title << "#{@type} update #{@version} "
     
     # now figure out the title
     # if there is only package
     if @packages.size == 1
       # then name the fix according to the package, and the type
       @title << "for #{@packages.first.name}"
-      @id = @packages.first.name
+      @updateidid = @packages.first.name
     elsif @packages.size < 1
       # do nothing, it is may be just a message
     else
@@ -76,20 +86,30 @@ class Update
         # assume it is a KDE update
         @title << "for KDE"
         # KDE 3 or KDE4
-        @id = "KDE3" if @packages.grep(/kde(.+)3$/).size > 1
-        @id = "KDE4" if @packages.grep(/kde(.+)4$/).size > 1
+        @updateid = "KDE3" if @packages.grep(/kde(.+)3$/).size > 1
+        @updateid = "KDE4" if @packages.grep(/kde(.+)4$/).size > 1
       elsif @packages.grep(/kernel/).size > 1
         @title << "for the Linux kernel"
-        @id = 'kernel'
+        @updateid = 'kernel'
       end
     end
     # now figure out and fill references
-    bugzillas = description.scan(/bnc#(\d+)/)
+    # second format is a weird non correct format some developers use
+    bugzillas = description.scan(/bnc\s?#(\d+)|b\.n\.c (\d+)/)
     bugzillas.each do |bnc|
       ref = Reference.new
       ref.href << "/#{bnc}"
       ref.referenceid = bnc
       ref.title = "bug number #{bnc}"
+      @references << ref
+    end
+    cves = description.scan(/CVE-([\d-]+)/)
+    cves.each do |cve|
+      ref = Reference.new
+      ref.href = "http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-#{cve}"
+      ref.referenceid = "#{cve}"
+      ref.type = 'cve'
+      ref.title = "CVE number #{cve}"
       @references << ref
     end
   end
@@ -103,7 +123,7 @@ class Update
   def append_to_builder(builder)  
     builder.update('status' => 'stable', 'from' => @from, 'version' => @version, 'type' => @type) do |b|
       b.title(@title)
-      b.id(@id)
+      b.id(@updateid)
       b.issued(@issued)
       b.release(@release)
       b.description(@description)
@@ -131,9 +151,12 @@ end
 
 class UpdateInfo
 
-  def initialize(dir)
-    @dir = dir
-    @updates = Array.new
+  def initialize(config)
+    @dir = config.dir
+    @basedir = config.updatesbasedir
+
+    # update files
+    @updates = Set.new
   end
 
   def empty?
@@ -141,10 +164,9 @@ class UpdateInfo
   end
   
   def add_updates
-    Dir["#{@dir}/**/*.update"].each do |updatefile|
-      node = YAML.load(File.new(updatefile).read)
+    Dir["#{@dir}/**/update-*.xml"].each do |updatefile|
       STDERR.puts("Adding update #{updatefile}")
-      @nodes << node
+      @updates << updatefile
     end
     # end of directory iteration
   end
@@ -153,13 +175,31 @@ class UpdateInfo
   # it compares the last version of those package names
   # with their previous ones
   #
-  def generate_update(packages)
+  # outputdir is the directory where to save the patch to.
+  def generate_update(packages, outputdir)
+   
     # make a hash name -> array of packages
     STDERR.puts "generating update..."
-    pkgs = Hash.new    
-    Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
+    pkgs = Hash.new
+    [ Dir["#{@dir}/**/*.rpm"], @basedir.nil? ? [] : Dir["#{@basedir}/**/*.rpm"]].flatten.each do |rpmfile|
       next if rpmfile =~ /\.delta\.rpm$/
-      rpm = PackageId.new(rpmfile)     
+      # in case we are working with a big base directory
+      # it would be expensive to read all package headers
+      # so exclude packages with different name
+      # it has to match at least one
+      matched = false
+      packages.each do |pkg|
+        matched = true if rpmfile =~ /#{pkg}/
+      end
+      # dont read the package header if this rpm
+      # is not useful
+      next if not matched
+      
+      rpm = PackageId.new(rpmfile)
+      # if the rpm we found is not in the list of packages
+      # we are doing the update for, we just skip it
+      next if not packages.include?(rpm.name)
+      
       pkgs[rpm.name] = Array.new if not pkgs.has_key?(rpm.name)
       pkgs[rpm.name] << rpm
     end
@@ -197,14 +237,24 @@ class UpdateInfo
           update.description << entry.text << "\n"
         end
       else
-        raise "ah"
+        # jump to next pkgname
+        next
       end
     
     end
     # before writing the update, figure out more
     # information
     update.smart_fill_blank_fields
-    update.write(STDOUT)
+    filename = ""
+    # increase version until version is available
+    while ( File.exists?(filename = File.join(outputdir, update.suggested_filename + ".xml") ))
+      update.version += 1
+    end
+    STDERR.puts "Saving update part to '#{filename}'."
+    
+    f = File.open(filename, 'w')
+    update.write(f)
+    f.close
   end
   
   # write a update out
@@ -213,7 +263,8 @@ class UpdateInfo
     builder.instruct!
     xml = builder.updates do |b|
       @updates.each do |update|
-        update.append_to_builder(b)
+        file << File.open(update).read
+        #update.append_to_builder(b)
       end
     end #done builder
   end
