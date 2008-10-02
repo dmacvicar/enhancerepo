@@ -9,13 +9,14 @@ opts = GetoptLong.new(
          [ '--sign', '-s',     GetoptLong::REQUIRED_ARGUMENT ],
          [ '--expire', '-e',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--updates', '-u',  GetoptLong::NO_ARGUMENT ],
+         [ '--generate-update', GetoptLong::REQUIRED_ARGUMENT ],                      
+         [ '--updates-base-dir', GetoptLong::REQUIRED_ARGUMENT ],
          [ '--eulas', '-l',    GetoptLong::NO_ARGUMENT ],
          [ '--keywords', '-k', GetoptLong::NO_ARGUMENT ],
          [ '--disk-usage', '-d', GetoptLong::NO_ARGUMENT ],
          [ '--repo-product',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--repo-keyword',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--create-deltas',  GetoptLong::OPTIONAL_ARGUMENT ],
-         [ '--generate-update', GetoptLong::REQUIRED_ARGUMENT ],                      
          [ '--deltas',  GetoptLong::NO_ARGUMENT ]             
           )
 
@@ -40,6 +41,8 @@ opts.each do |opt, arg|
   when '--generate-update'
     packages = arg.split(",")
     config.generate_update = packages
+  when '--updates-base-dir'
+    config.updates_base_dir = arg
   when '--eulas'
     config.eulas = true
   when '--keywords'

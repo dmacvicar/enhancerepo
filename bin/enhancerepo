@@ -20,8 +20,13 @@
 #    and generate updateinfo.xml
 #
 # --generate-update pkg1,pkg2,...
-#   Generates an update from the package list
-#   (using last versions)
+#   Generates an update from the given package list
+#   comparing package's last version changes.
+#
+# --updates-base-dir dir
+#   Looks for package also in <dir>
+#   Useful if you keep old packages in a different repos
+#   and updates in this one.
 #
 # === SUSE specific repository data (suseinfo.xml):
 #

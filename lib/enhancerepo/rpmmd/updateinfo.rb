@@ -46,10 +46,54 @@ class Update
     @references = []
     @description = ""
     @title = "Untitled update"
-
     @packages = []
   end
 
+  # automatically set empty fields
+  # needs the description to be set to
+  # be somehow smart
+  def smart_fill_blank_fields
+    # figure out the type (optional is default)
+    if description =~ /vulnerability|security|CVE|Secunia/
+      @type = 'security'
+    else
+      @type = 'recommended' if description =~ /fix|bnc#|bug|crash/
+    end
+
+    @title << "#{@type} update #{@version}"
+    
+    # now figure out the title
+    # if there is only package
+    if @packages.size == 1
+      # then name the fix according to the package, and the type
+      @title << "for #{@packages.first.name}"
+      @id = @packages.first.name
+    elsif @packages.size < 1
+      # do nothing, it is may be just a message
+    else
+      # figure out what the multiple packages are
+      if @packages.grep(/kde/).size > 1
+        # assume it is a KDE update
+        @title << "for KDE"
+        # KDE 3 or KDE4
+        @id = "KDE3" if @packages.grep(/kde(.+)3$/).size > 1
+        @id = "KDE4" if @packages.grep(/kde(.+)4$/).size > 1
+      elsif @packages.grep(/kernel/).size > 1
+        @title << "for the Linux kernel"
+        @id = 'kernel'
+      end
+    end
+    # now figure out and fill references
+    bugzillas = description.scan(/bnc#(\d+)/)
+    bugzillas.each do |bnc|
+      ref = Reference.new
+      ref.href << "/#{bnc}"
+      ref.referenceid = bnc
+      ref.title = "bug number #{bnc}"
+      @references << ref
+    end
+  end
+  
   # write a update out
   def write(file)
     builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
@@ -150,14 +194,16 @@ class UpdateInfo
         STDERR.puts "'#{pkgname}' has #{diff.size} entries (#{first.changelog.size}/#{second.changelog.size})"
         update.packages << first
         diff.each do |entry|
-#          update.description <<
+          update.description << entry.text << "\n"
         end
       else
         raise "ah"
       end
-      
-    end
     
+    end
+    # before writing the update, figure out more
+    # information
+    update.smart_fill_blank_fields
     update.write(STDOUT)
   end
   

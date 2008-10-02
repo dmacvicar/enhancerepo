@@ -11,6 +11,7 @@ class ConfigOpts
   attr_accessor :expire
   attr_accessor :updates
   attr_accessor :generate_update
+  attr_accessor :updatesbasedir
   attr_accessor :eulas
   attr_accessor :keywords
   attr_accessor :diskusage
@@ -30,6 +31,5 @@ class ConfigOpts
     @diskusage = false
     @deltas = false
     @create_deltas = false
-    
   end
 end
