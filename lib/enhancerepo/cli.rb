@@ -95,7 +95,9 @@ if config.diskusage
 end
 
 if not config.generate_update.nil?
-  repomd.updateinfo.generate_update(config.generate_update, config.dir)
+  # make sure the repoparts directory is there
+  `mkdir -p #{File.join(config.dir, 'repoparts')}`
+  repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
 end
 
 if config.updates

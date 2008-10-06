@@ -77,7 +77,7 @@ class Update
     if @packages.size == 1
       # then name the fix according to the package, and the type
       @title << "for #{@packages.first.name}"
-      @updateidid = @packages.first.name
+      @updateid = @packages.first.name
     elsif @packages.size < 1
       # do nothing, it is may be just a message
     else
@@ -95,7 +95,8 @@ class Update
     end
     # now figure out and fill references
     # second format is a weird non correct format some developers use
-    bugzillas = description.scan(/bnc\s?#(\d+)|b\.n\.c (\d+)/)
+    # Novell bugzilla
+    bugzillas = description.scan(/bnc\s?#(\d+)|b\.n\.c (\d+)|n#(\d+)/)
     bugzillas.each do |bnc|
       ref = Reference.new
       ref.href << "/#{bnc}"
@@ -103,6 +104,34 @@ class Update
       ref.title = "bug number #{bnc}"
       @references << ref
     end
+    # Redhat bugzilla
+    rhbz = description.scan(/rh\s?#(\d+)|rhbz\s?#(\d+)/)
+    rhbz.each do |rhbz|
+      ref = Reference.new
+      ref.href = "http://bugzilla.redhat.com/#{rhbz}"
+      ref.referenceid = rhbz
+      ref.title = "Redhat's bug number #{rhbz}"
+      @references << ref
+    end
+    # gnome
+    bgo = description.scan(/bgo\s?#(\d+)|BGO\s?#(\d+)/)
+    bgo.each do |bgo|
+      ref = Reference.new
+      ref.href << "http://bugzilla.gnome.org/#{bgo}"
+      ref.referenceid = bgo
+      ref.title = "Gnome bug number #{bgo}"
+      @references << ref
+    end
+    # KDE
+    bko = description.scan(/bko\s?#(\d+)|kde\s?#(\d+)|KDE\s?#(\d+)/)
+    bko.each do |bko|
+      ref = Reference.new
+      ref.href << "http://bugs.kde.org/#{bko}"
+      ref.referenceid = bko
+      ref.title = "KDE bug number #{bko}"
+      @references << ref
+    end
+    # CVE security
     cves = description.scan(/CVE-([\d-]+)/)
     cves.each do |cve|
       ref = Reference.new
@@ -112,6 +141,7 @@ class Update
       ref.title = "CVE number #{cve}"
       @references << ref
     end
+
   end
   
   # write a update out
@@ -246,6 +276,7 @@ class UpdateInfo
     # information
     update.smart_fill_blank_fields
     filename = ""
+
     # increase version until version is available
     while ( File.exists?(filename = File.join(outputdir, update.suggested_filename + ".xml") ))
       update.version += 1
