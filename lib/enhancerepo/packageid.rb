@@ -6,7 +6,8 @@ require 'rpm'
 class PackageId
   attr_accessor :checksum
   attr_accessor :path
-
+  attr_accessor :rpm
+  
   def initialize(rpmfile)
     @path = rpmfile
     @rpm = RPM::Package.open(rpmfile)    

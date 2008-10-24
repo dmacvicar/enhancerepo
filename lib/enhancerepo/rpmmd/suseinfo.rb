@@ -17,8 +17,11 @@ class SuseInfo
   attr_accessor :expire
   attr_accessor :products
   attr_accessor :keywords
-  
-  def initialize(dir)
+
+  attr_reader :log
+
+  def initialize(log, dir)
+    @log = log
     @dir = dir
     @keywords = Set.new
     @products = Set.new

@@ -7,8 +7,12 @@ class ConfigOpts
   attr_accessor :repoproducts
   attr_accessor :repokeywords
   attr_accessor :dir
+  # output dir, if specified, if not
+  # we use dir
+  attr_writer :outputdir
   attr_accessor :signkey
   attr_accessor :expire
+  attr_accessor :primary
   attr_accessor :updates
   attr_accessor :generate_update
   attr_accessor :updatesbasedir
@@ -20,8 +24,14 @@ class ConfigOpts
   attr_accessor :create_deltas
   # whether to index delta rpms
   attr_accessor :deltas
-  
+
+  def outputdir
+    return @dir if @outputdir.nil?
+    return @outputdir
+  end
+    
   def initialize
+    @primary = false
     @repoproducts = Set.new
     @repokeywords = Set.new
     @signkey = nil

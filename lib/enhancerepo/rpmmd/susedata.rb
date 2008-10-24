@@ -66,8 +66,11 @@ end
 #
 class SuseData < ExtraPrimaryData
 
-  def initialize(dir)
+  attr_reader :log
+  
+  def initialize(log, dir)  
     super('susedata')
+    @log = log
     @dir = dir
     @diskusage_enabled = false
 
@@ -97,7 +100,7 @@ class SuseData < ExtraPrimaryData
         if pkgid.matches(base)
           eulacontent = File.new(eulafile).read
           add_attribute(pkgid, ValueProperty.new('eula', eulacontent))
-          STDERR.puts "Adding eula: #{eulafile.to_s} to #{pkgid.to_s}"
+          log.info "Adding eula: #{eulafile.to_s} to #{pkgid.to_s}"
         end
       end
     end
@@ -117,7 +120,7 @@ class SuseData < ExtraPrimaryData
             keyword = line.chop
             add_attribute(pkgid, ValueProperty.new('keyword', keyword)) if not keyword.empty?
           end
-          STDERR.puts "Adding keyword: #{keywordfile.to_s} to #{pkgid.to_s}"
+          log.info "Adding keyword: #{keywordfile.to_s} to #{pkgid.to_s}"
         end
       end
     end
@@ -134,11 +137,11 @@ class SuseData < ExtraPrimaryData
     builder.instruct!
     xml = builder.tag!(@name) do |b|
       @properties.each do |pkgid, props|
-        #STDERR.puts "Dumping package #{pkgid.to_s}"
+        #log.info "Dumping package #{pkgid.to_s}"
         b.package('pkgid' => pkgid.checksum, 'name' => pkgid.name) do |b|
           b.version('ver' => pkgid.version.v, 'rel' => pkgid.version.r, 'arch' => pkgid.arch, 'epoch' => 0.to_s )
           props.each do |propname, prop|
-            #STDERR.puts "   -> property #{prop.name}"
+            #log.info "   -> property #{prop.name}"
             prop.write(builder, pkgid)
           end
         end # end package tag
@@ -148,7 +151,7 @@ class SuseData < ExtraPrimaryData
   
   def add_disk_usage
     @diskusage_enabled = true
-    STDERR.puts "Preparing disk usage..."
+    log.info "Preparing disk usage..."
     # build the pkgid hash
     Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
       pkgid = PackageId.new(rpmfile)

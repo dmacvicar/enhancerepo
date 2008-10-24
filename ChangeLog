@@ -1,3 +1,8 @@
+- 0.4
+* primary data generation
+* improved logging
+* allows to generate metadata to a separate
+  directory
 - 0.3.2
 * patch generation support
 - 0.3.1

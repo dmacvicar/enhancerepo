@@ -36,7 +36,10 @@ end
 
 class DeltaInfo
 
-  def initialize(dir)
+  attr_reader :log
+
+  def initialize(log, dir)
+    @log = log
     @dir = dir
     # here we store known deltas
     # we index by new package
@@ -64,7 +67,7 @@ class DeltaInfo
   # create a delta to go from 2 to 4 too.
   #
   def create_deltas(n = 1)
-    #STDERR.puts "Creating deltarpms : level #{n}"
+    #log.info "Creating deltarpms : level #{n}"
     # make a hash name -> array of packages
     pkgs = Hash.new
     
@@ -93,7 +96,7 @@ class DeltaInfo
           next if newpkg.arch != pkg.arch
           oldpkg = pkg
           # use the same dir as the new rpm
-          STDERR.puts "Creating delta - #{oldpkg.to_s} -> #{newpkg.to_s} (#{c+1}/#{n})"
+          log.info "Creating delta - #{oldpkg.to_s} -> #{newpkg.to_s} (#{c+1}/#{n})"
           # calculate the deltarpm name
           deltafile = File.join(File.dirname(newpkg.path), delta_package_name(oldpkg,newpkg))
           #puts "makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}"

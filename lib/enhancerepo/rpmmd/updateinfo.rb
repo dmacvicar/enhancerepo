@@ -181,7 +181,10 @@ end
 
 class UpdateInfo
 
-  def initialize(config)
+  attr_reader :log
+  
+  def initialize(log, config)
+    @log = log
     @dir = config.dir
     @basedir = config.updatesbasedir
 
@@ -195,7 +198,7 @@ class UpdateInfo
   
   def add_updates
     Dir["#{@dir}/**/update-*.xml"].each do |updatefile|
-      STDERR.puts("Adding update #{updatefile}")
+      log.info("Adding update #{updatefile}")
       @updates << updatefile
     end
     # end of directory iteration
@@ -209,7 +212,7 @@ class UpdateInfo
   def generate_update(packages, outputdir)
    
     # make a hash name -> array of packages
-    STDERR.puts "generating update..."
+    log.info "generating update..."
     pkgs = Hash.new
     [ Dir["#{@dir}/**/*.rpm"], @basedir.nil? ? [] : Dir["#{@basedir}/**/*.rpm"]].flatten.each do |rpmfile|
       next if rpmfile =~ /\.delta\.rpm$/
@@ -237,7 +240,7 @@ class UpdateInfo
     # do our package hash include every package?
     packages.each do |pkg|
       if not pkgs.has_key?(pkg)
-        STDERR.puts "the package '#{pkg}' is not available in the repository."
+        log.info "the package '#{pkg}' is not available in the repository."
       end
     end
 
@@ -245,7 +248,7 @@ class UpdateInfo
     
     packages.each do |pkgname|
       pkglist = pkgs[pkgname]
-      STDERR.puts "#{pkglist.size} versions for '#{pkgname}'"
+      log.info "#{pkglist.size} versions for '#{pkgname}'"
       # sort them by version
       pkglist.sort! { |a,b| a.version <=> b.version }
       pkglist.reverse!
@@ -259,9 +262,9 @@ class UpdateInfo
         while (diff = first.changelog[0, first.changelog.size - second.changelog.size]).empty?
           second = pkglist.shift
         end
-        STDERR.puts "Found change #{first.ident} and #{second.ident}."
+        log.info "Found change #{first.ident} and #{second.ident}."
         
-        STDERR.puts "'#{pkgname}' has #{diff.size} entries (#{first.changelog.size}/#{second.changelog.size})"
+        log.info "'#{pkgname}' has #{diff.size} entries (#{first.changelog.size}/#{second.changelog.size})"
         update.packages << first
         diff.each do |entry|
           update.description << entry.text << "\n"
@@ -281,7 +284,7 @@ class UpdateInfo
     while ( File.exists?(filename = File.join(outputdir, update.suggested_filename + ".xml") ))
       update.version += 1
     end
-    STDERR.puts "Saving update part to '#{filename}'."
+    log.info "Saving update part to '#{filename}'."
     
     f = File.open(filename, 'w')
     update.write(f)

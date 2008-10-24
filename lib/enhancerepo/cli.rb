@@ -1,11 +1,23 @@
+require 'rubygems'
 require 'getoptlong'
 require 'rdoc/usage'
 require 'enhancerepo/configopts'
 require 'enhancerepo/repomd'
 require 'enhancerepo/constants'
+require 'pathname'
+require 'log4r'
+
+include Log4r
+
+log = Logger.new 'enhancerepo'
+log.level = INFO
+console_format = PatternFormatter.new(:pattern => "%l:\t %m")
+log.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)
 
 opts = GetoptLong.new(
          [ '--help', '-h',     GetoptLong::NO_ARGUMENT ],
+         [ '--outputdir', '-o',     GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--primary', '-p',  GetoptLong::NO_ARGUMENT ],
          [ '--sign', '-s',     GetoptLong::REQUIRED_ARGUMENT ],
          [ '--expire', '-e',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--updates', '-u',  GetoptLong::NO_ARGUMENT ],
@@ -17,8 +29,9 @@ opts = GetoptLong.new(
          [ '--repo-product',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--repo-keyword',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--create-deltas',  GetoptLong::OPTIONAL_ARGUMENT ],
-         [ '--deltas',  GetoptLong::NO_ARGUMENT ]             
-          )
+         [ '--deltas',  GetoptLong::NO_ARGUMENT ],
+         [ '--debug',  GetoptLong::NO_ARGUMENT ]             
+)
 
 config = ConfigOpts.new
 
@@ -28,6 +41,10 @@ opts.each do |opt, arg|
   case opt
   when '--help'
     RDoc::usage
+  when '--outputdir'
+    config.outputdir = Pathname.new(arg)
+  when '--primary'
+    config.primary = true
   when '--sign'
     config.signkey = arg
   when '--repo-product'
@@ -42,7 +59,7 @@ opts.each do |opt, arg|
     packages = arg.split(",")
     config.generate_update = packages
   when '--updates-base-dir'
-    config.updatesbasedir = arg
+    config.updatesbasedir = Pathname.new(arg)
   when '--eulas'
     config.eulas = true
   when '--keywords'
@@ -57,26 +74,35 @@ opts.each do |opt, arg|
     end
   when '--deltas'
     config.deltas = true
+  when '--debug'
+    log.level = DEBUG
   end
 end
 
 # Check if dir is given
 if ARGV.length != 1
-  puts "Missing dir argument (try --help)"
+  log.fatal "Missing dir argument (try --help)"
   exit 0
 end
 
 dir = ARGV.shift
 
 # Check if the dir is valid
-if not (File.exists?(File.join(dir + REPOMD_FILE)))
-  puts "Directory '#{dir}' is not a rpm-md repository"
-  exit 1
+#if not (File.exists?(File.join(dir + REPOMD_FILE)))
+#  puts "Directory '#{dir}' is not a rpm-md repository"
+#  exit 1
+#end
+
+config.dir = Pathname.new(dir)
+
+repomd = RepoMd.new(log, config)
+
+if config.primary
+  repomd.primary.read
+  repomd.filelists.read
+  repomd.other.read
+  #repomd.primary.read
 end
-
-config.dir = dir
-
-repomd = RepoMd.new(config)
 
 # merge keywords and products to suseinfo
 repomd.suseinfo.products.merge(config.repoproducts)

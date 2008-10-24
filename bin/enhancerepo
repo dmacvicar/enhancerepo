@@ -12,12 +12,19 @@
 # -h, --help:
 #    show help
 #
+# --outputdir
+#   Generate metadata to a different directory
+#
+# --primary
+#   Add data from rpm files and generate
+#   primary.xml
+#
 # --sign keyid
-#    Generates signature for the repository
-#    using key keyid
+#   Generates signature for the repository
+#   using key keyid
 # --updates
-#    Add updates from *.updates files
-#    and generate updateinfo.xml
+#   Add updates from *.updates files
+#   and generate updateinfo.xml
 #
 # --generate-update pkg1,pkg2,...
 #   Generates an update from the given package list
@@ -70,6 +77,9 @@
 # --deltas
 #   Add package deltas metadata to deltainfo.xml. This indexes existing
 #   deltas, but don't create them. See --create-deltas for creation.
+#
+# --debug
+#   Show debug information
 #
 # DIR: The repo base directory ( where repodata/ directory is located )
 #
