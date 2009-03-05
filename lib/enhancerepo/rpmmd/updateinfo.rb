@@ -122,8 +122,9 @@ class Update
       ref.title = "Gnome bug number #{bgo}"
       @references << ref
     end
+
     # KDE
-    bko = description.scan(/bko\s?#(\d+)|kde\s?#(\d+)|KDE\s?#(\d+)/)
+    bko = description.scan(/kde\s?#(\d+)|KDE\s?#(\d+)/)
     bko.each do |bko|
       ref = Reference.new
       ref.href << "http://bugs.kde.org/#{bko}"
