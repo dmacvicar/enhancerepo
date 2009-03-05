@@ -223,7 +223,8 @@ class UpdateInfo
       # it has to match at least one
       matched = false
       packages.each do |pkg|
-        matched = true if rpmfile =~ /#{pkg}/
+        result=pkg.gsub(/\+/, "\\\\+")
+        matched = true if rpmfile =~ /#{result}/
       end
       # dont read the package header if this rpm
       # is not useful
