@@ -3,6 +3,7 @@ require 'rubygems'
 require 'builder'
 require 'rexml/document'
 require 'yaml'
+require 'prettyprint'
 
 include REXML
 
@@ -96,7 +97,7 @@ class Update
     # now figure out and fill references
     # second format is a weird non correct format some developers use
     # Novell bugzilla
-    bugzillas = description.scan(/bnc\s?#(\d+)|b\.n\.c (\d+)|n#(\d+)/)
+    bugzillas = description.scan(/BNC\:\s?(\d+)|bnc\s?#(\d+)|b\.n\.c (\d+)|n#(\d+)/i)
     bugzillas.each do |bnc|
       ref = Reference.new
       ref.href << "/#{bnc}"
@@ -261,15 +262,19 @@ class UpdateInfo
         first = pkglist.shift
         second = pkglist.shift
         # go down old version until there is some different package
-        while (diff = first.changelog[0, first.changelog.size - second.changelog.size]).empty?
+        diff = []
+        while diff.empty?
+          diff = first.changelog[0, first.changelog.size - second.changelog.size]
+          break if pkglist.empty?
           second = pkglist.shift
         end
+        
         log.info "Found change #{first.ident} and #{second.ident}."
         
         log.info "'#{pkgname}' has #{diff.size} entries (#{first.changelog.size}/#{second.changelog.size})"
         update.packages << first
         diff.each do |entry|
-          update.description << entry.text << "\n"
+          update.description << entry.text << "\n"          
         end
       else
         # jump to next pkgname
