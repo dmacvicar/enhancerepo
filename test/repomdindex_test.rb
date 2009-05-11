@@ -1,5 +1,7 @@
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
+
 require 'test/unit'
-require 'enhancerepo/repomd'
+require 'enhance_repo/rpm_md/index'
 
 class TC_RepoMdIndex < Test::Unit::TestCase
 
@@ -12,7 +14,7 @@ class TC_RepoMdIndex < Test::Unit::TestCase
 #  end
   
   def setup
-    @index = RepoMdIndex.new
+    @index = EnhanceRepo::RpmMd::Index.new
   end
   
   # def teardown

@@ -35,6 +35,9 @@
 #   Useful if you keep old packages in a different repos
 #   and updates in this one.
 #
+# --indent
+#   Generate indented xml. Default no.
+#
 # === SUSE specific repository data (suseinfo.xml):
 #
 # --expire time
@@ -87,4 +90,4 @@
 $: << '../lib' 
 $: << 'lib'
 
-require 'enhancerepo/cli.rb'
+require 'enhance_repo/cli.rb'

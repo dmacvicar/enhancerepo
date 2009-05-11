@@ -1,9 +1,9 @@
 require 'rubygems'
 require 'getoptlong'
 require 'rdoc/usage'
-require 'enhancerepo/configopts'
-require 'enhancerepo/repomd'
-require 'enhancerepo/constants'
+require 'enhance_repo/config_opts'
+require 'enhance_repo/rpm_md/index'
+require 'enhance_repo/constants'
 require 'pathname'
 require 'log4r'
 
@@ -18,6 +18,7 @@ opts = GetoptLong.new(
          [ '--help', '-h',     GetoptLong::NO_ARGUMENT ],
          [ '--outputdir', '-o',     GetoptLong::REQUIRED_ARGUMENT ],
          [ '--primary', '-p',  GetoptLong::NO_ARGUMENT ],
+         [ '--indent', '-i',     GetoptLong::OPTIONAL_ARGUMENT ],
          [ '--sign', '-s',     GetoptLong::REQUIRED_ARGUMENT ],
          [ '--expire', '-e',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--updates', '-u',  GetoptLong::NO_ARGUMENT ],
@@ -33,7 +34,7 @@ opts = GetoptLong.new(
          [ '--debug',  GetoptLong::NO_ARGUMENT ]             
 )
 
-config = ConfigOpts.new
+config = EnhanceRepo::ConfigOpts.new
 
 dir = nil
 
@@ -44,6 +45,8 @@ opts.each do |opt, arg|
   when '--outputdir'
     config.outputdir = Pathname.new(arg)
   when '--primary'
+    config.indent = true
+  when '--indent'
     config.primary = true
   when '--sign'
     config.signkey = arg
@@ -95,7 +98,7 @@ dir = ARGV.shift
 
 config.dir = Pathname.new(dir)
 
-repomd = RepoMd.new(log, config)
+repomd = EhnanceRepo::RpmMd::Repo.new(log, config)
 
 if config.primary
   repomd.primary.read
