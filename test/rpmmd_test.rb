@@ -34,7 +34,7 @@ class RpmMd_test < Test::Unit::TestCase
     @repo.primary.read
     out = StringIO.new
     @repo.primary.write(out)
-    puts out.string
+    #puts out.string
     
   end
 

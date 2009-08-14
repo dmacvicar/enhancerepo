@@ -14,6 +14,7 @@ require 'enhance_repo/rpm_md/update_info'
 require 'enhance_repo/rpm_md/suse_info'
 require 'enhance_repo/rpm_md/suse_data'
 require 'enhance_repo/rpm_md/delta_info'
+require 'enhance_repo/rpm_md/index'
 
 module EnhanceRepo
   module RpmMd
@@ -27,124 +28,6 @@ module EnhanceRepo
       end
     end
     
-    # represents a resource in repomd.xml
-    class Resource
-      attr_accessor :type
-      attr_accessor :location, :checksum, :timestamp, :openchecksum
-
-      # define equality based on the location
-      # as it has no sense to have two resources for the
-      #same location
-      def ==(other)
-        return (location == other.location) if other.is_a?(Resource)
-        false
-      end
-      
-    end
-
-    # represents the repomd index
-    class Index
-      attr_accessor :products, :keywords
-      attr_reader :log
-      
-      # constructor
-      # repomd - repository
-      def initialize(log)
-        @log = log
-        @resources = []
-      end
-
-      # add a file resource. Takes care of setting
-      # all the metadata.
-      
-      def add_file_resource(abspath, path, type=nil)
-        r = Resource.new
-        r.type = type
-        # figure out the type of resource
-        # the extname to remove is different if it is gzipped
-        ext = File.extname(path)
-        base = File.basename(path, ext)
-
-        # if it was gzipped, repeat the operation
-        # to get the real basename
-        if ext == '.gz'
-          ext = File.extname(base)
-          base = File.basename(base, ext)
-        end
-        
-        r.type = base if r.type.nil?
-        r.location = abspath
-        r.timestamp = File.mtime(path).to_i.to_s
-        r.checksum = Digest::SHA1.hexdigest(File.new(path).read)
-        r.openchecksum = r.checksum
-        if File.extname(path) == '.gz'
-          # we have a different openchecksum
-          r.openchecksum = Digest::SHA1.hexdigest(Zlib::GzipReader.new(File.new(path)).read)
-        end
-        add_resource(r)
-        
-      end
-
-      # add resource
-      # any resource of the same location
-      # is overwritten
-      def add_resource(r)
-        # first check if this resource is already in
-        # if yes then override it
-        if (index = @resources.index(r)).nil?
-          # add it
-          @resources << r
-        else
-          # replace it
-          log.warn("Resource #{r.location} already exists. Replacing.")
-          @resources[index] = r
-        end
-      end
-      
-      # read data from a file
-      def read_file(file)
-        doc = Document.new(file)
-        doc.elements.each('repomd/data') do |datael|
-          resource = Resource.new
-          resource.type = datael.attributes['type']
-          datael.elements.each do |attrel|
-            case attrel.name
-            when 'location'
-              resource.location = attrel.attributes['href']
-            when 'checksum'
-              resource.checksum = attrel.text
-            when 'timestamp'
-              resource.timestamp = attrel.text
-            when 'open-checksum'
-              resource.openchecksum = attrel.text
-            else
-              raise "unknown tag #{attrel.name}"
-            end # case
-          end # iterate over data subelements
-          add_resource(resource)
-        end # iterate over data elements
-      end
-      
-      # write the index to xml file
-      def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
-        builder.instruct!
-        xml = builder.repomd('xmlns' => "http://linux.duke.edu/metadata/repo") do |b|
-          @resources.each do |resource|
-            b.data('type' => resource.type) do |b|
-              b.location('href' => resource.location)
-              b.checksum(resource.checksum, 'type' => 'sha')
-              b.timestamp(resource.timestamp)
-              b.tag!('open-checksum', resource.openchecksum, 'type' => 'sha')
-            end
-          end
-          
-        end #builder
-        
-      end
-      
-    end
-
     class Repo
 
       attr_accessor :index
@@ -203,17 +86,14 @@ module EnhanceRepo
       # write back the metadata
       def write
         repomdfile = @outputdir + REPOMD_FILE
-        primaryfile = (@outputdir + PRIMARY_FILE).extend('.gz')
-        filelistsfile = (@outputdir + FILELISTS_FILE).extend('.gz')
-        otherfile = (@outputdir + OTHER_FILE).extend('.gz')
-        susedfile = (@outputdir + SUSEDATA_FILE).extend('.gz')
-        updateinfofile = (@outputdir + UPDATEINFO_FILE).extend('.gz')
-        suseinfofile = (@outputdir + SUSEINFO_FILE).extend('.gz')
-        deltainfofile = (@outputdir + DELTAINFO_FILE).extend('.gz')
+        primaryfile = @outputdir + "#{PRIMARY_FILE}.gz"
+        filelistsfile = @outputdir + "#{FILELISTS_FILE}.gz"
+        otherfile = @outputdir + "#{OTHER_FILE}.gz"
+        susedfile = @outputdir + "#{SUSEDATA_FILE}.gz"
+        updateinfofile = @outputdir + "#{UPDATEINFO_FILE}.gz"
+        suseinfofile = @outputdir + "#{SUSEINFO_FILE}.gz"
+        deltainfofile = @outputdir + "#{DELTAINFO_FILE}.gz"
 
-        log.info((@outputdir + OTHER_FILE))
-        log.info otherfile.class
-        
         write_gz_extension_file(@primary, primaryfile, PRIMARY_FILE)
         write_gz_extension_file(@filelists, filelistsfile, FILELISTS_FILE)
         write_gz_extension_file(@other, otherfile, OTHER_FILE)

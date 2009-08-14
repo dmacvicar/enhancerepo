@@ -2,7 +2,7 @@ require 'rubygems'
 require 'getoptlong'
 require 'rdoc/usage'
 require 'enhance_repo/config_opts'
-require 'enhance_repo/rpm_md/index'
+require 'enhance_repo/rpm_md/repo'
 require 'enhance_repo/constants'
 require 'pathname'
 require 'log4r'
@@ -98,7 +98,7 @@ dir = ARGV.shift
 
 config.dir = Pathname.new(dir)
 
-repomd = EhnanceRepo::RpmMd::Repo.new(log, config)
+repomd = EnhanceRepo::RpmMd::Repo.new(log, config)
 
 if config.primary
   repomd.primary.read
