@@ -20,6 +20,7 @@ module EnhanceRepo
     attr_accessor :primary
     attr_accessor :updates
     attr_accessor :generate_update
+    attr_accessor :split_updates
     attr_accessor :updatesbasedir
     attr_accessor :eulas
     attr_accessor :keywords
@@ -42,6 +43,7 @@ module EnhanceRepo
       @repokeywords = Set.new
       @signkey = nil
       @updates = false
+      @split_updates = false
       @eulas = false
       @keywords = false
       @diskusage = false

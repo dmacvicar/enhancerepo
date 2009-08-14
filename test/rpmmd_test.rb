@@ -41,5 +41,6 @@ class RpmMd_test < Test::Unit::TestCase
   def test_update_info
     #config.generate_update = packages
   end
+
   
 end

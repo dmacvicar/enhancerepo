@@ -8,8 +8,6 @@ require 'prettyprint'
 module EnhanceRepo
   module RpmMd
 
-    include REXML
-
     #
     # Represents a reference to a external bugreport
     # feature or issue for a software update
@@ -312,6 +310,42 @@ module EnhanceRepo
         f = File.open(filename, 'w')
         update.write(f)
         f.close
+      end
+
+      # splits the updateinfo file into serveral update files
+      # it writes those files into outputdir
+      # output filenames will be id+_splited_version.xml
+      # where id is the update id
+      # version is incremented when there is others update files
+      # with the same id
+      #
+      # outputdir is the directory where to save the patch to.
+      def split_updates(outputdir)
+        updateinfofile = File.new(File.join(@dir, UPDATEINFO_FILE))
+
+        # we can't split without an updateinfo file
+        raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)                    
+        document = REXML::Document.new(updateinfofile)
+        root = document.root
+        root.each_element("update") do |updateElement|
+          id = nil
+          updateElement.each_element("id") do |elementId|
+            id = elementId.text
+          end
+          if id == nil
+            STDERR.puts('No id found. Setting id to NON_ID_FOUND')
+            id = 'NON_ID_FOUND'
+          end
+          version = 0
+          updatefilename = ""
+          while ( File.exists?(updatefilename = (outputdir + '/' + id + '_splited_' + version.to_s + ".xml") ) )
+            version += 1
+          end
+          STDERR.puts "Saving update part to '#{updatefilename}'."
+          updatefile = File.open(updatefilename, 'w')
+          updatefile << updateElement
+          updatefile.close
+        end
       end
       
       # write a update out

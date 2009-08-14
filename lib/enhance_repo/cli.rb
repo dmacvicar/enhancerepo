@@ -22,7 +22,8 @@ opts = GetoptLong.new(
          [ '--sign', '-s',     GetoptLong::REQUIRED_ARGUMENT ],
          [ '--expire', '-e',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--updates', '-u',  GetoptLong::NO_ARGUMENT ],
-         [ '--generate-update', GetoptLong::REQUIRED_ARGUMENT ],                      
+         [ '--generate-update', GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--split-updates', GetoptLong::NO_ARGUMENT ],
          [ '--updates-base-dir', GetoptLong::REQUIRED_ARGUMENT ],
          [ '--eulas', '-l',    GetoptLong::NO_ARGUMENT ],
          [ '--keywords', '-k', GetoptLong::NO_ARGUMENT ],
@@ -61,6 +62,8 @@ opts.each do |opt, arg|
   when '--generate-update'
     packages = arg.split(",")
     config.generate_update = packages
+  when '--split-updates'
+    config.split_updates = true
   when '--updates-base-dir'
     config.updatesbasedir = Pathname.new(arg)
   when '--eulas'
@@ -100,55 +103,44 @@ config.dir = Pathname.new(dir)
 
 repomd = EnhanceRepo::RpmMd::Repo.new(log, config)
 
-if config.primary
-  repomd.primary.read
-  repomd.filelists.read
-  repomd.other.read
-  #repomd.primary.read
-end
+# perform the operations in a rescue block
 
-# merge keywords and products to suseinfo
-repomd.suseinfo.products.merge(config.repoproducts)
-repomd.suseinfo.keywords.merge(config.repokeywords)
+begin
+  if config.primary
+    repomd.primary.read
+    repomd.filelists.read
+    repomd.other.read
+    #repomd.primary.read
+  end
 
-if config.eulas
-  repomd.susedata.add_eulas
-end
+  # merge keywords and products to suseinfo
+  repomd.suseinfo.products.merge(config.repoproducts)
+  repomd.suseinfo.keywords.merge(config.repokeywords)
 
-if config.keywords
-  repomd.susedata.add_keywords
-end
+  repomd.susedata.add_eulas if config.eulas  
+  repomd.susedata.add_keywords if config.keywords
+  repomd.susedata.add_disk_usage if config.diskusage
 
-if config.diskusage
-  repomd.susedata.add_disk_usage
-end
+  if not config.generate_update.nil?
+    # make sure the repoparts directory is there
+    `mkdir -p #{File.join(config.dir, 'repoparts')}`
+    repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
+  end
 
-if not config.generate_update.nil?
-  # make sure the repoparts directory is there
-  `mkdir -p #{File.join(config.dir, 'repoparts')}`
-  repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
-end
+  repomd.updateinfo.add_updates if config.updates  
+  repomd.updateinfo.split_updates(File.join(config.dir, 'repoparts')) if config.split_updates                                                                        
 
-if config.updates
-  repomd.updateinfo.add_updates
-end
+  repomd.deltainfo.create_deltas(config.create_deltas) if config.create_deltas
+  repomd.deltainfo.add_deltas if config.deltas
+    
+  # add expiration date
+  repomd.suseinfo.expire = config.expire if not config.expire.nil?
 
-if config.create_deltas
-  repomd.deltainfo.create_deltas(config.create_deltas)
-end
+  # write the repository out
+  repomd.write
 
-if config.deltas
-    repomd.deltainfo.add_deltas
-end
-
-
-# add expiration date
-if not config.expire.nil?
-  repomd.suseinfo.expire = config.expire
-end
-
-repomd.write
-
-if not config.signkey.nil?
-  repomd.sign(config.signkey)
+  # perform signature of the repository
+  repomd.sign(config.signkey) if not config.signkey.nil?  
+rescue Exception => excp
+  log.fatal excp.message
 end
