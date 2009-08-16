@@ -359,7 +359,7 @@ module EnhanceRepo
             id = elementId.text
           end
           if id == nil
-            STDERR.puts('No id found. Setting id to NON_ID_FOUND')
+            log.warning 'No id found. Setting id to NON_ID_FOUND'
             id = 'NON_ID_FOUND'
           end
           version = 0
@@ -367,7 +367,7 @@ module EnhanceRepo
           while ( File.exists?(updatefilename = (outputdir + '/' + id + '_splited_' + version.to_s + ".xml") ) )
             version += 1
           end
-          STDERR.puts "Saving update part to '#{updatefilename}'."
+          log.info "Saving update part to '#{updatefilename}'."
           updatefile = File.open(updatefilename, 'w')
           updatefile << updateElement
           updatefile.close
