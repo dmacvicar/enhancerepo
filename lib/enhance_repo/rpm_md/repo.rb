@@ -2,7 +2,6 @@ require 'rubygems'
 require 'builder'
 require 'rexml/document'
 require 'digest/sha1'
-require 'enhance_repo/constants'
 require 'zlib'
 require 'yaml'
 
@@ -30,15 +29,14 @@ module EnhanceRepo
     
     class Repo
 
+      include Logger
+      
       attr_accessor :index
 
       # extensions
       attr_reader :primary, :other, :filelists, :susedata, :suseinfo, :deltainfo, :updateinfo
-      attr_reader :log
-      
-      def initialize(log, config)
-        @log = log
-        @index = Index.new(log)
+      def initialize(config)
+        @index = Index.new
         # populate the index
         if (config.dir + REPOMD_FILE).exist?
           @index.read_file(File.new(config.dir + REPOMD_FILE))
@@ -46,15 +44,15 @@ module EnhanceRepo
         @dir = config.dir
         @outputdir = config.outputdir
 
-        @primary = Primary.new(log, config.dir)
+        @primary = Primary.new(config.dir)
         @primary.indent = config.indent
         
-        @filelists = FileLists.new(log, config.dir)
-        @other = Other.new(log, config.dir)
-        @susedata = SuseData.new(log, config.dir)
-        @updateinfo = UpdateInfo.new(log, config)
-        @suseinfo = SuseInfo.new(log, config.dir)
-        @deltainfo = DeltaInfo.new(log, config.dir)
+        @filelists = FileLists.new(config.dir)
+        @other = Other.new(config.dir)
+        @susedata = SuseData.new(config.dir)
+        @updateinfo = UpdateInfo.new(config)
+        @suseinfo = SuseInfo.new(config.dir)
+        @deltainfo = DeltaInfo.new(config.dir)
       end
 
       def sign(keyid)

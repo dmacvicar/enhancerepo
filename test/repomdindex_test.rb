@@ -1,7 +1,7 @@
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'test/unit'
-require 'enhance_repo/rpm_md/index'
+require 'enhance_repo'
 
 class TC_RepoMdIndex < Test::Unit::TestCase
 
@@ -21,7 +21,7 @@ class TC_RepoMdIndex < Test::Unit::TestCase
   # end
 
   def test_read_write
-    repomdpath = File.join(TESTDATADIR, '/repomd.xml')
+    repomdpath = test_data('repomd.xml')
     index_content = File.new(repomdpath).read
     @index.read_file(File.new(repomdpath))
 

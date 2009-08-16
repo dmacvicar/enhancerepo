@@ -1,18 +1,16 @@
 require 'rubygems'
 require 'getoptlong'
 require 'rdoc/usage'
-require 'enhance_repo/config_opts'
-require 'enhance_repo/rpm_md/repo'
-require 'enhance_repo/constants'
+require 'enhance_repo'
 require 'pathname'
 require 'log4r'
 
 include Log4r
 
-log = Logger.new 'enhancerepo'
-log.level = INFO
+EnhanceRepo.logger = Logger.new 'enhancerepo'
+EnhanceRepo.logger.level = INFO
 console_format = PatternFormatter.new(:pattern => "%l:\t %m")
-log.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)
+EnhanceRepo.logger.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)
 
 opts = GetoptLong.new(
          [ '--help', '-h',     GetoptLong::NO_ARGUMENT ],
@@ -81,13 +79,13 @@ opts.each do |opt, arg|
   when '--deltas'
     config.deltas = true
   when '--debug'
-    log.level = DEBUG
+    EnhanceRepo.logger.level = DEBUG
   end
 end
 
 # Check if dir is given
 if ARGV.length != 1
-  log.fatal "Missing dir argument (try --help)"
+  EnhanceRepo.logger.fatal "Missing dir argument (try --help)"
   exit 0
 end
 
@@ -101,7 +99,7 @@ dir = ARGV.shift
 
 config.dir = Pathname.new(dir)
 
-repomd = EnhanceRepo::RpmMd::Repo.new(log, config)
+repomd = EnhanceRepo::RpmMd::Repo.new(config)
 
 # perform the operations in a rescue block
 
@@ -142,5 +140,5 @@ begin
   # perform signature of the repository
   repomd.sign(config.signkey) if not config.signkey.nil?  
 rescue Exception => excp
-  log.fatal excp.message
+  EnhanceRepo.logger.fatal excp.message
 end

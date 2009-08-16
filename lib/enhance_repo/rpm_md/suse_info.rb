@@ -13,6 +13,8 @@ module EnhanceRepo
     #
     class SuseInfo
 
+      include Logger
+      
       # expiration time
       # the generated value is
       # still calculated from repomd.xml
@@ -21,10 +23,7 @@ module EnhanceRepo
       attr_accessor :products
       attr_accessor :keywords
 
-      attr_reader :log
-
-      def initialize(log, dir)
-        @log = log
+      def initialize(dir)
         @dir = dir
         @keywords = Set.new
         @products = Set.new

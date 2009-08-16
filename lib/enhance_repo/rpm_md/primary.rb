@@ -8,12 +8,11 @@ module EnhanceRepo
     #
     class Primary
       attr_accessor :indent
+
+      include Logger
       
-      attr_reader :log
-      
-      def initialize(log, dir)
+      def initialize(dir)
         @indent = false
-        @log = log
         @dir = dir
         @rpmfiles = []
       end

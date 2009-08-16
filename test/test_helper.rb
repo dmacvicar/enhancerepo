@@ -1,5 +1,8 @@
 require 'test/unit'
 require 'mocha'
-require 'stubba'
-require File.dirname(__FILE__) + '/../lib/[project name]'
 
+$: << File.join(File.dirname(__FILE__), "..", "lib")
+
+def test_data(name)
+  File.join(File.dirname(__FILE__), "data", name)
+end

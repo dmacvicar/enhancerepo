@@ -12,8 +12,7 @@ module EnhanceRepo
       
       # constructor
       # log logger object
-      def initialize(log=Logger.new('enhancerepo'))
-        @log = log
+      def initialize
         @resources = []
       end
       

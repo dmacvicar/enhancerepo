@@ -9,6 +9,8 @@ module EnhanceRepo
     # but it is not part of the standard, yet still associated
     # with a particular package (so with primary.xml semantics
     class ExtraPrimaryData
+      include Logger
+      
       # initialize the extra data with a name
       def initialize(name)
         @name = name

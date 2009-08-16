@@ -69,11 +69,8 @@ module EnhanceRepo
     #
     class SuseData < ExtraPrimaryData
 
-      attr_reader :log
-      
-      def initialize(log, dir)  
+      def initialize(dir)  
         super('susedata')
-        @log = log
         @dir = dir
         @diskusage_enabled = false
 

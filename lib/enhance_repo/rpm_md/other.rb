@@ -8,10 +8,9 @@ module EnhanceRepo
     #
     class Other
 
-      attr_reader :log
+      include Logger
       
-      def initialize(log, dir)
-        @log = log
+      def initialize(dir)
         @dir = dir
         @rpmfiles = []
       end

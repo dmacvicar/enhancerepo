@@ -196,11 +196,10 @@ module EnhanceRepo
     end
 
     class UpdateInfo
-
-      attr_reader :log
       
-      def initialize(log, config)
-        @log = log
+      include Logger
+
+      def initialize(config)
         @dir = config.dir
         @basedir = config.updatesbasedir
 

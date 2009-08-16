@@ -39,10 +39,9 @@ module EnhanceRepo
 
     class DeltaInfo
 
-      attr_reader :log
+      include Logger
 
-      def initialize(log, dir)
-        @log = log
+      def initialize(dir)
         @dir = dir
         # here we store known deltas
         # we index by new package
