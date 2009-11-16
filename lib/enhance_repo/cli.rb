@@ -165,4 +165,9 @@ begin
   repomd.sign(config.signkey) if not config.signkey.nil?  
 rescue Exception => excp
   EnhanceRepo.logger.fatal excp.message
+  if EnhanceRepo.logger.level == DEBUG
+    EnhanceRepo.logger.fatal(excp.backtrace.join("\n"))
+  else
+    EnhanceRepo.logger.info "Pass --debug for more information..."
+  end
 end
