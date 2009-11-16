@@ -49,8 +49,6 @@ module EnhanceRepo
         end
       end
 
-      attr_accessor :sequence
-
       def hash
         ident.hash
       end
@@ -74,6 +72,10 @@ module EnhanceRepo
         @deltas = Hash.new
       end
 
+      def delta_count
+        @deltas.size
+      end
+      
       def empty?
         return @deltas.empty?
       end
@@ -171,7 +173,10 @@ module EnhanceRepo
                 version = RPM::Version.new(delta.sourcerpm.gsub(/#{delta.name}-/, ''))
                 b.delta('oldepoch'=>0, 'ver'=>version.v, 'rel'=>version.r) do |b|
                   # remove the base dir, make it relative
-                  b.filename(Pathname.new(delta.path).relative_path_from(Pathname.new(@dir)))
+                  delta_abs_path = Pathname.new(delta.path).realpath
+                  base_dir_abs_path = Pathname.new(@dir).realpath
+                  relative_path = delta_abs_path.relative_path_from(base_dir_abs_path)
+                  b.filename relative_path
                   b.sequence(delta.sequence)
                   b.size(File.size(delta.path))
                   b.checksum(delta.checksum, 'type'=>'sha')

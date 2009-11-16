@@ -22,9 +22,7 @@
 #
 #++
 #
-$: << File.join(File.dirname(__FILE__), '..', 'lib')
-
-require 'test/unit'
+require File.join(File.dirname(__FILE__), 'test_helper')
 require 'enhance_repo'
 
 class TC_RepoMdIndex < Test::Unit::TestCase

@@ -43,13 +43,6 @@ module EnhanceRepo
   module RpmMd
     
     include REXML
-
-    # nice hack
-    class Pathname
-      def extend(s)
-        return Pathname.new("#{self.to_s}#{s}")
-      end
-    end
     
     class Repo
 
