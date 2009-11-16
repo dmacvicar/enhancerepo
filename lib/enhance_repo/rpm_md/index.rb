@@ -30,8 +30,10 @@ module EnhanceRepo
 
     # represents the repomd index
     class Index
+
+      include EnhanceRepo::Logger
+      
       attr_accessor :products, :keywords
-      attr_reader :log
       attr_accessor :resources
       
       # constructor
