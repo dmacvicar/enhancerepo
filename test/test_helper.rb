@@ -22,9 +22,11 @@
 #
 #++
 #
+gem 'test-unit'
 require 'test/unit'
 require 'rubygems'
 require 'mocha'
+require 'test/unit/xml'
 
 $: << File.join(File.dirname(__FILE__), "..", "lib")
 
