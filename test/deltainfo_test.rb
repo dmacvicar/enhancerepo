@@ -50,13 +50,13 @@ class DeltaInfo_test < Test::Unit::TestCase
 <deltainfo>
   <newpackage name="a" arch="x86_64" version="2.0" release="0">
     <delta oldepoch="0" ver="1.0" rel="0">
-      <filename>a-1.0_2.0-0_0.x86_64.delta.rpm</filename>
+      <filename>aa-1.0_2.0-0_0.x86_64.delta.rpm</filename>
       <sequence>a-1.0-0-e5c45328f4ca8bf629f25ddb3516a18510</sequence>
       <size>1766</size>
       <checksum type="sha">b24f078b8a6861bc4d0e21c6d2b1258e7c663b91</checksum>\n    </delta>
   </newpackage>
 </deltainfo>
 EOF
-    assert_equal delta_xml, buffer.string
+    assert_xml_equal delta_xml, buffer.string
   end
 end
