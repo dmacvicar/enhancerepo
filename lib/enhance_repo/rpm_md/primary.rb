@@ -61,7 +61,7 @@ module EnhanceRepo
           pkgid = PackageId.new(rpmfile)
           b.name pkgid.name
           b.arch pkgid.arch
-          b.version('epoch' => pkgid.version.e, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
+          b.version('epoch' => pkgid.version.e.nil? ? "0" : pkgid.version.e.to_s, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
           b.checksum(pkgid.checksum, 'type'=>'sha', 'pkgid'=>'YES')
           b.summary pkgid[RPM::TAG_SUMMARY]
           b.description pkgid[RPM::TAG_DESCRIPTION]
@@ -82,7 +82,7 @@ module EnhanceRepo
             # serialize dependencies
             [:provides, :requires, :obsoletes, :conflicts, :obsoletes].each do |deptype|
               b.tag!("rpm:#{deptype}") do |b|
-                pkgid.send(deptype).each { |dep|
+                pkgid.send(deptype).reverse.each { |dep|
                   flag = nil
                   flag = 'LT' if dep.lt?
                   flag = 'GT' if dep.gt?
@@ -93,7 +93,9 @@ module EnhanceRepo
                   if not flag.nil?
                     attrs['pre'] = 1 if (deptype == :requires) and dep.pre?
                     attrs['flags'] = flag
-                    attrs['ver'] =dep.version
+                    attrs['ver'] =dep.version.v
+                    attrs['epoch'] = dep.version.e.nil? ? "0" : dep.version.e.to_s
+                    attrs['rel'] =dep.version.r
                   end
                   b.tag!('rpm:entry', attrs)
                 }

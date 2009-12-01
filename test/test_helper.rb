@@ -26,10 +26,25 @@ gem 'test-unit'
 require 'test/unit'
 require 'rubygems'
 require 'mocha'
-require 'test/unit/xml'
 
 $: << File.join(File.dirname(__FILE__), "..", "lib")
+require 'enhance_repo/xml_comparer'
+require 'activesupport'
 
 def test_data(name)
   File.join(File.dirname(__FILE__), "data", name)
 end
+
+# compare xml files
+module Test
+  module Unit
+    module Assertions
+      def assert_xml_equal(expected, result)
+        comparer = XmlComparer.new(:show_messages => true)
+        assert comparer.compare(expected, result)
+      end
+    end
+  end
+end
+        
+                                           

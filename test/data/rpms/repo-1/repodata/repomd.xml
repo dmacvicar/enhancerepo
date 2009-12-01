@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" ?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo">
   <data type="other">
     <location href="repodata/other.xml.gz"/>
@@ -24,10 +24,12 @@
     <timestamp>1258389317</timestamp>
     <open-checksum type="sha">914ddd93451adfb5651de2e87267f48e8d4ef669</open-checksum>
   </data>
+  
+  
   <data type="deltainfo">
-    <location href="repodata/deltainfo.xml.gz"/>
-    <checksum type="sha">8acdda641d52e087da1e504537d7b4fd24ab1a6a</checksum>
-    <timestamp>1258389317</timestamp>
-    <open-checksum type="sha">871d1a37131069d248258d47af436d8624baf764</open-checksum>
-  </data>
+    <location href="repodata/deltainfo.xml.gz.gz"/>
+    <checksum type="sha">c7e547bc99c0f6b8311623f6eee812bd66591008</checksum>
+    <timestamp>1259681954.0</timestamp>
+    <open-checksum type="sha">25c9c4541ca4179ef08c67ade93622c06b5afe26</open-checksum>
+    </data>
 </repomd>
