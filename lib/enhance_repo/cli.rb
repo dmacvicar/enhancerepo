@@ -54,6 +54,7 @@ opts = GetoptLong.new(
          [ '--repo-keyword',   GetoptLong::REQUIRED_ARGUMENT ],
          [ '--create-deltas',  GetoptLong::OPTIONAL_ARGUMENT ],
          [ '--deltas',  GetoptLong::NO_ARGUMENT ],
+         [ '--products',  GetoptLong::NO_ARGUMENT ],
          [ '--debug',  GetoptLong::NO_ARGUMENT ]             
 )
 
@@ -102,6 +103,8 @@ opts.each do |opt, arg|
     end
   when '--deltas'
     config.deltas = true
+  when '--products'
+    config.products = true
   when '--debug'
     EnhanceRepo.logger.level = DEBUG
   end
@@ -154,7 +157,9 @@ begin
 
   repomd.deltainfo.create_deltas(config.create_deltas) if config.create_deltas
   repomd.deltainfo.add_deltas if config.deltas
-    
+
+  repomd.products.read_packages if config.products
+
   # add expiration date
   repomd.suseinfo.expire = config.expire if not config.expire.nil?
 

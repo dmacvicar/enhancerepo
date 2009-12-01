@@ -17,11 +17,12 @@
 #
 # --primary
 #   Add data from rpm files and generate
-#   primary.xml
+#   primary.xml (EXPERIMENTAL)
 #
 # --sign keyid
 #   Generates signature for the repository
 #   using key keyid
+#
 # --updates
 #   Add updates from *.updates files
 #   and generate updateinfo.xml
@@ -83,6 +84,12 @@
 #
 # --debug
 #   Show debug information
+#
+# === Product information support
+#
+# --products
+#   Create products.xml based on the information included in the
+#   -release.rpm packages present in the repository
 #
 # DIR: The repo base directory ( where repodata/ directory is located )
 #

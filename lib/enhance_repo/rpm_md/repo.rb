@@ -37,6 +37,7 @@ require 'enhance_repo/rpm_md/update_info'
 require 'enhance_repo/rpm_md/suse_info'
 require 'enhance_repo/rpm_md/suse_data'
 require 'enhance_repo/rpm_md/delta_info'
+require 'enhance_repo/rpm_md/products'
 require 'enhance_repo/rpm_md/index'
 
 module EnhanceRepo
@@ -51,7 +52,7 @@ module EnhanceRepo
       attr_accessor :index
 
       # extensions
-      attr_reader :primary, :other, :filelists, :susedata, :suseinfo, :deltainfo, :updateinfo
+      attr_reader :primary, :other, :filelists, :susedata, :suseinfo, :deltainfo, :updateinfo, :products
       def initialize(config)
         @index = Index.new
         # populate the index
@@ -70,6 +71,7 @@ module EnhanceRepo
         @updateinfo = UpdateInfo.new(config)
         @suseinfo = SuseInfo.new(config.dir)
         @deltainfo = DeltaInfo.new(config.dir)
+        @products = Products.new(config.dir)
       end
 
       def sign(keyid)

@@ -22,14 +22,34 @@
 #
 #++
 #
-module EnhanceRepo
-  REPOMD_FILE = 'repodata/repomd.xml'
-  PRIMARY_FILE = 'repodata/primary.xml'
-  FILELISTS_FILE = 'repodata/filelists.xml'
-  OTHER_FILE = 'repodata/other.xml'
-  SUSEDATA_FILE = 'repodata/susedata.xml'
-  SUSEINFO_FILE = 'repodata/suseinfo.xml'
-  UPDATEINFO_FILE = 'repodata/updateinfo.xml'
-  DELTAINFO_FILE = 'repodata/deltainfo.xml'
-  PRODUCTS_FILE = 'repodata/products.xml'
+require File.join(File.dirname(__FILE__), 'test_helper')
+require 'tmpdir'
+require 'log4r'
+require 'enhance_repo'
+require 'stringio'
+require 'zlib'
+
+include Log4r
+
+class Products_test < Test::Unit::TestCase
+
+  def setup
+  end
+
+  def test_xml_output
+    products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-1'))
+    products.read_packages
+
+    assert ! products.empty?
+    
+    assert_equal 3, products.size
+
+    Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/products.xml.gz')) do |expected_products|
+
+      buffer = StringIO.new
+      products.write(buffer)
+#      assert_equal(expected_primary.read, buffer.string)
+#     assert_xml_equal(expected_primary, buffer.string)
+    end
+  end
 end

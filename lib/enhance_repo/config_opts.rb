@@ -54,6 +54,8 @@ module EnhanceRepo
     attr_accessor :create_deltas
     # whether to index delta rpms
     attr_accessor :deltas
+
+    attr_accessor :products
     
     def outputdir
       return @dir if @outputdir.nil?
@@ -73,6 +75,7 @@ module EnhanceRepo
       @diskusage = false
       @deltas = false
       @create_deltas = false
+      @products = false
     end
   end
 end
