@@ -171,7 +171,7 @@ module EnhanceRepo
               deltas.each do |delta|
                 # get the edition by getting the name out
                 version = RPM::Version.new(delta.sourcerpm.gsub(/#{delta.name}-/, ''))
-                b.delta('oldepoch'=>0, 'ver'=>version.v, 'rel'=>version.r) do |b|
+                b.delta('oldepoch'=>0, 'oldversion'=>version.v, 'oldrelease'=>version.r) do |b|
                   # remove the base dir, make it relative
                   delta_abs_path = Pathname.new(delta.path).realpath
                   base_dir_abs_path = Pathname.new(@dir).realpath
