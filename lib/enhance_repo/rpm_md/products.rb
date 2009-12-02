@@ -37,6 +37,8 @@ module EnhanceRepo
       
       include EnhanceRepo::Logger
 
+      # Holder for products we read from the
+      # release files
       class ProductData
         attr_accessor :name
         attr_accessor :vendor
@@ -72,7 +74,7 @@ module EnhanceRepo
           #print doc.to_s
           product = ProductData.new
           # set attributes of the product based on the xml data
-          [:name, :version:, :release, :arch, :summary, :description].each do |attr|
+          [:name, :version, :release, :arch, :summary, :description].each do |attr|
             product.send("#{attr}=".to_sym, doc.root.xpath("./#{attr}").text)
           end
           products << product
@@ -85,7 +87,6 @@ module EnhanceRepo
       def read_packages
 #        log.info "Looking for product release packages"
         Dir["#{@dir}/**/*-release-*.rpm"].each do |rpmfile|
-          log.info rpmfile
           pkg = RPM::Package.new(rpmfile)
           # we dont care for packages not providing a product
           next if pkg.provides.select{|x| x.name == "product()"}.empty?
@@ -113,7 +114,26 @@ module EnhanceRepo
       end
       
       def write(io)
-        
+        builder = Nokogiri::XML::Builder.new do |xml|
+          xml.products do
+            @products.each do |product|
+              xml.product do
+                xml.name product.name
+                version = RPM::Version.new("#{product.version}-#{product.release}")
+                epoch = version.e
+                epoch ||= "0"
+                xml.version :epoch => epoch, :ver => version.v, :rel => version.r
+                xml.arch product.arch
+                xml.vendor product.vendor
+                xml.summary product.summary
+                xml.description product.description                
+              end
+            end
+          end
+        end
+        # write the result
+        #io.write(builder.to_xml)
+        io.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
 
       

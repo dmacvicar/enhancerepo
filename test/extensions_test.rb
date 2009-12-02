@@ -23,31 +23,9 @@
 #++
 #
 require File.join(File.dirname(__FILE__), 'test_helper')
-require 'tmpdir'
 require 'enhance_repo'
-require 'stringio'
-require 'zlib'
 
-class Products_test < Test::Unit::TestCase
-
+class Extensions_test < Test::Unit::TestCase
   def setup
-  end
-
-  def test_xml_output
-    products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-with-product'))
-    products.read_packages
-
-    assert ! products.empty?
-    
-    assert_equal 1, products.size
-
-    #Zlib::GzipReader.open(test_data('rpms/repo-with-product/repodata/products.xml.gz')) do |expected_products|
-
-      buffer = StringIO.new
-      products.write(buffer)
-      assert_equal "", buffer.string
-#      assert_equal(expected_primary.read, buffer.string)
-#     assert_xml_equal(expected_primary, buffer.string)
-    #end
-  end
+  end  
 end

@@ -29,7 +29,6 @@ require 'enhance_repo'
 require 'pathname'
 
 EnhanceRepo::enable_logger
-EnhanceRepo.logger.level = INFO
 
 opts = GetoptLong.new(
          [ '--help', '-h',     GetoptLong::NO_ARGUMENT ],
@@ -101,7 +100,7 @@ opts.each do |opt, arg|
   when '--products'
     config.products = true
   when '--debug'
-    EnhanceRepo.logger.level = DEBUG
+    EnhanceRepo::enable_debug
   end
 end
 
@@ -165,7 +164,7 @@ begin
   repomd.sign(config.signkey) if not config.signkey.nil?  
 rescue Exception => excp
   EnhanceRepo.logger.fatal excp.message
-  if EnhanceRepo.logger.level == DEBUG
+  if EnhanceRepo::enable_debug
     EnhanceRepo.logger.fatal(excp.backtrace.join("\n"))
   else
     EnhanceRepo.logger.info "Pass --debug for more information..."

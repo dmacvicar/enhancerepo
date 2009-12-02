@@ -110,6 +110,7 @@ module EnhanceRepo
         updateinfofile = @outputdir + "#{UPDATEINFO_FILE}.gz"
         suseinfofile = @outputdir + "#{SUSEINFO_FILE}.gz"
         deltainfofile = @outputdir + "#{DELTAINFO_FILE}.gz"
+        productsfile = @outputdir + "#{PRODUCTS_FILE}.gz"
 
         write_gz_extension_file(@primary, primaryfile, PRIMARY_FILE)
         write_gz_extension_file(@filelists, filelistsfile, FILELISTS_FILE)
@@ -118,6 +119,7 @@ module EnhanceRepo
         write_gz_extension_file(@susedata, susedfile, SUSEDATA_FILE)
         write_gz_extension_file(@suseinfo, suseinfofile, SUSEINFO_FILE)
         write_gz_extension_file(@deltainfo, deltainfofile, DELTAINFO_FILE)
+        write_gz_extension_file(@products, productsfile, PRODUCTS_FILE)
         
         # now write the index
         f = File.open((@outputdir + REPOMD_FILE), 'w')
