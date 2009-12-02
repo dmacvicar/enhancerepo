@@ -1,9 +1,11 @@
 - 0.4 (not released)
 * improved logger support
 * --split-updates, patch by Jordi Massaguer Pla
-* primary data generation
-* allows to generate metadata to a separate
-  directory
+* primary data generation (EXPERIMENTAL)
+* allows to generate metadata to a separate directory
+* product metadata generation extracted from *-release rpm packages
+* benchmark feature
+* speed improvements
 - 0.3.2
 * patch generation support
 - 0.3.1
