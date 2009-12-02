@@ -41,7 +41,7 @@ module EnhanceRepo
         @rpmfiles = []
       end
 
-      def read
+      def read_packages
         Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
           @rpmfiles << rpmfile
         end  

@@ -56,6 +56,8 @@ module EnhanceRepo
     attr_accessor :deltas
 
     attr_accessor :products
+
+    attr_accessor :benchmark
     
     def outputdir
       return @dir if @outputdir.nil?
@@ -76,6 +78,7 @@ module EnhanceRepo
       @deltas = false
       @create_deltas = false
       @products = false
+      @benchmark = false
     end
   end
 end

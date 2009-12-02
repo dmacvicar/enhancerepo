@@ -12,6 +12,9 @@
 # -h, --help:
 #    show help
 #
+# --benchmark
+#   Show benchmark statistics
+#
 # --outputdir
 #   Generate metadata to a different directory
 #

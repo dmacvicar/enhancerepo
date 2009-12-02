@@ -27,6 +27,7 @@ require 'getoptlong'
 require 'rdoc/usage'
 require 'enhance_repo'
 require 'pathname'
+require 'benchmark'
 
 EnhanceRepo::enable_logger
 
@@ -49,7 +50,8 @@ opts = GetoptLong.new(
          [ '--create-deltas',  GetoptLong::OPTIONAL_ARGUMENT ],
          [ '--deltas',  GetoptLong::NO_ARGUMENT ],
          [ '--products',  GetoptLong::NO_ARGUMENT ],
-         [ '--debug',  GetoptLong::NO_ARGUMENT ]             
+         [ '--debug',  GetoptLong::NO_ARGUMENT ],
+         [ '--benchmark',  GetoptLong::NO_ARGUMENT ]
 )
 
 config = EnhanceRepo::ConfigOpts.new
@@ -101,6 +103,8 @@ opts.each do |opt, arg|
     config.products = true
   when '--debug'
     EnhanceRepo::enable_debug
+  when '--benchmark'
+    config.benchmark = true
   end
 end
 
@@ -124,49 +128,52 @@ repomd = EnhanceRepo::RpmMd::Repo.new(config)
 
 # perform the operations in a rescue block
 
-begin
-  if config.primary
-    repomd.primary.read
-    repomd.filelists.read
-    repomd.other.read
-    #repomd.primary.read
+time = Benchmark.measure do
+  begin
+    if config.primary
+      repomd.primary.read_packages
+      repomd.filelists.read
+      repomd.other.read
+    end
+
+    # merge keywords and products to suseinfo
+    repomd.suseinfo.products.merge(config.repoproducts)
+    repomd.suseinfo.keywords.merge(config.repokeywords)
+
+    repomd.susedata.add_eulas if config.eulas  
+    repomd.susedata.add_keywords if config.keywords
+    repomd.susedata.add_disk_usage if config.diskusage
+
+    if not config.generate_update.nil?
+      # make sure the repoparts directory is there
+      `mkdir -p #{File.join(config.dir, 'repoparts')}`
+      repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
+    end
+
+    repomd.updateinfo.add_updates if config.updates  
+    repomd.updateinfo.split_updates(File.join(config.dir, 'repoparts')) if config.split_updates                                                                        
+
+    repomd.deltainfo.create_deltas(config.create_deltas) if config.create_deltas
+    repomd.deltainfo.add_deltas if config.deltas
+
+    repomd.products.read_packages if config.products
+
+    # add expiration date
+    repomd.suseinfo.expire = config.expire if not config.expire.nil?
+
+    # write the repository out
+    repomd.write
+
+    # perform signature of the repository
+    repomd.sign(config.signkey) if not config.signkey.nil?  
+  rescue Exception => excp
+    EnhanceRepo.logger.fatal excp.message
+    if EnhanceRepo::enable_debug
+      EnhanceRepo.logger.fatal(excp.backtrace.join("\n"))
+    else
+      EnhanceRepo.logger.info "Pass --debug for more information..."
+    end
   end
 
-  # merge keywords and products to suseinfo
-  repomd.suseinfo.products.merge(config.repoproducts)
-  repomd.suseinfo.keywords.merge(config.repokeywords)
-
-  repomd.susedata.add_eulas if config.eulas  
-  repomd.susedata.add_keywords if config.keywords
-  repomd.susedata.add_disk_usage if config.diskusage
-
-  if not config.generate_update.nil?
-    # make sure the repoparts directory is there
-    `mkdir -p #{File.join(config.dir, 'repoparts')}`
-    repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
-  end
-
-  repomd.updateinfo.add_updates if config.updates  
-  repomd.updateinfo.split_updates(File.join(config.dir, 'repoparts')) if config.split_updates                                                                        
-
-  repomd.deltainfo.create_deltas(config.create_deltas) if config.create_deltas
-  repomd.deltainfo.add_deltas if config.deltas
-
-  repomd.products.read_packages if config.products
-
-  # add expiration date
-  repomd.suseinfo.expire = config.expire if not config.expire.nil?
-
-  # write the repository out
-  repomd.write
-
-  # perform signature of the repository
-  repomd.sign(config.signkey) if not config.signkey.nil?  
-rescue Exception => excp
-  EnhanceRepo.logger.fatal excp.message
-  if EnhanceRepo::enable_debug
-    EnhanceRepo.logger.fatal(excp.backtrace.join("\n"))
-  else
-    EnhanceRepo.logger.info "Pass --debug for more information..."
-  end
 end
+EnhanceRepo.logger.info(time) if config.benchmark
