@@ -26,11 +26,8 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 require 'tmpdir'
 require 'pathname'
 require 'rubygems'
-require 'log4r'
 require 'enhance_repo'
 require 'stringio'
-
-include Log4r
 
 class RpmMd_test < Test::Unit::TestCase
 

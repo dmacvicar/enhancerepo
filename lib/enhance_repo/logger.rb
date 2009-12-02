@@ -25,6 +25,19 @@
 
 module EnhanceRepo
 
+  def self.enable_logger
+    # support both log4r and ruby logger
+    begin
+      require 'log4r'
+      @logger = Log4r::Logger.new 'enhancerepo'
+      console_format = Log4r::PatternFormatter.new(:pattern => "%l:\t %m")
+      @logger.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)  
+    rescue LoadError
+      require 'logger'
+      @logger = Logger.new 'enhancerepo'
+    end
+  end
+  
   def self.logger
     @logger
   end

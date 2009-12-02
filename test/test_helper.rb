@@ -22,14 +22,17 @@
 #
 #++
 #
+require 'rubygems'
 gem 'test-unit'
 require 'test/unit'
-require 'rubygems'
 require 'mocha'
 
 $: << File.join(File.dirname(__FILE__), "..", "lib")
+require 'enhance_repo'
 require 'enhance_repo/xml_comparer'
 require 'activesupport'
+
+EnhanceRepo::enable_logger
 
 def test_data(name)
   File.join(File.dirname(__FILE__), "data", name)

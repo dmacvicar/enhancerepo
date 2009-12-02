@@ -27,14 +27,9 @@ require 'getoptlong'
 require 'rdoc/usage'
 require 'enhance_repo'
 require 'pathname'
-require 'log4r'
 
-include Log4r
-
-EnhanceRepo.logger = Logger.new 'enhancerepo'
+EnhanceRepo::enable_logger
 EnhanceRepo.logger.level = INFO
-console_format = PatternFormatter.new(:pattern => "%l:\t %m")
-EnhanceRepo.logger.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)
 
 opts = GetoptLong.new(
          [ '--help', '-h',     GetoptLong::NO_ARGUMENT ],

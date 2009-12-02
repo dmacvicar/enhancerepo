@@ -25,11 +25,8 @@
 #
 require File.join(File.dirname(__FILE__), 'test_helper')
 require 'tmpdir'
-require 'log4r'
 require 'enhance_repo'
 require 'stringio'
-
-include Log4r
 
 class DeltaInfo_test < Test::Unit::TestCase
 
