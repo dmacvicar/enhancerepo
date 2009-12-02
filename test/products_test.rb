@@ -41,13 +41,11 @@ class Products_test < Test::Unit::TestCase
     
     assert_equal 1, products.size
 
-    #Zlib::GzipReader.open(test_data('rpms/repo-with-product/repodata/products.xml.gz')) do |expected_products|
+    Zlib::GzipReader.open(test_data('rpms/repo-with-product/repodata/products.xml.gz')) do |expected_products|
 
       buffer = StringIO.new
       products.write(buffer)
-      assert_equal "", buffer.string
-#      assert_equal(expected_primary.read, buffer.string)
-#     assert_xml_equal(expected_primary, buffer.string)
-    #end
+      assert_xml_equal(expected_products.read, buffer.string)
+    end
   end
 end

@@ -18,4 +18,10 @@
     <timestamp>1259682631</timestamp>
     <open-checksum type="sha">c4862faab25f8fe1c95576073f2f5c3e8289da63</open-checksum>
   </data>
+  <data type="products">
+    <location href="repodata/products.xml.gz"/>
+    <checksum type="sha">b9018c2e1da81d0379d7f27812b723bcdb1b35a1</checksum>
+    <timestamp>1259749650</timestamp>
+    <open-checksum type="sha">39f52e814187451136f31c201bc2c4bf88a70c05</open-checksum>
+  </data>
 </repomd>
