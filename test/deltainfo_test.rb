@@ -45,7 +45,7 @@ class DeltaInfo_test < Test::Unit::TestCase
       buffer = StringIO.new
       deltainfo.write(buffer)
 
-      assert_equal(expected_deltainfo.read, buffer.string)
+      assert_xml_equal(expected_deltainfo.read, buffer.string)
     end
   end
 end

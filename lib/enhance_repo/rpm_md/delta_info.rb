@@ -24,8 +24,7 @@
 #
 
 require 'rubygems'
-require 'builder'
-require 'rexml/document'
+require 'nokogiri'
 require 'yaml'
 require 'rpm'
 require 'pp'
@@ -161,31 +160,32 @@ module EnhanceRepo
 
       # write a update out
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
-        builder.instruct!
-        builder.deltainfo do |b|
-          @deltas.each do |ident, deltas|
-            b.newpackage( 'name' => ident.name, 'arch' => ident.arch,
-                          'version' => ident.version.v,
-                          'release' => ident.version.r ) do |b|
-              deltas.each do |delta|
-                # get the edition by getting the name out
-                version = RPM::Version.new(delta.sourcerpm.gsub(/#{delta.name}-/, ''))
-                b.delta('oldepoch'=>0, 'oldversion'=>version.v, 'oldrelease'=>version.r) do |b|
-                  # remove the base dir, make it relative
-                  delta_abs_path = Pathname.new(delta.path).realpath
-                  base_dir_abs_path = Pathname.new(@dir).realpath
-                  relative_path = delta_abs_path.relative_path_from(base_dir_abs_path)
-                  b.filename relative_path
-                  b.sequence(delta.sequence)
-                  b.size(File.size(delta.path))
-                  b.checksum(delta.checksum, 'type'=>'sha')
-                end # </delta>
-              end
-            end # </newpackage>
-          end
+        builder = Nokogiri::XML::Builder.new do |b|
+          b.deltainfo do
+            @deltas.each do |ident, deltas|
+              b.newpackage( 'name' => ident.name, 'arch' => ident.arch,
+                            'version' => ident.version.v,
+                            'release' => ident.version.r ) do |b|
+                deltas.each do |delta|
+                  # get the edition by getting the name out
+                  version = RPM::Version.new(delta.sourcerpm.gsub(/#{delta.name}-/, ''))
+                  b.delta('oldepoch'=>0, 'oldversion'=>version.v, 'oldrelease'=>version.r) do |b|
+                    # remove the base dir, make it relative
+                    delta_abs_path = Pathname.new(delta.path).realpath
+                    base_dir_abs_path = Pathname.new(@dir).realpath
+                    relative_path = delta_abs_path.relative_path_from(base_dir_abs_path)
+                    b.filename relative_path
+                    b.sequence(delta.sequence)
+                    b.size(File.size(delta.path))
+                    b.checksum(delta.checksum, 'type'=>'sha')
+                  end # </delta>
+                end
+              end # </newpackage>
+            end # each delta
+          end #</deltainfo>
         end
         # ready builder
+        file.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
       
     end
