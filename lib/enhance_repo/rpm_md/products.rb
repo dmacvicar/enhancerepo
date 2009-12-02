@@ -35,7 +35,7 @@ module EnhanceRepo
     # reads the release files from a repository
     class Products
       
-      include Logger
+      include EnhanceRepo::Logger
 
       class ProductData
         attr_accessor :name
@@ -69,7 +69,12 @@ module EnhanceRepo
         products = []
         rpm_extract_file(rpmpath, path) do |f|
           doc = Nokogiri::XML(f)
+          #print doc.to_s
           product = ProductData.new
+          # set attributes of the product based on the xml data
+          [:name, :version:, :release, :arch, :summary, :description].each do |attr|
+            product.send("#{attr}=".to_sym, doc.root.xpath("./#{attr}").text)
+          end
           products << product
           yield product if block_given?
         end
@@ -78,7 +83,7 @@ module EnhanceRepo
 
       # scan the products from the rpm files in the repository
       def read_packages
-        log.info "Looking for product release packages"
+#        log.info "Looking for product release packages"
         Dir["#{@dir}/**/*-release-*.rpm"].each do |rpmfile|
           log.info rpmfile
           pkg = RPM::Package.new(rpmfile)
@@ -103,7 +108,12 @@ module EnhanceRepo
         @products.empty?
       end
 
+      def size
+        @products.size
+      end
+      
       def write(io)
+        
       end
 
       
