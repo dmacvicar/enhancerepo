@@ -45,7 +45,7 @@ class RpmMd_test < Test::Unit::TestCase
     config.outputdir = Pathname.new(File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}'))
     config.dir = @rpms1
     @repo = EnhanceRepo::RpmMd::Repo.new(config)
-    @repo.primary.read
+    @repo.primary.read_packages
     out = StringIO.new
     @repo.primary.write(out)
     #puts out.string

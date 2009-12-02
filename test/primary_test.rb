@@ -35,7 +35,7 @@ class Primary_test < Test::Unit::TestCase
 
   def test_xml_output
     primary = EnhanceRepo::RpmMd::Primary.new(test_data('rpms/repo-1'))
-    primary.read
+    primary.read_packages
 
     assert ! primary.empty?
     assert_equal 3, primary.size

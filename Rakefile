@@ -24,8 +24,8 @@ servers as the testbed for the specification"
     s.require_path  =   "lib"
     s.test_files = Dir.glob('tests/*.rb')
     s.has_rdoc  =  true
-    spec.add_dependency('log4r', '>= 1.0.5')
-    spec.add_dependency('nokogiri', '>= 1.4')
+    s.add_dependency('log4r', '>= 1.0.5')
+    s.add_dependency('nokogiri', '>= 1.4')
 #    s.extra_rdoc_files  =   ["README"]
 end
 
