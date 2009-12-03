@@ -125,7 +125,7 @@ module EnhanceRepo
               # calculate the deltarpm name
               deltafile = File.join(File.dirname(newpkg.path), delta_package_name(oldpkg,newpkg))
               #puts "makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}"
-              `makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}`
+              `makedeltarpm '#{oldpkg.path}' '#{newpkg.path}' '#{deltafile}'`
               c += 1
             end
           end

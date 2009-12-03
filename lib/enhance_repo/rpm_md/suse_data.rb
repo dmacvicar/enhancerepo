@@ -63,7 +63,7 @@ module EnhanceRepo
       def write(builder, pkgid)
         dirsizes = Hash.new
         dircount = Hash.new
-        `rpm -q --queryformat \"[%{FILENAMES} %{FILESIZES}\n]\" -p #{@rpmfile}`.each_line do |line|
+        `rpm -q --queryformat \"[%{FILENAMES} %{FILESIZES}\n]\" -p '#{@rpmfile}'`.each_line do |line|
           file, size = line.split
           dirsizes[File.dirname(file)] = 0 if not dirsizes.has_key?(File.dirname(file))
           dircount[File.dirname(file)] = 0 if not dircount.has_key?(File.dirname(file))

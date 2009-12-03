@@ -84,7 +84,7 @@ module EnhanceRepo
           raise "#{repomdfile} does not exist."
         end
         # call gpg to sign the repository
-        `gpg -sab -u #{keyid} -o #{repomdfile}.asc #{repomdfile}`
+        `gpg -sab -u #{keyid} -o '#{repomdfile}.asc' '#{repomdfile}'`
         if not File.exists?("#{repomdfile}.asc")
           log.info "Could't not generate signature #{repomdfile}.asc"
           exit(1)
@@ -93,7 +93,7 @@ module EnhanceRepo
         end
 
         # now export the public key
-        `gpg --export -a -o #{repomdfile}.key #{keyid}`
+        `gpg --export -a -o '#{repomdfile}.key' #{keyid}`
 
         if not File.exists?("#{repomdfile}.key")
           log.info "Could't not generate public key #{repomdfile}.key"
