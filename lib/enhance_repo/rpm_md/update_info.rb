@@ -331,9 +331,9 @@ module EnhanceRepo
         end
         log.info "Saving update part to '#{filename}'."
         
-        f = File.open(filename, 'w')
-        update.write(f)
-        f.close
+        File.open(filename, 'w') do |f|
+          update.write(f)
+        end
       end
 
       # splits the updateinfo file into serveral update files
@@ -366,9 +366,9 @@ module EnhanceRepo
             version += 1
           end
           log.info "Saving update part to '#{updatefilename}'."
-          updatefile = File.open(updatefilename, 'w')
-          updatefile << updateElement
-          updatefile.close
+          File.open(updatefilename, 'w') do |updatefile|
+            updatefile << updateElement
+          end
         end
       end
       
@@ -378,7 +378,9 @@ module EnhanceRepo
         builder.instruct!
         xml = builder.updates do |b|
           @updates.each do |update|
-            file << File.open(update).read
+            File.open(update) do |f|
+              file << f.read
+            end
             #update.append_to_builder(b)
           end
         end #done builder

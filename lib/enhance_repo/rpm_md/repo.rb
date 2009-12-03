@@ -159,9 +159,10 @@ module EnhanceRepo
         end
         
         # now write the index
-        f = File.open((@outputdir + @index.metadata_filename), 'w')
-        log.info "Saving #{@index.metadata_filename} .."
-        @index.write(f)        
+        File.open((@outputdir + @index.metadata_filename), 'w') do |f|
+          log.info "Saving #{@index.metadata_filename} .."
+          @index.write(f)
+        end
       end
 
       # writes an extension to an xml filename if
@@ -173,11 +174,10 @@ module EnhanceRepo
           log.info "Creating non existing #{filename.dirname} .."
           filename.dirname.mkpath
         end
-        f = File.open(filename, 'w')
         # compress the output
-        gz = Zlib::GzipWriter.new(f)
-        data.write(gz)
-        gz.close
+        Zlib::GzipWriter.open(filename) do |gz|
+          data.write(gz)
+        end
       end
       
     end
