@@ -57,7 +57,7 @@ module EnhanceRepo
         tmppath = File.join(Dir.tmpdir, 'enhancerepo')
         File.makedirs(tmppath)
         Dir.chdir(tmppath) do
-          `rpm2cpio #{rpmpath} | cpio -iv --make-directories #{File.join(".", path)} 2>/dev/null`
+          `rpm2cpio '#{rpmpath}' | cpio -iv --make-directories #{File.join(".", path)} 2>/dev/null`
         end
         File.open(File.join(tmppath, path)) do |f|
           yield f if block_given?

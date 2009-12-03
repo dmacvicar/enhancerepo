@@ -40,7 +40,7 @@ module EnhanceRepo
       
       def initialize(filename)
         super(filename)
-        `applydeltarpm -i #{filename}`.each_line do |line|
+        `applydeltarpm -i '#{filename}'`.each_line do |line|
           key, value = line.chop.split(':')
           value.gsub!(/ /, '')
           @sequence = value if key == "sequence"
