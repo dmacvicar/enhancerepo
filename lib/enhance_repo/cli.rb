@@ -66,11 +66,11 @@ opts.each do |opt, arg|
   when '--outputdir'
     config.outputdir = Pathname.new(arg)
   when '--primary'
-    config.indent = true
+    config.primary = true
   when '--index'
     config.index = true
   when '--indent'
-    config.primary = true
+    config.indent = true
   when '--sign'
     config.signkey = arg
   when '--repo-product'
