@@ -28,6 +28,7 @@ require 'rdoc/usage'
 require 'enhance_repo'
 require 'pathname'
 require 'benchmark'
+require 'fileutils'
 
 EnhanceRepo::enable_logger
 
@@ -149,7 +150,7 @@ time = Benchmark.measure do
 
     if not config.generate_update.nil?
       # make sure the repoparts directory is there
-      `mkdir -p #{File.join(config.dir, 'repoparts')}`
+      FileUtils.mkdir_p File.join(config.dir, 'repoparts')
       repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
     end
 
