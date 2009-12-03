@@ -33,7 +33,7 @@ module EnhanceRepo
       # initialize the extra data with a name
       # or use the class name as default
       def initialize(name)
-        @name = namebi
+        @name = name
       end
 
       def name
