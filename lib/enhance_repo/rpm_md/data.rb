@@ -22,14 +22,34 @@
 #
 #++
 #
+
 module EnhanceRepo
-  REPOMD_FILE = 'repodata/repomd.xml'
-  PRIMARY_FILE = 'repodata/primary.xml'
-  FILELISTS_FILE = 'repodata/filelists.xml'
-  OTHER_FILE = 'repodata/other.xml'
-  SUSEDATA_FILE = 'repodata/susedata.xml'
-  SUSEINFO_FILE = 'repodata/suseinfo.xml'
-  UPDATEINFO_FILE = 'repodata/updateinfo.xml'
-  DELTAINFO_FILE = 'repodata/deltainfo.xml'
-  PRODUCTS_FILE = 'repodata/products.xml'
+  module RpmMd
+
+    # represents a metadata unit
+    class Data
+      include Logger
+      
+      # initialize the extra data with a name
+      # or use the class name as default
+      def initialize(name)
+        @name = namebi
+      end
+
+      def name
+        defined?(@name) ? @name : self.class.to_s.split("::").last.downcase
+      end
+      
+      def metadata_filename
+        "repodata/#{name}.xml#{should_compress? ? '.gz' : ''}"
+      end
+
+      # wether the metadata should be compressed
+      def should_compress?
+        true
+      end
+      
+    end
+    
+  end
 end
