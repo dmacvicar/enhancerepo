@@ -222,10 +222,8 @@ module EnhanceRepo
       
     end
 
-    class UpdateInfo
+    class UpdateInfo < Data
       
-      include Logger
-
       def initialize(config)
         @dir = config.dir
         @basedir = config.updatesbasedir

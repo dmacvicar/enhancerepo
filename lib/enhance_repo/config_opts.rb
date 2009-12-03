@@ -32,6 +32,7 @@ module EnhanceRepo
   #
 
   class ConfigOpts
+    attr_accessor :index
     attr_accessor :indent
     attr_accessor :repoproducts
     attr_accessor :repokeywords
@@ -65,7 +66,8 @@ module EnhanceRepo
     end
     
     def initialize
-      @indent = false
+      @index = false
+      @indent = false      
       @primary = false
       @repoproducts = Set.new
       @repokeywords = Set.new

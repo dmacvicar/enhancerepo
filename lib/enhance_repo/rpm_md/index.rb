@@ -29,8 +29,8 @@ module EnhanceRepo
   module RpmMd
 
     # represents the repomd index
-    class Index
-
+    class Index < Data
+      
       include EnhanceRepo::Logger
       
       attr_accessor :products, :keywords
@@ -39,12 +39,17 @@ module EnhanceRepo
       # constructor
       # log logger object
       def initialize
+        super('repomd')
         @resources = []
+      end
+
+      # Reimplemented from EnhanceRepo::RpmMd::Data
+      def should_compress?
+        false
       end
       
       # add a file resource. Takes care of setting
-      # all the metadata.
-      
+      # all the metadata.      
       def add_file_resource(abspath, path, type=nil)
         r = Resource.new
         r.type = type
@@ -61,13 +66,13 @@ module EnhanceRepo
         end
         
         r.type = base if r.type.nil?
-        r.location = abspath
-        r.timestamp = File.mtime(path).to_i.to_s
-        r.checksum = Digest::SHA1.hexdigest(File.new(path).read)
+        r.location = path
+        r.timestamp = File.mtime(abspath).to_i.to_s
+        r.checksum = Digest::SHA1.hexdigest(File.new(abspath).read)
         r.openchecksum = r.checksum
-        if File.extname(path) == '.gz'
+        if File.extname(abspath) == '.gz'
           # we have a different openchecksum
-          r.openchecksum = Digest::SHA1.hexdigest(Zlib::GzipReader.new(File.new(path)).read)
+          r.openchecksum = Digest::SHA1.hexdigest(Zlib::GzipReader.new(File.new(abspath)).read)
         end
         add_resource(r)
         
@@ -84,7 +89,7 @@ module EnhanceRepo
           @resources << r
         else
           # replace it
-          log.warn("Resource #{r.location} already exists. Replacing.")
+          #log.warn("Resource #{r.location} already exists. Replacing.")
           @resources[index] = r
         end
       end

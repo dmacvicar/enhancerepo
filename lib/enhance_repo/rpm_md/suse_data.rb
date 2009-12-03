@@ -23,8 +23,6 @@
 #++
 #
 
-require 'enhance_repo/rpm_md/extra_primary_data'
-
 module EnhanceRepo
   module RpmMd
 
@@ -91,10 +89,9 @@ module EnhanceRepo
     # See:
     # http://en.opensuse.org/Standards/Rpm_Metadata#SUSE_primary_data_.28susedata.xml.29
     #
-    class SuseData < ExtraPrimaryData
+    class SuseData < Data
 
-      def initialize(dir)  
-        super('susedata')
+      def initialize(dir)
         @dir = dir
         @diskusage_enabled = false
 
@@ -155,11 +152,15 @@ module EnhanceRepo
         @properties.empty?
       end
 
+      def size
+        @properties.size
+      end
+
       # write an extension file like other.xml
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.tag!(@name) do |b|
+        xml = builder.tag!(name) do |b|
           @properties.each do |pkgid, props|
             #log.info "Dumping package #{pkgid.to_s}"
             b.package('pkgid' => pkgid.checksum, 'name' => pkgid.name) do |b|

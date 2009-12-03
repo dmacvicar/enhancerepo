@@ -12,8 +12,13 @@
 # -h, --help:
 #    show help
 #
+# --index
+#   Reindex the metadata and regenerates repomd.xml, even
+#   if nothing was changed using enhancerepo.
+#   Use this if you did manual changes to the metadata
+#
 # --benchmark
-#   Show benchmark statistics
+#   Show benchmark statistics at the end
 #
 # --outputdir
 #   Generate metadata to a different directory
@@ -55,16 +60,16 @@
 # === SUSE specific package data (susedata.xml)
 #
 # --eulas
-#    Drop packagename.eula files and
-#    the attributes will be added to susedata.xml
+#    Reads packagename.eula files and add the
+#    information to susedata.xml
 #
 # --keywords
-#    Drop packagename.keywords files and
-#    the attributes will be added to susedata.xml
+#    Reads packagename.keywords files and add
+#    keyword metadata to susedata.xml
 #
 # --disk-usage
-#    Add disk usage information
-#    the attributes will be added to susedata.xml
+#    Reads rpm packages, generates disk usage information
+#    on susedata.xml
 #
 # Note: your .eula or .keywords file will be added to
 # a package if it matches its name. If you want to add
@@ -82,8 +87,10 @@
 #   This does not index the deltas. Use --deltas for that.
 #
 # --deltas
-#   Add package deltas metadata to deltainfo.xml. This indexes existing
-#   deltas, but don't create them. See --create-deltas for creation.
+#   Reads all *.delta.rpm files and add the information to
+#   deltainfo.xml.
+#   This indexes existing deltas, but won't create them.
+#   See --create-deltas for deltas creation.
 #
 # --debug
 #   Show debug information
@@ -91,8 +98,9 @@
 # === Product information support
 #
 # --products
-#   Create products.xml based on the information included in the
-#   -release.rpm packages present in the repository
+#   Reads release packages and generating product information
+#   in products.xml based on the information contained in the
+#   .prod files included in the packages.
 #
 # DIR: The repo base directory ( where repodata/ directory is located )
 #

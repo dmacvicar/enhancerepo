@@ -1,11 +1,14 @@
 require 'rake'
 require 'rake/gempackagetask'
 require 'rake/packagetask'
+require 'rake/testtask'
 
 task :default => :test
 
-task :test do
-    require File.dirname(__FILE__) + '/test/all_tests.rb'  
+Rake::TestTask.new do |t|
+  t.test_files = FileList['test/*_test.rb']
+  t.verbose = true
+  t.warning = true
 end
 
 version = File.new('VERSION').read.chomp

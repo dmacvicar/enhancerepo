@@ -30,10 +30,8 @@ module EnhanceRepo
     # See:
     # http://en.opensuse.org/Standards/Rpm_Metadata
     #
-    class Other
+    class Other < Data
 
-      include Logger
-      
       def initialize(dir)
         @dir = dir
         @rpmfiles = []

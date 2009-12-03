@@ -30,6 +30,7 @@ require 'zlib'
 require 'yaml'
 
 require 'enhance_repo/package_id'
+require 'enhance_repo/rpm_md/data'
 require 'enhance_repo/rpm_md/primary'
 require 'enhance_repo/rpm_md/file_lists'
 require 'enhance_repo/rpm_md/other'
@@ -54,14 +55,16 @@ module EnhanceRepo
       # extensions
       attr_reader :primary, :other, :filelists, :susedata, :suseinfo, :deltainfo, :updateinfo, :products
       def initialize(config)
-        @index = Index.new
-        # populate the index
-        if (config.dir + REPOMD_FILE).exist?
-          @index.read_file(File.new(config.dir + REPOMD_FILE))
-        end
         @dir = config.dir
         @outputdir = config.outputdir
 
+        @index = Index.new
+        repomdfile = File.join(@dir, @index.metadata_filename)
+        # populate the index
+        if File.exist?(repomdfile)
+          @index.read_file(File.new(repomdfile))
+        end
+        
         @primary = Primary.new(config.dir)
         @primary.indent = config.indent
         
@@ -76,8 +79,8 @@ module EnhanceRepo
 
       def sign(keyid)
         # check if the index is written to disk
-        repomdfile = @dir + REPOMD_FILE
-        if not repomdfile.exist?
+        repomdfile = File.join(@dir, @index.metadata_filename)
+        if not File.exist?(repomdfile)
           raise "#{repomdfile} does not exist."
         end
         # call gpg to sign the repository
@@ -100,53 +103,81 @@ module EnhanceRepo
         end
       end
 
-      # write back the metadata
       def write
-        repomdfile = @outputdir + REPOMD_FILE
-        primaryfile = @outputdir + "#{PRIMARY_FILE}.gz"
-        filelistsfile = @outputdir + "#{FILELISTS_FILE}.gz"
-        otherfile = @outputdir + "#{OTHER_FILE}.gz"
-        susedfile = @outputdir + "#{SUSEDATA_FILE}.gz"
-        updateinfofile = @outputdir + "#{UPDATEINFO_FILE}.gz"
-        suseinfofile = @outputdir + "#{SUSEINFO_FILE}.gz"
-        deltainfofile = @outputdir + "#{DELTAINFO_FILE}.gz"
-        productsfile = @outputdir + "#{PRODUCTS_FILE}.gz"
 
-        write_gz_extension_file(@primary, primaryfile, PRIMARY_FILE)
-        write_gz_extension_file(@filelists, filelistsfile, FILELISTS_FILE)
-        write_gz_extension_file(@other, otherfile, OTHER_FILE)
-        write_gz_extension_file(@updateinfo, updateinfofile, UPDATEINFO_FILE)
-        write_gz_extension_file(@susedata, susedfile, SUSEDATA_FILE)
-        write_gz_extension_file(@suseinfo, suseinfofile, SUSEINFO_FILE)
-        write_gz_extension_file(@deltainfo, deltainfofile, DELTAINFO_FILE)
-        write_gz_extension_file(@products, productsfile, PRODUCTS_FILE)
+        datas = [@primary, @filelists, @other, @updateinfo,
+                 @susedata, @suseinfo, @deltainfo, @products ]
+
+        # select the datas that are not empty
+        # those need to be saved
+        non_empty_data = datas.reject { |x| x.empty? }
+        changed_files = []
+        missing_files = []
+        # now look for files that changed or dissapeared
+        Dir.chdir(@dir) do
+          # look all files except the index itself
+          metadata_files = Dir["repodata/*.xml.*"].reject { |x| x == @index.metadata_filename }
+          non_empty_files = non_empty_data.map { |x| x.metadata_filename }
+          # ignore it if it is already in the non_empty_list
+          # as it will be added to the index anyway
+          metadata_files.reject!{ |x| non_empty_files.include?(x) }
+          metadata_files.each do |metadata_file|
+            # find the indexed resource for this file
+            indexed_resource = @index.resources.select { |x| x.location == metadata_file }.first
+            # add it to the list of changed resources if the timestamp
+            # are differents
+            if indexed_resource.nil?
+              missing_files << metadata_file
+              next
+            end
+            if File.mtime(File.join(@outputdir, metadata_file)).to_i != indexed_resource.timestamp.to_i
+              changed_files << metadata_file
+              next
+            end
+          end
+        end
+        
+        # find the datas which either
+        non_empty_data.each do |data|
+          write_gz_extension_file(data)
+        end
+
+        # update the index
+        non_empty_data.each do |d|
+          log.info "Adding #{d.metadata_filename} to #{@index.metadata_filename} index"
+          @index.add_file_resource(File.join(@outputdir, d.metadata_filename), d.metadata_filename)
+        end
+
+        missing_files.each do |f|
+          log.info "Adding missing #{f} to #{@index.metadata_filename} index"
+          @index.add_file_resource(File.join(@outputdir, f), f)
+        end
+                
+        changed_files.each do |f|
+          log.info "Replacing changed #{f} on #{@index.metadata_filename} index"
+          @index.add_file_resource(File.join(@outputdir, f), f)
+        end
         
         # now write the index
-        f = File.open((@outputdir + REPOMD_FILE), 'w')
-        log.info "Saving #{repomdfile} .."
-        @index.write(f)
-        
+        f = File.open((@outputdir + @index.metadata_filename), 'w')
+        log.info "Saving #{@index.metadata_filename} .."
+        @index.write(f)        
       end
 
       # writes an extension to an xml filename if
       # the extension is not empty
-      def write_gz_extension_file(extension, filename, relfilename)
-        if not extension.empty?
-          repomdfile = @outputdir + REPOMD_FILE
-          log.info "Saving #{filename} .."
-          if not filename.dirname.exist?
-            log.info "Creating non existing #{filename.dirname} .."
-            filename.dirname.mkpath
-          end
-          f = File.open(filename, 'w')
-          # compress the output
-          gz = Zlib::GzipWriter.new(f)
-          extension.write(gz)
-          gz.close
-          # add it to the index
-          log.info "Adding #{filename} to #{repomdfile} index"
-          @index.add_file_resource("#{relfilename}.gz", filename)
+      def write_gz_extension_file(data)
+        filename = Pathname.new(File.join(@outputdir, data.metadata_filename))
+        log.info "Saving #{filename} .."
+        if not filename.dirname.exist?
+          log.info "Creating non existing #{filename.dirname} .."
+          filename.dirname.mkpath
         end
+        f = File.open(filename, 'w')
+        # compress the output
+        gz = Zlib::GzipWriter.new(f)
+        data.write(gz)
+        gz.close
       end
       
     end

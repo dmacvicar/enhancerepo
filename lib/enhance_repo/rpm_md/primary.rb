@@ -30,17 +30,15 @@ module EnhanceRepo
     # See:
     # http://en.opensuse.org/Standards/Rpm_Metadata
     #
-    class Primary
+    class Primary < Data
       attr_accessor :indent
-
-      include Logger
       
       def initialize(dir)
         @indent = false
         @dir = dir
         @rpmfiles = []
       end
-
+      
       def read_packages
         Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
           @rpmfiles << rpmfile

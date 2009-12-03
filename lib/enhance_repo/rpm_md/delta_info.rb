@@ -58,9 +58,7 @@ module EnhanceRepo
       
     end
 
-    class DeltaInfo
-
-      include Logger
+    class DeltaInfo < Data
 
       def initialize(dir)
         @dir = dir

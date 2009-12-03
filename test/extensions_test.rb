@@ -27,5 +27,5 @@ require 'enhance_repo'
 
 class Extensions_test < Test::Unit::TestCase
   def setup
-  end  
+  end
 end

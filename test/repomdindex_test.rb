@@ -53,6 +53,6 @@ class TC_RepoMdIndex < Test::Unit::TestCase
     
     dump_content = String.new
     @index.write(dump_content)
-    assert_equal(index_content, dump_content, 'Reading repomd index and dumping it should not change it' )
+    assert_xml_equal(index_content, dump_content)
   end
 end

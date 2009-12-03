@@ -33,10 +33,8 @@ module EnhanceRepo
 
     # products.xml metadata generator
     # reads the release files from a repository
-    class Products
+    class Products < Data
       
-      include EnhanceRepo::Logger
-
       # Holder for products we read from the
       # release files
       class ProductData

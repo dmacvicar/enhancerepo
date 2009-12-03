@@ -34,6 +34,7 @@ EnhanceRepo::enable_logger
 opts = GetoptLong.new(
          [ '--help', '-h',     GetoptLong::NO_ARGUMENT ],
          [ '--outputdir', '-o',     GetoptLong::REQUIRED_ARGUMENT ],
+         [ '--index', '-x',  GetoptLong::NO_ARGUMENT ],
          [ '--primary', '-p',  GetoptLong::NO_ARGUMENT ],
          [ '--indent', '-i',     GetoptLong::OPTIONAL_ARGUMENT ],
          [ '--sign', '-s',     GetoptLong::REQUIRED_ARGUMENT ],
@@ -66,6 +67,8 @@ opts.each do |opt, arg|
     config.outputdir = Pathname.new(arg)
   when '--primary'
     config.indent = true
+  when '--index'
+    config.index = true
   when '--indent'
     config.primary = true
   when '--sign'
@@ -161,6 +164,9 @@ time = Benchmark.measure do
     # add expiration date
     repomd.suseinfo.expire = config.expire if not config.expire.nil?
 
+    # index if requested
+    repomd.index if config.index
+    
     # write the repository out
     repomd.write
 

@@ -35,10 +35,8 @@ module EnhanceRepo
     # See:
     # http://en.opensuse.org/Standards/Rpm_Metadata#SUSE_repository_info_.28suseinfo.xml.29
     #
-    class SuseInfo
+    class SuseInfo < Data
 
-      include Logger
-      
       # expiration time
       # the generated value is
       # still calculated from repomd.xml
