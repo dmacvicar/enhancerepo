@@ -237,7 +237,7 @@ module EnhanceRepo
       end
       
       def add_updates
-        Dir["#{@dir}/**/update-*.xml"].each do |updatefile|
+        Dir["#{@dir}/repoparts/update-*.xml"].each do |updatefile|
           log.info("Adding update #{updatefile}")
           @updates << updatefile
         end
