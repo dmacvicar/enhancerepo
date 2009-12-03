@@ -116,7 +116,11 @@ module EnhanceRepo
         # now look for files that changed or dissapeared
         Dir.chdir(@dir) do
           # look all files except the index itself
-          metadata_files = Dir["repodata/*.xml.*"].reject { |x| x == @index.metadata_filename }
+          metadata_files = Dir["repodata/*.xml.*"].reject do |x|            
+            x  =~ /#{@index.metadata_filename}/ ||
+            x =~ /\.key$/ ||
+            x =~ /\.asc$/
+          end
           non_empty_files = non_empty_data.map { |x| x.metadata_filename }
           # ignore it if it is already in the non_empty_list
           # as it will be added to the index anyway
