@@ -362,7 +362,7 @@ module EnhanceRepo
           end
           version = 0
           updatefilename = ""
-          while ( File.exists?(updatefilename = (outputdir + '/' + id + '_splited_' + version.to_s + ".xml") ) )
+          while ( File.exists?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version.to_s}.xml") ) )
             version += 1
           end
           log.info "Saving update part to '#{updatefilename}'."
