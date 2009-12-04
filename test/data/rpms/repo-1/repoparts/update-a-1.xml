@@ -1,10 +1,16 @@
-<update from="duncan@tarro" version="1" type="optional" status="stable">
-  <title>Untitled updateoptional update 1 for a</title>
+<update from="duncan@tarro" version="1" type="security" status="stable">
+  <title>Untitled updatesecurity update 1 for a</title>
   <id>a</id>
-  <issued>1259886228</issued>
+  <issued>1259968029</issued>
   <release>no release</release>
-  <description></description>
+  <description>- second change fixes bnc#1111 and
+  kde #3444 and CVE-3333
+- first change
+</description>
   <references>
+    <reference href="http://bugzilla.novell.com/1111" title="bug number 1111" id="1111" type="bugzilla"/>
+    <reference href="http://bugzilla.novell.comhttp://bugs.kde.org/3444" title="KDE bug number 3444" id="3444" type="bugzilla"/>
+    <reference href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-3333" title="CVE number 3333" id="3333" type="cve"/>
   </references>
   <pkglist>
     <collection>

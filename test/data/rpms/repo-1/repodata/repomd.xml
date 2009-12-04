@@ -2,44 +2,44 @@
 <repomd xmlns="http://linux.duke.edu/metadata/repo">
   <data type="other">
     <location href="repodata/other.xml.gz"/>
-    <checksum type="sha">e3505a1a67c60f8075d6f1a2d2fd1d6ccffd2ba9</checksum>
-    <timestamp>1259600805</timestamp>
-    <open-checksum type="sha">e8969da1604d966f2b7c2ffa372cfe9fa6561040</open-checksum>
+    <checksum type="sha">c78367c224f85b229aa6d1c16ba1eb5f28435786</checksum>
+    <timestamp>1259968015</timestamp>
+    <open-checksum type="sha">26405ecdeec3557696349c1e9325a6754b6ed584</open-checksum>
   </data>
   <data type="filelists">
     <location href="repodata/filelists.xml.gz"/>
-    <checksum type="sha">c34e01c24ab9017808555721c66439525c2e185e</checksum>
-    <timestamp>1259600805</timestamp>
-    <open-checksum type="sha">f3b26f4e001cb6b3f009ffb66e073b2f458a7220</open-checksum>
+    <checksum type="sha">68af6fc6b89cf9531ce140f89b11d6dccfabad1c</checksum>
+    <timestamp>1259968015</timestamp>
+    <open-checksum type="sha">24ba31a04fcb0dd89aa3c5032c14969b89a8d502</open-checksum>
   </data>
   <data type="primary">
     <location href="repodata/primary.xml.gz"/>
-    <checksum type="sha">96965aa5132d5c75056109f60bfd7f3bc67262fb</checksum>
-    <timestamp>1259874197</timestamp>
-    <open-checksum type="sha">36c308131f617196a18b694774adb68716947ed9</open-checksum>
+    <checksum type="sha">51e59ba5df06511182f1f254a48660908f895b9b</checksum>
+    <timestamp>1259968015</timestamp>
+    <open-checksum type="sha">c976a494aa2177e8c2646a1162d2d7fc294a8d6e</open-checksum>
+  </data>
+  <data type="updateinfo">
+    <location href="repodata/updateinfo.xml.gz"/>
+    <checksum type="sha">83c9778ef4c8291ad1cb73676b2945fa4e6698c4</checksum>
+    <timestamp>1259968029</timestamp>
+    <open-checksum type="sha">e8a05e79b949bd7f25bce85643e915244a3e46cd</open-checksum>
   </data>
   <data type="susedata">
     <location href="repodata/susedata.xml.gz"/>
-    <checksum type="sha">c4b1a1a34aae81b2265dbd61fd40c02dd1f47a37</checksum>
-    <timestamp>1259600805</timestamp>
-    <open-checksum type="sha">914ddd93451adfb5651de2e87267f48e8d4ef669</open-checksum>
+    <checksum type="sha">79cc4e11a640a0e2bc2adb1e8216f6b3917011e8</checksum>
+    <timestamp>1259968029</timestamp>
+    <open-checksum type="sha">05fdff00eba1cf95f391813ce63dbe0b95a6fcae</open-checksum>
+  </data>
+  <data type="deltainfo">
+    <location href="repodata/deltainfo.xml.gz"/>
+    <checksum type="sha">08928f1b24ebc198e237237160803410799e8c92</checksum>
+    <timestamp>1259968029</timestamp>
+    <open-checksum type="sha">5b77c957f06423dd6659a5431e89f9b408a1e296</open-checksum>
   </data>
   <data type="deltainfo.xml">
     <location href="repodata/deltainfo.xml.gz.gz"/>
     <checksum type="sha">c7e547bc99c0f6b8311623f6eee812bd66591008</checksum>
     <timestamp>1259697250</timestamp>
     <open-checksum type="sha">25c9c4541ca4179ef08c67ade93622c06b5afe26</open-checksum>
-  </data>
-  <data type="deltainfo">
-    <location href="repodata/deltainfo.xml.gz"/>
-    <checksum type="sha">25c9c4541ca4179ef08c67ade93622c06b5afe26</checksum>
-    <timestamp>1259697250</timestamp>
-    <open-checksum type="sha">50ddcfc75a02fe82e49d8d907349ab02bd031b44</open-checksum>
-  </data>
-  <data type="updateinfo">
-    <location href="repodata/updateinfo.xml.gz"/>
-    <checksum type="sha">980909b4d16b7e92e414c58af91258f25998f6e6</checksum>
-    <timestamp>1259886228</timestamp>
-    <open-checksum type="sha">978e1f981d86da100ec6d937ebbf8850e602a659</open-checksum>
   </data>
 </repomd>

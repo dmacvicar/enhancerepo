@@ -13,3 +13,7 @@ echo "Hello friends!" > %{buildroot}/hello.txt
 
 %files
 /hello.txt
+
+%changelog
+* Mon May 11 2009 xxxx@yyyy.com
+- initial package
