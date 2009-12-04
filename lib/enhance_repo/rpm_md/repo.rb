@@ -128,8 +128,9 @@ module EnhanceRepo
           end
           # remove datas in the index not present in the disk
           @index.resources.reject! do |resource|
-            log.info "Removing not existing #{resource.location} from index"
-            ! metadata_files.include?(resource.location)
+            reject = ! metadata_files.include?(resource.location)
+            log.info "Removing not existing #{resource.location} from index" if reject
+            reject
           end
           
           non_empty_files = non_empty_data.map { |x| x.metadata_filename }
