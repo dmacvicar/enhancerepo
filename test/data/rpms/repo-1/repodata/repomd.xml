@@ -1,35 +1,45 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo">
   <data type="other">
     <location href="repodata/other.xml.gz"/>
     <checksum type="sha">e3505a1a67c60f8075d6f1a2d2fd1d6ccffd2ba9</checksum>
-    <timestamp>1258385642</timestamp>
+    <timestamp>1259600805</timestamp>
     <open-checksum type="sha">e8969da1604d966f2b7c2ffa372cfe9fa6561040</open-checksum>
   </data>
   <data type="filelists">
     <location href="repodata/filelists.xml.gz"/>
     <checksum type="sha">c34e01c24ab9017808555721c66439525c2e185e</checksum>
-    <timestamp>1258385642</timestamp>
+    <timestamp>1259600805</timestamp>
     <open-checksum type="sha">f3b26f4e001cb6b3f009ffb66e073b2f458a7220</open-checksum>
   </data>
   <data type="primary">
     <location href="repodata/primary.xml.gz"/>
-    <checksum type="sha">8f3a2b57eef21b728478fd91250af8732ad10a91</checksum>
-    <timestamp>1258385642</timestamp>
+    <checksum type="sha">96965aa5132d5c75056109f60bfd7f3bc67262fb</checksum>
+    <timestamp>1259874197</timestamp>
     <open-checksum type="sha">36c308131f617196a18b694774adb68716947ed9</open-checksum>
   </data>
   <data type="susedata">
     <location href="repodata/susedata.xml.gz"/>
     <checksum type="sha">c4b1a1a34aae81b2265dbd61fd40c02dd1f47a37</checksum>
-    <timestamp>1258389317</timestamp>
+    <timestamp>1259600805</timestamp>
     <open-checksum type="sha">914ddd93451adfb5651de2e87267f48e8d4ef669</open-checksum>
   </data>
-  
-  
-  <data type="deltainfo">
+  <data type="deltainfo.xml">
     <location href="repodata/deltainfo.xml.gz.gz"/>
     <checksum type="sha">c7e547bc99c0f6b8311623f6eee812bd66591008</checksum>
-    <timestamp>1259681954.0</timestamp>
+    <timestamp>1259697250</timestamp>
     <open-checksum type="sha">25c9c4541ca4179ef08c67ade93622c06b5afe26</open-checksum>
-    </data>
+  </data>
+  <data type="deltainfo">
+    <location href="repodata/deltainfo.xml.gz"/>
+    <checksum type="sha">25c9c4541ca4179ef08c67ade93622c06b5afe26</checksum>
+    <timestamp>1259697250</timestamp>
+    <open-checksum type="sha">50ddcfc75a02fe82e49d8d907349ab02bd031b44</open-checksum>
+  </data>
+  <data type="updateinfo">
+    <location href="repodata/updateinfo.xml.gz"/>
+    <checksum type="sha">980909b4d16b7e92e414c58af91258f25998f6e6</checksum>
+    <timestamp>1259886228</timestamp>
+    <open-checksum type="sha">978e1f981d86da100ec6d937ebbf8850e602a659</open-checksum>
+  </data>
 </repomd>

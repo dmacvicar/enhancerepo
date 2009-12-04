@@ -1,0 +1,16 @@
+<update from="duncan@tarro" version="1" type="optional" status="stable">
+  <title>Untitled updateoptional update 1 for a</title>
+  <id>a</id>
+  <issued>1259886228</issued>
+  <release>no release</release>
+  <description></description>
+  <references>
+  </references>
+  <pkglist>
+    <collection>
+      <package name="a" arch="x86_64" version="2.0" release="0">
+        <filename>a-2.0-0.x86_64.rpm</filename>
+      </package>
+    </collection>
+  </pkglist>
+</update>

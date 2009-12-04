@@ -154,7 +154,7 @@ time = Benchmark.measure do
       repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
     end
 
-    repomd.updateinfo.add_updates if config.updates  
+    repomd.updateinfo.read_repoparts if config.updates  
     repomd.updateinfo.split_updates(File.join(config.dir, 'repoparts')) if config.split_updates                                                                        
 
     repomd.deltainfo.create_deltas(config.create_deltas) if config.create_deltas
