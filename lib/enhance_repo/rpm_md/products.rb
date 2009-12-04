@@ -23,7 +23,7 @@
 #++
 #
 require 'rpm'
-require 'tmpdir'
+require 'tempdir'
 require 'pathname'
 require 'nokogiri'
 require 'ftools'
@@ -54,14 +54,15 @@ module EnhanceRepo
       end
 
       def rpm_extract_file(rpmpath, path)
-        tmppath = File.join(Dir.tmpdir, 'enhancerepo')
-        File.makedirs(tmppath)
-        Dir.chdir(tmppath) do
-          `rpm2cpio '#{rpmpath}' | cpio -iv --make-directories #{File.join(".", path)} 2>/dev/null`
-        end
-        File.open(File.join(tmppath, path)) do |f|
-          yield f if block_given?
-          return f.read
+        Tempdir.open do |tmppath|
+          File.makedirs(tmppath)
+          Dir.chdir(tmppath) do
+            `rpm2cpio '#{rpmpath}' | cpio -iv --make-directories #{File.join(".", path)} 2>/dev/null`
+          end
+          File.open(File.join(tmppath, path)) do |f|
+            yield f if block_given?
+            return f.read
+          end
         end
       end
 
