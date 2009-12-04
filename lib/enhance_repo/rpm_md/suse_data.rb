@@ -130,6 +130,7 @@ module EnhanceRepo
 
       def add_keywords
         # add keywords
+        log.info "Adding repository keywords"
         Dir["#{@dir}/**/*.keywords"].each do |keywordfile|
           base = File.basename(keywordfile, '.keywords')
           # =>  look for all rpms with that name in that dir
@@ -141,7 +142,7 @@ module EnhanceRepo
                 keyword = line.chop
                 add_attribute(pkgid, ValueProperty.new('keyword', keyword)) if not keyword.empty?
               end
-              log.info "Adding keyword: #{keywordfile.to_s} to #{pkgid.to_s}"
+              log.info "`-> adding keyword: #{keywordfile.to_s} to #{pkgid.to_s}"
             end
           end
         end
@@ -176,7 +177,7 @@ module EnhanceRepo
       
       def add_disk_usage
         @diskusage_enabled = true
-        log.info "Preparing disk usage..."
+        log.info "Calculating disk usage..."
         # build the pkgid hash
         Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
           pkgid = PackageId.new(rpmfile)

@@ -91,7 +91,14 @@ module EnhanceRepo
       # version 3 to 4. While n = 2 would
       # create a delta to go from 2 to 4 too.
       #
-      def create_deltas(n = 1)
+      # options are :n => number of deltas (default 1)
+      # and :outputdir => defaulting to the same
+      # input directory
+      def create_deltas(opts={})
+        outputdir = opts[:outputdir] || @dir
+        n = opts[:n] || 1
+
+        log.info "Scanning rpms for delta generation (#{n} levels)"
         #log.info "Creating deltarpms : level #{n}"
         # make a hash name -> array of packages
         pkgs = Hash.new
@@ -121,9 +128,14 @@ module EnhanceRepo
               next if newpkg.arch != pkg.arch
               oldpkg = pkg
               # use the same dir as the new rpm
-              log.info "Creating delta - #{oldpkg.to_s} -> #{newpkg.to_s} (#{c+1}/#{n})"
+              log.info "`-> creating delta - #{oldpkg.to_s} -> #{newpkg.to_s} (#{c+1}/#{n})"
+              # calculate directory where to save the delta. Use the newpkg
+              # relative to the origin directory,
+              # this only works because we know the rpm is inside @dir
+              subdir = Pathname.new(newpkg.path).relative_path_from(Pathname.new(@dir)).dirname              
               # calculate the deltarpm name
-              deltafile = File.join(File.dirname(newpkg.path), delta_package_name(oldpkg,newpkg))
+              deltafile = File.join(outputdir, subdir, delta_package_name(oldpkg,newpkg))
+              FileUtils.mkdir_p File.dirname(deltafile)
               #puts "makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}"
               `makedeltarpm '#{oldpkg.path}' '#{newpkg.path}' '#{deltafile}'`
               c += 1

@@ -145,8 +145,7 @@ module EnhanceRepo
             if indexed_resource.nil?
               missing_files << metadata_file
               next
-            end
-            if File.mtime(File.join(@outputdir, metadata_file)).to_i != indexed_resource.timestamp.to_i
+            elsif File.mtime(File.join(@dir, metadata_file)).to_i != indexed_resource.timestamp.to_i
               changed_files << metadata_file
               next
             end
@@ -185,6 +184,7 @@ module EnhanceRepo
       # the extension is not empty
       def write_gz_extension_file(data)
         filename = Pathname.new(File.join(@outputdir, data.metadata_filename))
+        FileUtils.mkdir_p filename.dirname
         log.info "Saving #{filename} .."
         if not filename.dirname.exist?
           log.info "Creating non existing #{filename.dirname} .."
