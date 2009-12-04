@@ -32,6 +32,7 @@ require 'rexml/document'
 require 'yaml'
 require 'prettyprint'
 require 'fileutils'
+require 'zlib'
 require 'enhance_repo/rpm_md/update'
 
 module EnhanceRepo
@@ -183,29 +184,32 @@ module EnhanceRepo
       #
       # outputdir is the directory where to save the patch to.
       def split_updates(outputdir)
+        FileUtils.mkdir_p outputdir        
         updateinfofile = File.new(File.join(@dir, metadata_filename))
 
         # we can't split without an updateinfo file
-        raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)                    
-        document = REXML::Document.new(updateinfofile)
-        root = document.root
-        root.each_element("update") do |updateElement|
-          id = nil
-          updateElement.each_element("id") do |elementId|
-            id = elementId.text
-          end
-          if id == nil
-            log.warning 'No id found. Setting id to NON_ID_FOUND'
-            id = 'NON_ID_FOUND'
-          end
-          version = 0
-          updatefilename = ""
-          while ( File.exists?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version.to_s}.xml") ) )
-            version += 1
-          end
-          log.info "Saving update part to '#{updatefilename}'."
-          File.open(updatefilename, 'w') do |updatefile|
-            updatefile << updateElement
+        raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)
+        Zlib::GzipReader.open(updateinfofile) do |gz|        
+          document = REXML::Document.new(gz)
+          root = document.root
+          root.each_element("update") do |updateElement|
+            id = nil
+            updateElement.each_element("id") do |elementId|
+              id = elementId.text
+            end
+            if id == nil
+              log.warning 'No id found. Setting id to NON_ID_FOUND'
+              id = 'NON_ID_FOUND'
+            end
+            version = 0
+            updatefilename = ""
+            while ( File.exists?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version.to_s}.xml") ) )
+              version += 1
+            end
+            log.info "Saving update part to '#{updatefilename}'."
+            File.open(updatefilename, 'w') do |updatefile|
+              updatefile << updateElement
+            end
           end
         end
       end

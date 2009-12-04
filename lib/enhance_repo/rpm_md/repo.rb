@@ -111,16 +111,27 @@ module EnhanceRepo
         # select the datas that are not empty
         # those need to be saved
         non_empty_data = datas.reject { |x| x.empty? }
+        # files present in the index, which were changed
         changed_files = []
+        # files present on disk, but not in the index
         missing_files = []
+        # files present in the index, but not on disk
+        superflous_files = []
+        
         # now look for files that changed or dissapeared
         Dir.chdir(@dir) do
           # look all files except the index itself
-          metadata_files = Dir["repodata/*.xml.*"].reject do |x|            
+          metadata_files = Dir["repodata/*.xml*"].reject do |x|            
             x  =~ /#{@index.metadata_filename}/ ||
             x =~ /\.key$/ ||
             x =~ /\.asc$/
           end
+          # remove datas in the index not present in the disk
+          @index.resources.reject! do |resource|
+            log.info "Removing not existing #{resource.location} from index"
+            ! metadata_files.include?(resource.location)
+          end
+          
           non_empty_files = non_empty_data.map { |x| x.metadata_filename }
           # ignore it if it is already in the non_empty_list
           # as it will be added to the index anyway
@@ -141,7 +152,7 @@ module EnhanceRepo
           end
         end
         
-        # find the datas which either
+        # write down changed datas
         non_empty_data.each do |data|
           write_gz_extension_file(data)
         end
