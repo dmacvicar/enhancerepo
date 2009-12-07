@@ -1,4 +1,3 @@
-
 #--
 # 
 # enhancerepo is a rpm-md repository metadata tool.
@@ -26,25 +25,27 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 require 'enhance_repo'
 require 'stringio'
+require 'zlib'
+require 'nokogiri'
 
-class DeltaInfo_test < Test::Unit::TestCase
+class Index_test < Test::Unit::TestCase
 
   def setup
   end
 
-  def test_xml_output
-    deltainfo = EnhanceRepo::RpmMd::DeltaInfo.new(test_data('rpms/repo-1'))
-    deltainfo.add_deltas
+  def test_reading_existing_index
+    index = EnhanceRepo::RpmMd::Index.new
+    repomdfile = File.join(test_data('rpms/repo-with-product'), index.metadata_filename)
+    index.read_file(File.new(repomdfile))
 
-    assert ! deltainfo.empty?
-    assert_equal 1, deltainfo.delta_count
+    assert_equal 4, index.resources.size
 
-    Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/deltainfo.xml.gz')) do |expected_deltainfo|
+    # now test that saving back produces the same result
+    buffer = StringIO.new
+    index.write(buffer)
 
-      buffer = StringIO.new
-      deltainfo.write(buffer)
-
-      assert_xml_equal(expected_deltainfo.read, buffer.string)
+    File.open(repomdfile) do |f|
+      assert_xml_equal(f.read, buffer.string)
     end
   end
 end

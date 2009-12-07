@@ -47,6 +47,7 @@ module EnhanceRepo
 
       def initialize(dir)
         @dir = dir
+        @expire = nil
         @keywords = Set.new
         @products = Set.new
       end
@@ -61,7 +62,7 @@ module EnhanceRepo
         xml = builder.suseinfo do |b|
 
           # add expire tag
-          b.expire(@expire.to_i.to_s)
+          b.expire(@expire.to_i.to_s) if not @expire.nil?
 
           if not @keywords.empty?
             b.keywords do |b|

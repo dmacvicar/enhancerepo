@@ -24,7 +24,6 @@
 #++
 #
 require File.join(File.dirname(__FILE__), 'test_helper')
-require 'tmpdir'
 require 'enhance_repo'
 require 'tempdir'
 require 'stringio'

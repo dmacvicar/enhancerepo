@@ -149,15 +149,13 @@ time = Benchmark.measure do
     repomd.susedata.add_disk_usage if config.diskusage
 
     if not config.generate_update.nil?
-      # make sure the repoparts directory is there
-      FileUtils.mkdir_p File.join(config.dir, 'repoparts')
-      repomd.updateinfo.generate_update(config.generate_update, File.join(config.dir, 'repoparts') )
+      repomd.updateinfo.generate_update(config.generate_update, File.join(config.outputdir, 'repoparts') )
     end
 
     repomd.updateinfo.read_repoparts if config.updates  
-    repomd.updateinfo.split_updates(File.join(config.dir, 'repoparts')) if config.split_updates                                                                        
+    repomd.updateinfo.split_updates(File.join(config.outputdir, 'repoparts')) if config.split_updates                                                                        
 
-    repomd.deltainfo.create_deltas(config.create_deltas) if config.create_deltas
+    repomd.deltainfo.create_deltas(:outputdir => config.outputdir, :n => config.create_deltas) if config.create_deltas
     repomd.deltainfo.add_deltas if config.deltas
 
     repomd.products.read_packages if config.products
@@ -176,6 +174,7 @@ time = Benchmark.measure do
   rescue Exception => excp
     EnhanceRepo.logger.fatal excp.message
     if EnhanceRepo::enable_debug
+      EnhanceRepo.logger.fatal excp.class
       EnhanceRepo.logger.fatal(excp.backtrace.join("\n"))
     else
       EnhanceRepo.logger.info "Pass --debug for more information..."

@@ -32,6 +32,7 @@ require 'rexml/document'
 require 'yaml'
 require 'prettyprint'
 require 'fileutils'
+require 'zlib'
 require 'enhance_repo/rpm_md/update'
 
 module EnhanceRepo
@@ -76,7 +77,7 @@ module EnhanceRepo
       def generate_update(packages, outputdir)
         
         # make a hash name -> array of packages
-        log.info "Generating update parts to #{outputdir}..."
+        log.info "Generating update part to #{outputdir} for packages #{packages.join(", ")}"
         package_index = {}
 
         # look all rpms in the old packages base directory plus
@@ -86,8 +87,8 @@ module EnhanceRepo
         # reject unwanted files
         rpmfiles.reject! do |rpmfile|
           reject = false
-          # reject all delta rpms
-          reject = true if rpmfile =~ /\.delta\.rpm$/
+          # reject all delta and src rpms
+          reject = true if rpmfile =~ /\.delta\.rpm$|\.src\.rpm$/
           # now reject all the packages for which the rpm file name
           # does not match the name of the requested packages
           # so if packages is A, B and we have C-1.0.rpm it does not
@@ -97,6 +98,7 @@ module EnhanceRepo
         end
 
         log.info "`-> #{rpmfiles.size} rpm packages were not discarded"
+        log.debug "    #{rpmfiles.map { |x| File.basename(x) }.join(', ')}"
         
         # now index all rpms per package name in a hash table
         # which goes from name => list of versions
@@ -107,11 +109,12 @@ module EnhanceRepo
           next if not packages.include?(rpm.name)
           
           package_index[rpm.name] = Array.new if not package_index.has_key?(rpm.name)
-          package_index[rpm.name] << rpm
+          # add the rpm if there is no other rpm with the same version
+          package_index[rpm.name] << rpm if not package_index[rpm.name].select { |x| x.version == rpm.version && x.name == rpm.name }.first
         end
 
         log.info "`-> indexed #{package_index.size} unique packages from #{rpmfiles.size} rpms"
-        
+        log.debug "    #{package_index.keys.join(', ')}"
         # do our package hash include every package?
         packages.reject! do |pkg|
           reject = false
@@ -127,6 +130,7 @@ module EnhanceRepo
         packages.each do |pkgname|
           pkglist = package_index[pkgname]
           log.info "`-> #{pkglist.size} versions for '#{pkgname}'"
+          log.debug "    #{package_index[pkgname].map {|x| x.version}.join(", ")}"
           # sort them by version
           pkglist.sort! { |a,b| a.version <=> b.version }
           pkglist.reverse!
@@ -134,16 +138,11 @@ module EnhanceRepo
 
           # if there is only one package then we don't need changelog
           if pkglist.size > 1
+            # we know that there are no duplicate versions so we can
+            # take the first and the second            
             first = pkglist.shift
             second = pkglist.shift
-            # go down old version until there is some different package
-            diff = []
-            while diff.empty?
-              diff = first.changelog[0, first.changelog.size - second.changelog.size]
-              break if pkglist.empty?
-              second = pkglist.shift
-            end
-            
+            diff = first.changelog[0, first.changelog.size - second.changelog.size] || []                        
             log.info "`-> found change #{first.ident} and #{second.ident}."
             
             log.info "`-> '#{pkgname}' has #{diff.size} change entries (#{first.changelog.size}/#{second.changelog.size})"
@@ -157,6 +156,12 @@ module EnhanceRepo
           end
           
         end
+
+        # do not save it if there are no packages
+        if update.empty?
+
+        end
+        
         # before writing the update, figure out more
         # information
         update.smart_fill_blank_fields
@@ -183,29 +188,32 @@ module EnhanceRepo
       #
       # outputdir is the directory where to save the patch to.
       def split_updates(outputdir)
+        FileUtils.mkdir_p outputdir        
         updateinfofile = File.new(File.join(@dir, metadata_filename))
 
         # we can't split without an updateinfo file
-        raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)                    
-        document = REXML::Document.new(updateinfofile)
-        root = document.root
-        root.each_element("update") do |updateElement|
-          id = nil
-          updateElement.each_element("id") do |elementId|
-            id = elementId.text
-          end
-          if id == nil
-            log.warning 'No id found. Setting id to NON_ID_FOUND'
-            id = 'NON_ID_FOUND'
-          end
-          version = 0
-          updatefilename = ""
-          while ( File.exists?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version.to_s}.xml") ) )
-            version += 1
-          end
-          log.info "Saving update part to '#{updatefilename}'."
-          File.open(updatefilename, 'w') do |updatefile|
-            updatefile << updateElement
+        raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)
+        Zlib::GzipReader.open(updateinfofile) do |gz|        
+          document = REXML::Document.new(gz)
+          root = document.root
+          root.each_element("update") do |updateElement|
+            id = nil
+            updateElement.each_element("id") do |elementId|
+              id = elementId.text
+            end
+            if id == nil
+              log.warning 'No id found. Setting id to NON_ID_FOUND'
+              id = 'NON_ID_FOUND'
+            end
+            version = 0
+            updatefilename = ""
+            while ( File.exists?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version.to_s}.xml") ) )
+              version += 1
+            end
+            log.info "Saving update part to '#{updatefilename}'."
+            File.open(updatefilename, 'w') do |updatefile|
+              updatefile << updateElement
+            end
           end
         end
       end

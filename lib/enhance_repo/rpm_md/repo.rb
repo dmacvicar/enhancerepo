@@ -111,16 +111,28 @@ module EnhanceRepo
         # select the datas that are not empty
         # those need to be saved
         non_empty_data = datas.reject { |x| x.empty? }
+        # files present in the index, which were changed
         changed_files = []
+        # files present on disk, but not in the index
         missing_files = []
+        # files present in the index, but not on disk
+        superflous_files = []
+        
         # now look for files that changed or dissapeared
         Dir.chdir(@dir) do
           # look all files except the index itself
-          metadata_files = Dir["repodata/*.xml.*"].reject do |x|            
+          metadata_files = Dir["repodata/*.xml*"].reject do |x|            
             x  =~ /#{@index.metadata_filename}/ ||
             x =~ /\.key$/ ||
             x =~ /\.asc$/
           end
+          # remove datas in the index not present in the disk
+          @index.resources.reject! do |resource|
+            reject = ! metadata_files.include?(resource.location)
+            log.info "Removing not existing #{resource.location} from index" if reject
+            reject
+          end
+          
           non_empty_files = non_empty_data.map { |x| x.metadata_filename }
           # ignore it if it is already in the non_empty_list
           # as it will be added to the index anyway
@@ -133,15 +145,14 @@ module EnhanceRepo
             if indexed_resource.nil?
               missing_files << metadata_file
               next
-            end
-            if File.mtime(File.join(@outputdir, metadata_file)).to_i != indexed_resource.timestamp.to_i
+            elsif File.mtime(File.join(@dir, metadata_file)).to_i != indexed_resource.timestamp.to_i
               changed_files << metadata_file
               next
             end
           end
         end
         
-        # find the datas which either
+        # write down changed datas
         non_empty_data.each do |data|
           write_gz_extension_file(data)
         end
@@ -173,6 +184,7 @@ module EnhanceRepo
       # the extension is not empty
       def write_gz_extension_file(data)
         filename = Pathname.new(File.join(@outputdir, data.metadata_filename))
+        FileUtils.mkdir_p filename.dirname
         log.info "Saving #{filename} .."
         if not filename.dirname.exist?
           log.info "Creating non existing #{filename.dirname} .."
