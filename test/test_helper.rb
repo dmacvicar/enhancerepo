@@ -25,6 +25,7 @@
 require 'rubygems'
 gem 'test-unit'
 require 'test/unit'
+require 'shoulda'
 require 'mocha'
 
 $: << File.join(File.dirname(__FILE__), "..", "lib")

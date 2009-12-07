@@ -142,7 +142,8 @@ module EnhanceRepo
             # take the first and the second            
             first = pkglist.shift
             second = pkglist.shift
-            diff = first.changelog[0, first.changelog.size - second.changelog.size] || []                        
+            diff = first.changelog - second.changelog || []
+            #diff = first.changelog[0, first.changelog.size - second.changelog.size] || []                        
             log.info "`-> found change #{first.ident} and #{second.ident}."
             
             log.info "`-> '#{pkgname}' has #{diff.size} change entries (#{first.changelog.size}/#{second.changelog.size})"
