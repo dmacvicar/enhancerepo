@@ -23,7 +23,7 @@ spec = Gem::Specification.new do |s|
     s.summary   =   "Adds additional information to repomd repositories"
     s.description = "enhancerepo adds additional metadata to repommd repositories and
 servers as the testbed for the specification"
-    s.files     =   FileList['lib/**/*.rb', 'test/*', 'bin/enhancerepo'].to_a
+    s.files     =   FileList['ChangeLog', 'README', 'VERSION', 'TODO', 'Rakefile', 'lib/**/*.rb', 'test/**/*', 'bin/enhancerepo'].to_a
     s.require_path  =   "lib"
     s.test_files = Dir.glob('tests/*.rb')
     s.has_rdoc  =  true
