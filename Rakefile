@@ -29,6 +29,7 @@ servers as the testbed for the specification"
     s.has_rdoc  =  true
     s.add_dependency('log4r', '>= 1.0.5')
     s.add_dependency('nokogiri', '>= 1.4')
+    s.add_dependency('actvesupport', '>= 2.3')
 #    s.extra_rdoc_files  =   ["README"]
 end
 
