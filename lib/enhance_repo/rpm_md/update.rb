@@ -34,6 +34,8 @@ require 'yaml'
 require 'prettyprint'
 require 'set'
 
+require 'enhance_repo/rpm_md/update_smart_fields'
+
 module EnhanceRepo
   module RpmMd
 
@@ -52,6 +54,10 @@ module EnhanceRepo
       # label to display to the user
       attr_accessor :title
 
+      def to_s
+       "#{type}##{referenceid}"
+      end
+      
       # initialize a reference, per default a novell
       # bugzilla type
       def initialize
@@ -65,6 +71,11 @@ module EnhanceRepo
     # represents one update, which can consist of various packages
     # and references
     class Update
+
+      # methods to automatically grab data from the
+      # update description
+      include UpdateSmartFields
+      
       attr_accessor_with_default :updateid, "unknown"
       attr_accessor_with_default :status, "stable"
       attr_accessor_with_default :from, "#{ENV['USER']}@#{ENV['HOST']}"
@@ -90,98 +101,6 @@ module EnhanceRepo
         "update-#{updateid}-#{version}"
       end
 
-      # detects references for the given
-      # configuration
-      # options:
-      # :keyword => 'foo'
-      #    would match foo-#123 foo#1234 FOO #1234 and other
-      #    creative developer variations
-      # :keywords => ['foo', 'bar']
-      #    adds various keywords at once
-      # :href => 'http://foo.org/?query=:id'
-      #    website reference, :id is replaced with the
-      #    actual detected id
-      #  :title => 'SUSE bug #:id'
-      #    title, :id is replaced with the detected id
-      #  :type => 'bugzilla'
-      #    type is just passed and set in the reference that match
-      #    this options
-      def each_reference_for(opts={})
-        keywords = Set.new
-        keywords << opts[:keyword] if opts.has_key?(:keyword)
-        keywords = keywords.merge(opts[:keywords].to_set) if opts.has_key?(:keywords)
-
-        regexps = []
-        keywords.each do |keyword|
-          specifier = keyword.each_char.map{|x| "#{x}\\\.?"}.join
-          regexps << "#{specifier}[-|\\\s#|\\\s|#](\\\d+[-|\\\d+]*)"
-        end
-
-        regexps.each do |regexp|
-          references = description.scan(/#{regexp}/i)
-          references.each do |ref_id|
-            ref = Reference.new
-            ref.referenceid = ref_id.first
-            ref.href = opts[:href].gsub(/:id/, ref_id.join) if opts.has_key?(:href)
-            ref.title = opts[:title].gsub(/:id/, ref_id.join) if opts.has_key?(:title)
-            ref.type = opts[:type] if opts.has_key?(:type)
-            yield ref
-          end
-        end
-      end
-
-      # yields a reference in the passed
-      # block for every detected reference from the known
-      # ones
-      # in the update description
-      def each_detected_reference
-        each_reference_for(:keyword => 'bnc', :href => 'http://bugzilla.novell.com/:id', :title => 'Novell bugzilla #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keywords => ['rh', 'rhbz'], :href => 'http://bugzilla.redhat.com/:id', :title => 'Redhat bugzilla #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'bgo', :href => 'http://bugzilla.gnome.org/:id', :title => 'Gnome bug #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'cve', :href => 'http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-:id', :title => 'CVE-:id', :type => 'cve' ) {|x| yield x}
-      end
-      
-      # automatically set empty fields
-      # needs the description to be set to
-      # be somehow smart
-      def smart_fill_blank_fields
-        # figure out the type (optional is default)
-        if description =~ /vulnerability|security|CVE|Secunia/
-          @type = 'security'
-        else
-          @type = 'recommended' if description =~ /fix|bnc#|bug|crash/
-        end
-
-        @title = "#{type} update #{version} "
-        
-        # now figure out the title
-        # if there is only package
-        if packages.size == 1
-          # then name the fix according to the package, and the type
-          @title << "for #{packages.first.name}"
-          @updateid = packages.first.name
-        elsif packages.size < 1
-          # do nothing, it is may be just a message
-        else
-          # figure out what the multiple packages are
-          if packages.grep(/kde/).size > 1
-            # assume it is a KDE update
-            @title << "for KDE"
-            # KDE 3 or KDE4
-            @updateid = "KDE3" if packages.grep(/kde(.+)3$/).size > 1
-            @updateid = "KDE4" if packages.grep(/kde(.+)4$/).size > 1
-          elsif packages.grep(/kernel/).size > 1
-            @title << "for the Linux kernel"
-            @updateid = 'kernel'
-          end
-        end
-
-        @references ||= []
-        # now figure out and fill references
-        each_detected_reference { |ref| @references << ref }       
-      end
       
       # write a update out
       def write(file)

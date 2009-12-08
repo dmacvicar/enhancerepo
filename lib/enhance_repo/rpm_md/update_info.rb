@@ -166,6 +166,10 @@ module EnhanceRepo
         # before writing the update, figure out more
         # information
         update.smart_fill_blank_fields
+
+        log.info "`-> update has #{update.references.size} references"
+        log.debug "    #{update.references.join(',')} "
+        
         filename = ""
 
         FileUtils.mkdir_p outputdir
