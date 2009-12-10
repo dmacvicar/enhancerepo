@@ -194,7 +194,7 @@ module EnhanceRepo
       # outputdir is the directory where to save the patch to.
       def split_updates(outputdir)
         FileUtils.mkdir_p outputdir        
-        updateinfofile = File.new(File.join(@dir, metadata_filename))
+        updateinfofile = File.join(@dir, metadata_filename)
 
         # we can't split without an updateinfo file
         raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)
