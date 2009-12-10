@@ -44,6 +44,10 @@
 #   Useful if you keep old packages in a different repos
 #   and updates in this one.
 #
+# --split-updates
+#   Splits current updateinfo.xml into update parts files
+#   in repoparts/
+#
 # --indent
 #   Generate indented xml. Default no.
 #
