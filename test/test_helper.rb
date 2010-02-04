@@ -23,7 +23,6 @@
 #++
 #
 require 'rubygems'
-gem 'test-unit'
 require 'test/unit'
 require 'shoulda'
 require 'mocha'
@@ -31,7 +30,7 @@ require 'mocha'
 $: << File.join(File.dirname(__FILE__), "..", "lib")
 require 'enhance_repo'
 require 'enhance_repo/xml_comparer'
-require 'activesupport'
+require 'active_support'
 
 EnhanceRepo::enable_logger
 

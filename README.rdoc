@@ -1,0 +1,15 @@
+
+= enhancerepo
+
+* http://en.opensuse.org/Enhancerepo
+
+== Introduction
+
+Reference implementation for future rpmmd extensions
+
+requires ruby-rpm.
+
+== Authors
+
+* Duncan Mac-Vicar P. <dmacvicar@suse.de>
+

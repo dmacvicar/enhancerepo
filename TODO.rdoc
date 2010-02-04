@@ -1,0 +1,4 @@
+
+* replace accessors and initialization with ActiveSupport's
+  attr_accessor_with_default
+

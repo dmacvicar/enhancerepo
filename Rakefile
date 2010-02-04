@@ -1,40 +1,29 @@
-require 'rake'
-require 'rake/gempackagetask'
-require 'rake/packagetask'
-require 'rake/testtask'
+$: << File.join(File.dirname(__FILE__), "test")
+require 'rubygems'
+gem 'hoe', '>= 2.1.0'
+require 'hoe'
 
-task :default => :test
+task :default => [:docs, :test]
 
-Rake::TestTask.new do |t|
-  t.test_files = FileList['test/*_test.rb']
-  t.verbose = true
-  t.warning = true
-end
+Hoe.plugin :yard
 
-version = File.new('VERSION').read.chomp
-
-spec = Gem::Specification.new do |s|
-    s.platform  =   Gem::Platform::RUBY
-    s.name      =   "enhancerepo"
-    s.version   =   "0.4.0"
-    s.author    =   "Duncan Mac-Vicar P."
-    s.email     =   "dmacvicar@suse.de"
-    s.homepage  =   "http://en.opensuse.org/Enhancerepo"
-    s.summary   =   "Adds additional information to repomd repositories"
-    s.description = "enhancerepo adds additional metadata to repommd repositories and
+HOE = Hoe.spec 'enhancerepo' do
+  developer('Duncan Mac-Vicar P.', 'dmacvicar@suse.de')
+# s.homepage  =   "http://en.opensuse.org/Enhancerepo"
+  self.summary = "Adds additional information to repomd repositories"
+  self.description = "enhancerepo adds additional metadata to repommd repositories and
 servers as the testbed for the specification"
-    s.files     =   FileList['ChangeLog', 'README', 'VERSION', 'TODO', 'Rakefile', 'lib/**/*.rb', 'test/**/*', 'bin/enhancerepo'].to_a
-    s.require_path  =   "lib"
-    s.test_files = Dir.glob('tests/*.rb')
-    s.has_rdoc  =  true
-    s.add_dependency('log4r', '>= 1.0.5')
-    s.add_dependency('nokogiri', '>= 1.4')
-    s.add_dependency('actvesupport', '>= 2.3')
-#    s.extra_rdoc_files  =   ["README"]
-end
+  self.readme_file = ['README', ENV['HLANG'], 'rdoc'].compact.join('.')
+  self.history_file = ['CHANGELOG', ENV['HLANG'], 'rdoc'].compact.join('.')
+  self.extra_rdoc_files = FileList['*.rdoc']
 
-Rake::GemPackageTask.new(spec) do |pkg|
-    pkg.need_tar = true
+  self.extra_deps << ['log4r', '>= 1.0.5']
+  self.extra_deps << ['nokogiri', '>= 1.4']
+  self.extra_deps << ['activesupport', '>= 2.3']
+
+  self.extra_dev_deps << ['shoulda', '>= 0']
+  self.extra_dev_deps << ['mocha', '>= 0']
+  self.extra_dev_deps << ['yard', '>= 0']
 end
 
 desc "Insert GPL into all source files"
