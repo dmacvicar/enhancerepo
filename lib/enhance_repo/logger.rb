@@ -35,13 +35,13 @@ module EnhanceRepo
       @logger.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)  
     rescue LoadError
       require 'logger'
-      @logger = Logger.new 'enhancerepo'
+      @logger = ::Logger.new(STDERR)
     end
-    EnhanceRepo.logger.level = INFO
+    EnhanceRepo.logger.level = ::Logger::INFO
   end
 
   def self.enable_debug
-    EnhanceRepo.logger.level = DEBUG
+    EnhanceRepo.logger.level = ::Logger::DEBUG
   end
   
   def self.logger
