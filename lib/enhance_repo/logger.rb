@@ -32,16 +32,20 @@ module EnhanceRepo
       include Log4r
       @logger = Log4r::Logger.new 'enhancerepo'
       console_format = Log4r::PatternFormatter.new(:pattern => "%l:\t %m")
-      @logger.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)  
+      @logger.add Log4r::StdoutOutputter.new('console', :formatter=>console_format)
     rescue LoadError
       require 'logger'
       @logger = ::Logger.new(STDERR)
     end
-    EnhanceRepo.logger.level = ::Logger::INFO
+    EnhanceRepo.logger.level = using_log4r? ? Log4r::INFO : ::Logger::INFO
   end
 
+  def self.using_log4r?
+    (! (Object.const_get(:Log4r) rescue nil).nil?)
+  end
+  
   def self.enable_debug
-    EnhanceRepo.logger.level = ::Logger::DEBUG
+    EnhanceRepo.logger.level = using_log4r? ? Log4r::DEBUG : ::Logger::DEBUG
   end
   
   def self.logger
