@@ -17,6 +17,7 @@ servers as the testbed for the specification"
   self.history_file = ['CHANGELOG', ENV['HLANG'], 'rdoc'].compact.join('.')
   self.extra_rdoc_files = FileList['*.rdoc']
 
+  self.extra_deps << ['trollop', '>= 1.0.5']
   self.extra_deps << ['log4r', '>= 1.0.5']
   self.extra_deps << ['nokogiri', '>= 1.4']
   self.extra_deps << ['activesupport', '>= 2.3']

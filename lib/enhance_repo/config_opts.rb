@@ -63,24 +63,36 @@ module EnhanceRepo
     def outputdir
       return @dir if @outputdir.nil?
       return @outputdir
+
     end
     
-    def initialize
-      @index = false
-      @indent = false      
-      @primary = false
+    def initialize(opts)
       @repoproducts = Set.new
       @repokeywords = Set.new
-      @signkey = nil
-      @updates = false
-      @split_updates = false
-      @eulas = false
-      @keywords = false
-      @diskusage = false
-      @deltas = false
-      @create_deltas = false
-      @products = false
-      @benchmark = false
+      read_opts(opts)
     end
+    
+    def read_opts(opts)
+      outputdir = Pathname.new(opts[:outputdir])
+      index = opts[:index]
+      expire = opts[:expire]
+      primary = opts[:primary]
+      repoproducts = repoproducts.merge(opts[:'repo-products'])
+      repokeywords = repokeywords.merge(opts[:'repo-keywords'])
+      signkey = opts[:signkey]
+      updates = opts[:updates]
+      split_updates = opts[:'split-updates']
+      generate_update = opts[:'generate-update']
+      eulas = opts[:eulas]
+      keywords = opts[:keywords]
+      diskusage = opts[:'disk-usage']
+      deltas = opts[:deltas]
+      create_deltas = opts[:'create-deltas']
+      products = opts[:products]
+      benchmark = opts[:benchmark]
+      updatesbasedir = Pathname.new(opts[:'updates-base-dir'])
+      outputdir = Pathname.new(opts[:'outputdir'])
+    end
+    
   end
 end
