@@ -47,7 +47,7 @@ EOS
   opt :benchmark, 'Show benchmark statistics at the end'
   
   opt :primary, 'Add data from rpm files and generate primary.xml (EXPERIMENTAL)', :short => :p
-  opt :sign, 'Generates signature for the repository using key keyid', :short => :s
+  opt :sign, 'Generates signature for the repository using key keyid', :short => :s, :type => :string
   opt :updates, 'Add updates from *.updates files and generate updateinfo.xml', :short => :u
   opt :'generate-update', 'Generates an update from the given package list comparing package\'s last version changes', :type => :strings
   opt :'updates-base-dir', 'Looks for package also in <dir> Useful if you keep old packages in a different repos and updates in this one.', :type => :string

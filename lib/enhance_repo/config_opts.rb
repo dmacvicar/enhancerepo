@@ -78,7 +78,7 @@ module EnhanceRepo
       @primary = opts[:primary]
       @repoproducts = @repoproducts.merge([*opts[:'repo-products']])
       @repokeywords = @repokeywords.merge([*opts[:'repo-keywords']])
-      @signkey = opts[:signkey]
+      @signkey = opts[:sign]
       @updates = opts[:updates]
       @split_updates = opts[:'split-updates']
       @generate_update = opts[:'generate-update']
@@ -88,7 +88,7 @@ module EnhanceRepo
       @deltas = opts[:deltas]
       @create_deltas = opts[:'create-deltas']
       @products = opts[:products]
-      @benchmark = opts[:benchmark]
+      @benchmark = opts[:benchmark]      
       @updatesbasedir = Pathname.new(opts[:'updates-base-dir']) if opts[:'updates-base-dir']
       @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
       @dir = Pathname.new(opts[:dir]) if opts[:dir]
