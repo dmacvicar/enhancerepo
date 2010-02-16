@@ -90,7 +90,8 @@ module EnhanceRepo
       @products = opts[:products]
       @benchmark = opts[:benchmark]
       @updatesbasedir = Pathname.new(opts[:'updates-base-dir']) if opts[:'updates-base-dir']
-      @outputdir = Pathname.new(opts[:'outputdir']) if opts[:'outputdir']
+      @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
+      @dir = Pathname.new(opts[:dir]) if opts[:dir]
     end
     
   end

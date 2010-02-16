@@ -48,7 +48,7 @@ EOS
   
   opt :primary, 'Add data from rpm files and generate primary.xml (EXPERIMENTAL)', :short => :p
   opt :sign, 'Generates signature for the repository using key keyid', :short => :s
-  opt :updates, 'Add updates from *.updates files and generate updateinfo.xml', :type => :string, :short => :u
+  opt :updates, 'Add updates from *.updates files and generate updateinfo.xml', :short => :u
   opt :'generate-update', 'Generates an update from the given package list comparing package\'s last version changes', :type => :strings
   opt :'updates-base-dir', 'Looks for package also in <dir> Useful if you keep old packages in a different repos and updates in this one.', :type => :string
   opt :'split-updates', 'Splits current updateinfo.xml into update parts files in repoparts/'
@@ -80,28 +80,18 @@ EOS
   opt :products, 'Reads release packages and generating product information in products.xml based on the information contained in the .prod files included in the packages.'
 
   # other
-  opt :debug, 'Show debug information'  
+  opt :debug, 'Show debug information'
 end
 
 config = EnhanceRepo::ConfigOpts.new(opts)
-
-dir = nil
+dir = ARGV.shift
+config.dir = Pathname.new(dir) if not dir.nil?
 
 # Check if dir is given
-if ARGV.length != 1
+if config.dir.nil?
   EnhanceRepo.logger.fatal "Missing dir argument (try --help)"
   exit 0
 end
-
-dir = ARGV.shift
-
-# Check if the dir is valid
-#if not (File.exists?(File.join(dir + REPOMD_FILE)))
-#  puts "Directory '#{dir}' is not a rpm-md repository"
-#  exit 1
-#end
-
-config.dir = Pathname.new(dir)
 
 repomd = EnhanceRepo::RpmMd::Repo.new(config)
 
