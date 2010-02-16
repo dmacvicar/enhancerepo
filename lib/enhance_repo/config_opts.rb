@@ -73,25 +73,24 @@ module EnhanceRepo
     end
     
     def read_opts(opts)
-      outputdir = Pathname.new(opts[:outputdir])
-      index = opts[:index]
-      expire = opts[:expire]
-      primary = opts[:primary]
-      repoproducts = repoproducts.merge(opts[:'repo-products'])
-      repokeywords = repokeywords.merge(opts[:'repo-keywords'])
-      signkey = opts[:signkey]
-      updates = opts[:updates]
-      split_updates = opts[:'split-updates']
-      generate_update = opts[:'generate-update']
-      eulas = opts[:eulas]
-      keywords = opts[:keywords]
-      diskusage = opts[:'disk-usage']
-      deltas = opts[:deltas]
-      create_deltas = opts[:'create-deltas']
-      products = opts[:products]
-      benchmark = opts[:benchmark]
-      updatesbasedir = Pathname.new(opts[:'updates-base-dir'])
-      outputdir = Pathname.new(opts[:'outputdir'])
+      @index = opts[:index]
+      @expire = opts[:expire]
+      @primary = opts[:primary]
+      @repoproducts = @repoproducts.merge([*opts[:'repo-products']])
+      @repokeywords = @repokeywords.merge([*opts[:'repo-keywords']])
+      @signkey = opts[:signkey]
+      @updates = opts[:updates]
+      @split_updates = opts[:'split-updates']
+      @generate_update = opts[:'generate-update']
+      @eulas = opts[:eulas]
+      @keywords = opts[:keywords]
+      @diskusage = opts[:'disk-usage']
+      @deltas = opts[:deltas]
+      @create_deltas = opts[:'create-deltas']
+      @products = opts[:products]
+      @benchmark = opts[:benchmark]
+      @updatesbasedir = Pathname.new(opts[:'updates-base-dir']) if opts[:'updates-base-dir']
+      @outputdir = Pathname.new(opts[:'outputdir']) if opts[:'outputdir']
     end
     
   end

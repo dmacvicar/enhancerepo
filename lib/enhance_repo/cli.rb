@@ -55,8 +55,8 @@ EOS
   opt :indent, 'Generate indented xml. Default: no', :short => :i
   
   opt :expire, 'Set repository expiration hint (Can be used to detect dead mirrors)', :type => :date, :short => :e
-  opt :'repo-product', 'Adds product compatibility information', :type => :string
-  opt :'repo-keyword', 'Tags repository with keyword', :type => :string
+  opt :'repo-product', 'Adds product compatibility information', :type => :strings
+  opt :'repo-keyword', 'Tags repository with keyword', :type => :strings
 
   # === SUSE specific package data (susedata.xml)
   
