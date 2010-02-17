@@ -49,20 +49,20 @@ EOS
   opt :primary, 'Add data from rpm files and generate primary.xml (EXPERIMENTAL)', :short => :p
   opt :sign, 'Generates signature for the repository using key keyid', :short => :s, :type => :string
   opt :updates, 'Add updates from *.updates files and generate updateinfo.xml', :short => :u
-  opt :'generate-update', 'Generates an update from the given package list comparing package\'s last version changes', :type => :strings
-  opt :'updates-base-dir', 'Looks for package also in <dir> Useful if you keep old packages in a different repos and updates in this one.', :type => :string
-  opt :'split-updates', 'Splits current updateinfo.xml into update parts files in repoparts/'
+  opt :generate_update, 'Generates an update from the given package list comparing package\'s last version changes', :type => :strings
+  opt :updates_base_dir, 'Looks for package also in <dir> Useful if you keep old packages in a different repos and updates in this one.', :type => :string
+  opt :split_updates, 'Splits current updateinfo.xml into update parts files in repoparts/'
   opt :indent, 'Generate indented xml. Default: no', :short => :i
   
   opt :expire, 'Set repository expiration hint (Can be used to detect dead mirrors)', :type => :date, :short => :e
-  opt :'repo-product', 'Adds product compatibility information', :type => :strings
-  opt :'repo-keyword', 'Tags repository with keyword', :type => :strings
+  opt :repo_product, 'Adds product compatibility information', :type => :strings
+  opt :repo_keyword, 'Tags repository with keyword', :type => :strings
 
   # === SUSE specific package data (susedata.xml)
   
   opt :eulas, 'Reads packagename.eula files and add the information to susedata.xml', :short => :l
   opt :keywords, 'Reads packagename.keywords files and add keyword metadata to susedata.xml', :short => :k
-  opt :'disk-usage', 'Reads rpm packages, generates disk usage information on susedata.xml', :short => :d
+  opt :disk_usage, 'Reads rpm packages, generates disk usage information on susedata.xml', :short => :d
 
   # Note: your .eula or .keywords file will be added to
   # a package if it matches its name. If you want to add
