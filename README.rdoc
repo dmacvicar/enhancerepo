@@ -9,6 +9,12 @@ Reference implementation for future rpmmd extensions
 
 requires ruby-rpm.
 
+== Links
+
+=== Code Metrics
+
+* http://getcaliper.com/caliper/project?repo=git://gitorious.org/opensuse/enhancerepo.git
+
 == Authors
 
 * Duncan Mac-Vicar P. <dmacvicar@suse.de>
