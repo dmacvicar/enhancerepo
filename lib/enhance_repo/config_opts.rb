@@ -76,20 +76,20 @@ module EnhanceRepo
       @index = opts[:index]
       @expire = opts[:expire]
       @primary = opts[:primary]
-      @repoproducts = @repoproducts.merge([*opts[:'repo-products']])
-      @repokeywords = @repokeywords.merge([*opts[:'repo-keywords']])
+      @repoproducts = @repoproducts.merge([*opts[:repo_products]])
+      @repokeywords = @repokeywords.merge([*opts[:repo_keywords]])
       @signkey = opts[:sign]
       @updates = opts[:updates]
-      @split_updates = opts[:'split-updates']
-      @generate_update = opts[:'generate-update']
+      @split_updates = opts[:split_updates]
+      @generate_update = opts[:generate_update]
       @eulas = opts[:eulas]
       @keywords = opts[:keywords]
-      @diskusage = opts[:'disk-usage']
+      @diskusage = opts[:disk_usage]
       @deltas = opts[:deltas]
-      @create_deltas = opts[:'create-deltas']
+      @create_deltas = opts[:create_deltas]
       @products = opts[:products]
       @benchmark = opts[:benchmark]      
-      @updatesbasedir = Pathname.new(opts[:'updates-base-dir']) if opts[:'updates-base-dir']
+      @updatesbasedir = Pathname.new(opts[:updates_base_dir]) if opts[:updates_base_dir]
       @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
       @dir = Pathname.new(opts[:dir]) if opts[:dir]
     end
