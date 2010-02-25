@@ -23,6 +23,7 @@
 #++
 #
 require 'set'
+require 'enhance_repo/array_arg'
 
 module EnhanceRepo
   
@@ -76,12 +77,12 @@ module EnhanceRepo
       @index = opts[:index]
       @expire = opts[:expire]
       @primary = opts[:primary]
-      @repoproducts = @repoproducts.merge([*opts[:repo_products]])
-      @repokeywords = @repokeywords.merge([*opts[:repo_keywords]])
+      @repoproducts = @repoproducts.merge([*ArrayArg.new(opts[:repo_products])])
+      @repokeywords = @repokeywords.merge([*ArrayArg.new(opts[:repo_keywords])])
       @signkey = opts[:sign]
       @updates = opts[:updates]
       @split_updates = opts[:split_updates]
-      @generate_update = opts[:generate_update]
+      @generate_update = ArrayArg.new(opts[:generate_update])
       @eulas = opts[:eulas]
       @keywords = opts[:keywords]
       @diskusage = opts[:disk_usage]

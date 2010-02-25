@@ -75,7 +75,6 @@ module EnhanceRepo
       #
       # outputdir is the directory where to save the patch to.
       def generate_update(packages, outputdir)
-        
         # make a hash name -> array of packages
         log.info "Generating update part to #{outputdir} for packages #{packages.join(", ")}"
         package_index = {}
