@@ -217,6 +217,7 @@ module EnhanceRepo
             log.info "Saving update part to '#{updatefilename}'."
             File.open(updatefilename, 'w') do |updatefile|
               updatefile << updateElement
+              updatefile << "\n"
             end
           end
         end

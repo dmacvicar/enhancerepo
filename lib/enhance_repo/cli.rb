@@ -23,67 +23,14 @@
 #++
 #
 require 'rubygems'
-require 'trollop'
 require 'enhance_repo'
 require 'pathname'
 require 'benchmark'
 require 'fileutils'
 
 EnhanceRepo::enable_logger
+config = EnhanceRepo::ConfigOpts.new
 
-opts = Trollop::options do
-  version "enhancerepo #{EnhanceRepo::VERSION}"
-  banner <<-EOS
-enhancerepo is a rpm-md metadata tool
-
-Usage:
-        enhancerepo [options] DIR
-
-        DIR: The repo base directory ( where repodata/ directory is located )
-EOS
-  opt :help, 'Show help'
-  opt :outputdir, 'Generate metadata to a different directory', :short => :o
-  opt :index, "Reindex the metadata and regenerates repomd.xml, even if nothing was changed using enhancerepo. Use this if you did manual changes to the metadata", :short => :x
-  opt :benchmark, 'Show benchmark statistics at the end'
-  
-  opt :primary, 'Add data from rpm files and generate primary.xml (EXPERIMENTAL)', :short => :p
-  opt :sign, 'Generates signature for the repository using key keyid', :short => :s, :type => :string
-  opt :updates, 'Add updates from *.updates files and generate updateinfo.xml', :short => :u
-  opt :generate_update, 'Generates an update from the given package list comparing package\'s last version changes', :type => :strings
-  opt :updates_base_dir, 'Looks for package also in <dir> Useful if you keep old packages in a different repos and updates in this one.', :type => :string
-  opt :split_updates, 'Splits current updateinfo.xml into update parts files in repoparts/'
-  opt :indent, 'Generate indented xml. Default: no', :short => :i
-  
-  opt :expire, 'Set repository expiration hint (Can be used to detect dead mirrors)', :type => :date, :short => :e
-  opt :repo_product, 'Adds product compatibility information', :type => :strings
-  opt :repo_keyword, 'Tags repository with keyword', :type => :strings
-
-  # === SUSE specific package data (susedata.xml)
-  
-  opt :eulas, 'Reads packagename.eula files and add the information to susedata.xml', :short => :l
-  opt :keywords, 'Reads packagename.keywords files and add keyword metadata to susedata.xml', :short => :k
-  opt :disk_usage, 'Reads rpm packages, generates disk usage information on susedata.xml', :short => :d
-
-  # Note: your .eula or .keywords file will be added to
-  # a package if it matches its name. If you want to add
-  # the attributes to a specific package, name the file
-  # name-version, name-version-release or
-  # name-version-release.arch
-
-  # === Package deltas support
-  opt :'create-deltas',
-      'Create [num] deltas for different versions of a package. If there is foo-1.rpm, foo-2.rpm, foo-3.rpm, foo-4.rpm num=1 will create a delta to go from version 3 to 4, while num=2 will create one from 2 to 4 too. This does not index the deltas. Use --deltas for that.', :default => 1
-  opt :deltas, 'Reads all *.delta.rpm files and add the information to deltainfo.xml. This indexes existing deltas, but won\'t create them. See --create-deltas for deltas creation.'
-
-  # === Product information support
-
-  opt :products, 'Reads release packages and generating product information in products.xml based on the information contained in the .prod files included in the packages.'
-
-  # other
-  opt :debug, 'Show debug information'
-end
-
-config = EnhanceRepo::ConfigOpts.new(opts)
 dir = ARGV.shift
 config.dir = Pathname.new(dir) if not dir.nil?
 
@@ -118,7 +65,11 @@ time = Benchmark.measure do
     end
 
     repomd.updateinfo.read_repoparts if config.updates  
-    repomd.updateinfo.split_updates(File.join(config.outputdir, 'repoparts')) if config.split_updates                                                                        
+    repomd.updateinfo.split_updates(File.join(config.outputdir, 'repoparts')) if config.split_updates
+
+    repomd.patterns.split_patterns(File.join(config.outputdir, 'repoparts')) if config.split_patterns
+    repomd.patterns.generate_patterns(config.generate_patterns) if config.generate_patterns
+    repomd.patterns.read_repoparts if config.patterns || config.generate_patterns
 
     repomd.deltainfo.create_deltas(:outputdir => config.outputdir, :n => config.create_deltas) if config.create_deltas
     repomd.deltainfo.add_deltas if config.deltas
@@ -130,7 +81,7 @@ time = Benchmark.measure do
 
     # index if requested
     repomd.index if config.index
-    
+
     # write the repository out
     repomd.write
 

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern xmlns:rpm="http://linux.duke.edu/metadata/rpm" xmlns="http://novell.com/package/metadata/suse/pattern">
+  <name>multimedia_11.2_20.22.1_i586</name>
+  <icon>yast-tv</icon>
+  <order>1580</order>
+  <summary lang="zh_TW">多媒體</summary>
+  <summary lang="uk">Мультимедіа</summary>
+  <summary lang="it">Multimedia</summary>
+  <summary lang="en">Multimedia</summary>
+  <summary lang="ja">マルチメディア</summary>
+  <summary lang="hi">मल्टीमीडिया</summary>
+  <summary lang="fr">Multimédia</summary>
+  <summary lang="de">Multimedia</summary>
+  <summary lang="sk">Multimédiá</summary>
+  <summary lang="km">ពហុ​ព័ត៌មាន</summary>
+  <summary lang="hu">Multimédia</summary>
+  <summary lang="sv">Multimedia</summary>
+  <summary lang="sl">Večpredstavnost</summary>
+  <summary lang="ru">Мультимедиа</summary>
+  <summary lang="fi">Multimedia</summary>
+  <summary lang="es">Multimedia</summary>
+  <summary lang="pt_BR">Multimídia</summary>
+  <summary lang="pt">Multimédia</summary>
+  <summary lang="ko">멀티미디어</summary>
+  <summary lang="et">Multimeedia</summary>
+  <summary lang="cs">Multimédia</summary>
+  <summary lang="bg">Мултимедия</summary>
+  <summary lang="pl">Multimedia</summary>
+  <summary lang="pa">ਮਲਟੀਮੀਡਿਆ</summary>
+  <summary lang="ro">Multimedia</summary>
+  <summary lang="el">Πολυμέσα</summary>
+  <summary lang="da">Multimedie</summary>
+  <summary lang="zh_CN">多媒体</summary>
+  <summary lang="nl">Multimedia</summary>
+  <summary lang="lt">Daugialypė terpė</summary>
+  <summary lang="nb">Multimedia</summary>
+  <summary lang="hr">Multimedija</summary>
+  <summary lang="en_GB">Multimedia</summary>
+  <description lang="zh_TW">多媒體播放器，音效編輯工具，影片和圖形操作應用程式。
+</description>
+  <description lang="uk">Програвачі мультимедії, засоби редагування аудіо, програми маніпуляції відео і зображень.
+</description>
+  <description lang="it">Lettori multimediali, strumenti di elaborazione audio, applicazioni per l'elaborazione di video e di immagini.
+</description>
+  <description lang="en">Multimedia players, sound editing tools , video and image manipulation applications.
+</description>
+  <description lang="ja">マルチメディアプレーヤやサウンド編集ツール、映像や画像の操作を行なうアプリケーション群です。
+</description>
+  <description lang="fr">Les lecteurs multimedia, les outils d'edition de fichiers audio et les applications de manipulation d'images et de videos.
+</description>
+  <description lang="de">Multimedia-Spieler, Sound-Editoren, Video- und Bildbearbeitungsprogramme.
+</description>
+  <description lang="sk">Prehrávače multimédií, nástroje pre editáciu zvuku, aplikácie pre manipuláciu s videom a obrázkami.
+</description>
+  <description lang="km">កម្មវិធី​ចាក់​ពហុព័ត៌មាន ឧបករណ៍​កែសម្រួល​សំឡេង កម្មវិធីរៀបចំ​រូបភាព និង​វីដេអូ ។
+</description>
+  <description lang="hu">Multimédia-lejátszók, hang-, video- és képszerkesztő eszközök.
+</description>
+  <description lang="sv">Multimediaspelare, ljudredigeringsverktyg, video- och bildmanipuleringsprogram.
+</description>
+  <description lang="ru">Мультимедиа-плееры, утилиты работы со звуком, приложения для обработки видео и аудио.
+</description>
+  <description lang="fi">Multimediatoistimet, äänenmuokkaustyökalut sekä video- ja kuvamanipulaatiosovellukset.
+</description>
+  <description lang="es">Reproductores multimedia, herramientas de edición de sonido, aplicaciones de manipulación de imágenes y vídeo.
+</description>
+  <description lang="pt_BR">Reprodutores multimídia, ferramentas para edição de som, aplicativos de manipulação de vídeo e imagem.
+</description>
+  <description lang="pt">Reprodutores multimédia, ferramentas de edição de áudio, vídeo e aplicações de manipulação de imagem.
+</description>
+  <description lang="ko">멀티미디어 재생, 사운드 편집 도구, 비디오 및 이미지 조작 응용프로그램.
+</description>
+  <description lang="cs">Multimediální přehrávače, nástroje pro editaci zvuku nebo videa a programy pro práci s obrázky.
+</description>
+  <description lang="pl">Odtwarzacze multimedialne, edytory dźwiękowe, graficzne i wideo.
+</description>
+  <description lang="pa">ਮਲਟੀਮੀਡਿਆ ਪਲੇਅਰ, ਸਾਊਂਡ ਸੰਪਾਦਨ ਟੂਲ, ਵੀਡਿਓ ਅਤੇ ਚਿੱਤਰ ਸੋਧ ਕਾਰਜ ਹਨ।
+</description>
+  <description lang="ro">Playere multimedia, utilitare pentru ediatare de sunet, video şi imagine.
+</description>
+  <description lang="el">Εφαρμογές αναπαραγωγής πολυμέσων, εργαλεία επεξεργασίας ήχου, βίντεο και διαχείρισης εικόνας.
+</description>
+  <description lang="da">Multimedieafspillere, lydredigeringsværktøjer, video- og billedredigeringsprogrammer.
+</description>
+  <description lang="zh_CN">多媒体播放器，音频编辑工具、视频和图像处理应用程序。
+</description>
+  <description lang="nl">Multimediaspelers en programma's voor geluids-, video- en beeldbewerking
+</description>
+  <description lang="lt">Garso ir vaizdo grotuvai, redagavimo įrankiai ir kitokio daugialypės terpės naudojimo programos.
+</description>
+  <description lang="nb">Multimediaavspillere, lydredigeringsverktøy, video- og bildemanipuleringsprogramvare.
+</description>
+  <description lang="en_GB">Multimedia players, sound editing tools , video and image manipulation applications.
+</description>
+  <uservisible/>
+  <category lang="zh_TW">桌面功能</category>
+  <category lang="uk">Стільничні функції</category>
+  <category lang="it">Funzioni desktop</category>
+  <category lang="en">Desktop Functions</category>
+  <category lang="ja">デスクトップ機能</category>
+  <category lang="fr">Fonctions de bureau</category>
+  <category lang="de">Desktopfunktionen</category>
+  <category lang="sk">Funkcie pracovného prostredia</category>
+  <category lang="km">មុខងារ​ផ្ទៃ​តុ</category>
+  <category lang="hu">Munkaállomás</category>
+  <category lang="sv">Skrivbordsfunktioner</category>
+  <category lang="ru">Функции рабочего стола</category>
+  <category lang="fi">Työpöytätoiminnot</category>
+  <category lang="es">Funciones de escritorio</category>
+  <category lang="pt_BR">Funções de área de trabalho</category>
+  <category lang="pt">Funções de Ambiente de Trabalho</category>
+  <category lang="ko">데스크톱 기능</category>
+  <category lang="et">Töölaua funktsioonid</category>
+  <category lang="cs">Pracovní stanice</category>
+  <category lang="bg">Функции на работната среда</category>
+  <category lang="pl">Funkcje pulpitu</category>
+  <category lang="pa">ਡੈਸਕਟਾਪ ਫੰਕਸ਼ਨ</category>
+  <category lang="ro">Funcţionalităţi Desctop</category>
+  <category lang="el">Λειτουργίες Επιφάνειας Εργασίας</category>
+  <category lang="da">Skrivebordsfunktioner</category>
+  <category lang="zh_CN">桌面功能</category>
+  <category lang="nl">Desktopfuncties</category>
+  <category lang="lt">Darbalaukio funkcijos</category>
+  <category lang="nb">Skrivebordsfunksjoner</category>
+  <category lang="en_GB">Desktop Functions</category>
+  <rpm:requires>
+    <rpm:entry kind="package" name="patterns-openSUSE-multimedia"/>
+  </rpm:requires>
+  <rpm:recommends>
+    <rpm:entry kind="package" name="yast2-sound"/>
+    <rpm:entry kind="package" name="vorbis-tools"/>
+    <rpm:entry kind="package" name="dvd+rw-tools"/>
+  </rpm:recommends>
+  <rpm:suggests>
+    <rpm:entry kind="package" name="grip"/>
+    <rpm:entry kind="package" name="vdr"/>
+    <rpm:entry kind="package" name="abcde"/>
+    <rpm:entry kind="package" name="ripit"/>
+    <rpm:entry kind="package" name="xawtv"/>
+    <rpm:entry kind="package" name="timidity"/>
+    <rpm:entry kind="package" name="audacity"/>
+    <rpm:entry kind="package" name="flac"/>
+    <rpm:entry kind="package" name="gstreamer-0_10-plugins-good-extra"/>
+  </rpm:suggests>
+</pattern>

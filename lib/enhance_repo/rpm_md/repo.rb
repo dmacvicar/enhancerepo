@@ -35,6 +35,7 @@ require 'enhance_repo/rpm_md/primary'
 require 'enhance_repo/rpm_md/file_lists'
 require 'enhance_repo/rpm_md/other'
 require 'enhance_repo/rpm_md/update_info'
+require 'enhance_repo/rpm_md/pattern'
 require 'enhance_repo/rpm_md/suse_info'
 require 'enhance_repo/rpm_md/suse_data'
 require 'enhance_repo/rpm_md/delta_info'
@@ -53,7 +54,7 @@ module EnhanceRepo
       attr_accessor :index
 
       # extensions
-      attr_reader :primary, :other, :filelists, :susedata, :suseinfo, :deltainfo, :updateinfo, :products
+      attr_reader :primary, :other, :filelists, :susedata, :suseinfo, :deltainfo, :updateinfo, :products, :patterns
       def initialize(config)
         @dir = config.dir
         @outputdir = config.outputdir
@@ -75,6 +76,7 @@ module EnhanceRepo
         @suseinfo = SuseInfo.new(config.dir)
         @deltainfo = DeltaInfo.new(config.dir)
         @products = Products.new(config.dir)
+        @patterns = Patterns.new(config)
       end
 
       def sign(keyid)
@@ -106,7 +108,7 @@ module EnhanceRepo
       def write
 
         datas = [@primary, @filelists, @other, @updateinfo,
-                 @susedata, @suseinfo, @deltainfo, @products ]
+                 @susedata, @suseinfo, @deltainfo, @products, @patterns ]
 
         # select the datas that are not empty
         # those need to be saved
