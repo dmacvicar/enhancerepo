@@ -23,7 +23,7 @@
 #++
 #
 module EnhanceRepo
-  VERSION = "0.4.1"
+  VERSION = "0.4.2"
 end
 
 lib = File.dirname(__FILE__)
