@@ -38,6 +38,7 @@ module EnhanceRepo
     def initialize(array)
       @array = array
       @array ||= []
+      @expanded_cache = nil
     end
 
     # yields one element per line in
