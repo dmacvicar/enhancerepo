@@ -1,5 +1,25 @@
 
-== 0.4 (not released)
+
+== 0.4.2
+
+* implement support for array arguments to be read from an external file.
+   So if in the pass you did:
+   --generate-updates pkg1 pkg2 pkg3 --another-arg
+   Now you can also do:
+   --generate-updates pkg1 /file.txt pkg2 --another-arg
+   If /file.txt contains:
+   pkg3
+   pkg4
+   pkg5
+  those will be added to the list of arguments.
+* _Experimental_ support for generating rpm-md patterns from old susetags format.
+  Note, implementation and concept may change
+
+== 0.4.1
+
+* move to trollop options parsing
+
+== 0.4
 
 * improved logger support
 * --split-updates, patch by Jordi Massaguer Pla
