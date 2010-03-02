@@ -42,12 +42,12 @@ module EnhanceRepo
 enhancerepo is a rpm-md metadata tool
 
 Usage:
-        enhancerepo [options] DIR
+        enhancerepo [options]
 
-        DIR: The repo base directory ( where repodata/ directory is located )
 EOS
         opt :help, 'Show help'
-        opt :outputdir, 'Generate metadata to a different directory', :short => :o
+        opt :dir, 'The repo base directory ( where repodata/ directory is located )', :short => :r, :type => :string, :default => "./"
+        opt :outputdir, 'Generate metadata to a different directory', :short => :o, :type => :string
         opt :index, "Reindex the metadata and regenerates repomd.xml, even if nothing was changed using enhancerepo. Use this if you did manual changes to the metadata", :short => :x
         opt :benchmark, 'Show benchmark statistics at the end'
   
@@ -87,7 +87,7 @@ EOS
   # === Pattern information support
   
         opt :patterns, 'Add patterns from pattern-*.xml files and generate patterns.xml', :short => :P
-        opt :generate_patterns, 'Generate patterns.xml from the old style pattern given as parameter to this option', :type => :string
+        opt :generate_patterns, 'Generate patterns.xml from the old style pattern given as parameter to this option', :type => :strings
         opt :split_patterns, 'Splits current patterns.xml into pattern parts files in repoparts/'
   
         # other
@@ -139,18 +139,19 @@ EOS
       @repokeywords = Set.new
       opts = read_command_line
       read_opts(opts)
+      #dump(opts)
     end
     
     def read_opts(opts)
       @index = opts[:index]
       @expire = opts[:expire]
       @primary = opts[:primary]
-      @repoproducts = @repoproducts.merge([*ArrayArg.new(opts[:repo_products])])
-      @repokeywords = @repokeywords.merge([*ArrayArg.new(opts[:repo_keywords])])
+      @repoproducts = @repoproducts.merge([*ArrayArg.new(opts[:repo_products])]) if opts[:repo_products]
+      @repokeywords = @repokeywords.merge([*ArrayArg.new(opts[:repo_keywords])]) if opts[:repo_keywords]
       @signkey = opts[:sign]
       @updates = opts[:updates]
       @split_updates = opts[:split_updates]
-      @generate_update = ArrayArg.new(opts[:generate_update])
+      @generate_update = ArrayArg.new(opts[:generate_update]) if opts[:generate_update]
       @eulas = opts[:eulas]
       @keywords = opts[:keywords]
       @diskusage = opts[:disk_usage]
@@ -160,11 +161,42 @@ EOS
       @benchmark = opts[:benchmark]
       @patterns = opts[:patterns]
       @split_patterns = opts[:split_patterns]
-      @generate_patterns = opts[:generate_patterns] if opts[:generate_patterns]
+      @generate_patterns = Array.new(opts[:generate_patterns]) if opts[:generate_patterns]
       @updatesbasedir = Pathname.new(opts[:updates_base_dir]) if opts[:updates_base_dir]
       @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
       @dir = Pathname.new(opts[:dir]) if opts[:dir]
     end
     
+    def dump(opts)
+      logger = EnhanceRepo.logger
+
+      logger.info "index #{@index}"
+      logger.info "expire #{@expire}"
+      logger.info "primary #{@primary}"
+      logger.info "repoproducts #{@repoproducts}"
+      logger.info "repokeywords #{@repokeywords}"
+      logger.info "signkey #{@signkey}"
+      logger.info "updates #{@updates}"
+      logger.info "split_updates #{@split_updates}"
+      logger.info "generate_update #{@generate_update}"
+      logger.info "eulas #{@eulas}"
+      logger.info "keywords #{@keywords}"
+      logger.info "diskusage #{@diskusage}"
+      logger.info "deltas #{@deltas}"
+      logger.info "create_deltas #{@create_deltas}"
+      logger.info "products #{@products}"
+      logger.info "benchmark #{@benchmark}"
+      logger.info "patterns #{@patterns}"
+      logger.info "split_patterns #{@split_patterns}"
+      if not @generate_patterns.nil?
+        @generate_patterns.each do |p|
+          logger.info "generate_patterns #{p}"
+        end
+      end
+      logger.info "updatesbasedir #{@updatesbasedir}"
+      logger.info "outputdir #{@outputdir}"
+      logger.info "dir #{@dir}"
+      
+    end
   end
 end
