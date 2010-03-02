@@ -142,4 +142,15 @@
     <rpm:entry kind="package" name="flac"/>
     <rpm:entry kind="package" name="gstreamer-0_10-plugins-good-extra"/>
   </rpm:suggests>
+  <rpm:suggests>
+    <rpm:entry kind="package" name="grip"/>
+    <rpm:entry kind="package" name="vdr"/>
+    <rpm:entry kind="package" name="abcde"/>
+    <rpm:entry kind="package" name="ripit"/>
+    <rpm:entry kind="package" name="xawtv"/>
+    <rpm:entry kind="package" name="timidity"/>
+    <rpm:entry kind="package" name="audacity"/>
+    <rpm:entry kind="package" name="flac"/>
+    <rpm:entry kind="package" name="gstreamer-0_10-plugins-good-extra"/>
+  </rpm:suggests>
 </pattern>

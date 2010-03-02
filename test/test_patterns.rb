@@ -39,10 +39,28 @@ class Patterns_test < Test::Unit::TestCase
     patterns = EnhanceRepo::RpmMd::Patterns.new(config)
 
     Tempdir.open do |dir|
-      patterns.generate_patterns(test_data('susetags-patterns/dvd-11.2-20.22.1.i586.pat.gz'), dir)
+      dir = File.join(dir, "repoparts")
+      a = Array.new
+      a << test_data('susetags-patterns/dvd-11.2-20.22.1.i586.pat.gz')
+      a << test_data('susetags-patterns/base-11-38.5.x86_64.pat.gz')
+      a << test_data('susetags-patterns/base-32bit-11-38.5.x86_64.pat.gz')
+      a << test_data('susetags-patterns/32bit-11-38.5.x86_64.pat.gz')
+      patterns.generate_patterns(a, dir)
 
-      written = File.open(File.join(dir, 'repoparts/pattern-multimedia_11.2_20.22.1_i586_0.xml')).read      
+      written = File.open(File.join(dir, 'pattern-multimedia_11.2_20.22.1_i586_0.xml')).read
       expected = File.open(test_data('rpmmd-patterns/pattern-multimedia_11.2_20.22.1_i586_0.xml')).read
+      assert_xml_equal(expected, written)
+
+      written = File.open(File.join(dir, 'pattern-base_11_38.5_x86_64_0.xml')).read
+      expected = File.open(test_data('rpmmd-patterns/pattern-base_11_38.5_x86_64_0.xml')).read
+      assert_xml_equal(expected, written)
+
+      written = File.open(File.join(dir, 'pattern-base-32bit_11_38.5_x86_64_0.xml')).read
+      expected = File.open(test_data('rpmmd-patterns/pattern-base-32bit_11_38.5_x86_64_0.xml')).read
+      assert_xml_equal(expected, written)
+
+      written = File.open(File.join(dir, 'pattern-32bit_11_38.5_x86_64_0.xml')).read
+      expected = File.open(test_data('rpmmd-patterns/pattern-32bit_11_38.5_x86_64_0.xml')).read
       assert_xml_equal(expected, written)
     end
         
