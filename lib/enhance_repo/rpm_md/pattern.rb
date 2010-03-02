@@ -53,7 +53,7 @@ module EnhanceRepo
           xml.pattern('xmlns' => "http://novell.com/package/metadata/suse/pattern",
                       'xmlns:rpm' => "http://linux.duke.edu/metadata/rpm") {
             xml.name pattern.name
-            xml.icon pattern.icon
+            xml.icon pattern.icon if pattern.icon
             xml.order pattern.order
             pattern.summary.each do |lang, text|
               if lang.empty?
@@ -80,6 +80,13 @@ module EnhanceRepo
             if ! pattern.conflicts.empty?
               xml['rpm'].conflicts {
                 pattern.conflicts.each do |pkg, kind|
+                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                end
+              }
+            end
+            if ! pattern.supplements.empty?
+              xml['rpm'].supplements {
+                pattern.supplements.each do |pkg, kind|
                   xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
                 end
               }
@@ -112,6 +119,27 @@ module EnhanceRepo
                 end
               }
             end
+            if ! pattern.extends.empty?
+              xml.extends {
+                pattern.extends.each do |pkg, kind|
+                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                end
+              }
+            end
+            if ! pattern.includes.empty?
+              xml.includes {
+                pattern.includes.each do |pkg, kind|
+                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                end
+              }
+            end
+            if ! pattern.suggests.empty?
+              xml['rpm'].suggests {
+                pattern.suggests.each do |pkg, kind|
+                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                end
+              }
+            end
           }
         end
         io << builder.to_xml
@@ -131,25 +159,32 @@ module EnhanceRepo
         attr_accessor :order
         attr_accessor :visible
         attr_accessor :category
+        attr_accessor :supplements
         attr_accessor :conflicts
         attr_accessor :provides
         attr_accessor :requires
         attr_accessor :recommends
         attr_accessor :suggests
+        attr_accessor :extends
+        attr_accessor :includes
+        
         
         def initialize
           @name        = ""
           @summary     = Hash.new
           @description = Hash.new
-          @icon        = ""
+          @icon        = nil
           @order       = 0
           @visible     = true
           @category    = Hash.new
+          @supplements = Hash.new
           @conflicts   = Hash.new
           @provides    = Hash.new
           @requires    = Hash.new
           @recommends  = Hash.new
           @suggests    = Hash.new
+          @extends     = Hash.new
+          @includes    = Hash.new
         end
           
       end
@@ -188,111 +223,141 @@ module EnhanceRepo
       # with their previous ones
       #
       # outputdir is the directory where to save the patch to.      
-      def generate_patterns(file, outputdir)
-        raise "#{file} does not exist" if not File.exist?(file)
+      def generate_patterns(files, outputdir)
         patterns = []
+        files.each do |file|
+          raise "#{file} does not exist" if not File.exist?(file)
 
-        pattern = nil
-        in_des = false
-        in_req = false
-        in_rec = false
-        in_sug = false
-        in_con = false
-        in_prv = false
-        kind = "package"
-        cur_lang = ""
-        description = ""
-        requires = Array.new
-        recommends = Array.new
-        suggests = Array.new
-        Zlib::GzipReader.open(file) do |gz|
-          gz.each_line do |line|
-            if line.start_with?("=Pat:")
-              # save the previous one
-              patterns << pattern if not pattern.nil?
-              # a new patern starts here
-              pattern = PatternData.new
-              v = line.split(/:\s*/, 2)
-              pattern.name = v[1].chomp.gsub(/\s/, '_')
-            elsif line.start_with?("=Cat")
-              v = line.match(/=Cat\.?(\w*):\s*(.*)$/)
-              pattern.category["#{v[1]}"] = v[2].chomp
-            elsif line.start_with?("=Sum")
-              v = line.match(/=Sum\.?(\w*):\s*(.*)$/)
-              pattern.summary["#{v[1]}"] = v[2].chomp
-            elsif line.start_with?("=Ico:")
-              v = line.split(/:\s*/, 2)
-              pattern.icon = v[1].chomp
-            elsif line.start_with?("=Ord:")
-              v = line.split(/:\s*/, 2)
-              pattern.order = v[1].chomp.to_i
-            elsif line.start_with?("=Vis:")
-              if line.include?("true")
-                pattern.visible = true
-              else
-                pattern.visible = false
+          pattern = nil
+          in_des = false
+          in_req = false
+          in_rec = false
+          in_sug = false
+          in_sup = false
+          in_con = false
+          in_prv = false
+          in_ext = false
+          in_inc = false
+          kind = "package"
+          cur_lang = ""
+          description = ""
+          requires = Array.new
+          recommends = Array.new
+          suggests = Array.new
+          Zlib::GzipReader.open(file) do |gz|
+            gz.each_line do |line|
+              if line.start_with?("=Pat:")
+                # save the previous one
+                patterns << pattern if not pattern.nil?
+                # a new patern starts here
+                pattern = PatternData.new
+                v = line.split(/:\s*/, 2)
+                pattern.name = v[1].chomp.gsub(/\s/, '_')
+              elsif line.start_with?("=Cat")
+                v = line.match(/=Cat\.?(\w*):\s*(.*)$/)
+                pattern.category["#{v[1]}"] = v[2].chomp
+              elsif line.start_with?("=Sum")
+                v = line.match(/=Sum\.?(\w*):\s*(.*)$/)
+                pattern.summary["#{v[1]}"] = v[2].chomp
+              elsif line.start_with?("=Ico:")
+                v = line.split(/:\s*/, 2)
+                pattern.icon = v[1].chomp
+              elsif line.start_with?("=Ord:")
+                v = line.split(/:\s*/, 2)
+                pattern.order = v[1].chomp.to_i
+              elsif line.start_with?("=Vis:")
+                if line.include?("true")
+                  pattern.visible = true
+                else
+                  pattern.visible = false
+                end
+              elsif line.start_with?("+Des")
+                in_des = true
+                cur_lang = line.match(/\+Des\.?(\w*):/)[1]
+              elsif line.start_with?("-Des")
+                in_des = false
+                pattern.description[cur_lang] = description
+                cur_lang = ""
+                description = ""
+              elsif line.start_with?("+Req:")
+                in_req = true
+                kind = "pattern"
+              elsif line.start_with?("-Req:")
+                in_req = false
+                kind = "package"
+              elsif line.start_with?("+Sup:")
+                in_sup = true
+                kind = "pattern"
+              elsif line.start_with?("-Sup:")
+                in_sup = false
+                kind = "package"
+              elsif line.start_with?("+Con:")
+                in_con = true
+                kind = "pattern"
+              elsif line.start_with?("-Con:")
+                in_con = false
+                kind = "package"
+              elsif line.start_with?("+Prv:")
+                in_prv = true
+                kind = "pattern"
+              elsif line.start_with?("-Prv:")
+                in_prv = false
+                kind = "package"
+              elsif line.start_with?("+Prc:")
+                in_rec = true
+                kind = "package"
+              elsif line.start_with?("-Prc:")
+                in_rec = false
+              elsif line.start_with?("+Prq:")
+                in_req = true
+                kind = "package"
+              elsif line.start_with?("-Prq:")
+                in_req = false
+              elsif line.start_with?("+Psg:")
+                in_sug = true
+                kind = "package"
+              elsif line.start_with?("-Psg:")
+                in_sug = false
+              elsif line.start_with?("+Ext:")
+                in_ext = true
+                kind = "pattern"
+              elsif line.start_with?("-Ext:")
+                in_ext = false
+                kind = "package"
+              elsif line.start_with?("+Inc:")
+                in_req = true
+                kind = "pattern"
+              elsif line.start_with?("-Inc:")
+                in_inc = false
+                kind = "package"
+              elsif in_des
+                description << line
+              elsif in_con
+                pattern.conflicts[line.chomp] = kind
+              elsif in_sup
+                pattern.supplements[line.chomp] = kind
+              elsif in_prv
+                pattern.provides[line.chomp] = kind
+              elsif in_req
+                pattern.requires[line.chomp] = kind
+              elsif in_rec
+                pattern.recommends[line.chomp] = kind
+              elsif in_sug
+                pattern.suggests[line.chomp] = kind
+              elsif in_ext
+                pattern.extends[line.chomp] = kind
+              elsif in_inc
+                pattern.includes[line.chomp] = kind
               end
-            elsif line.start_with?("+Des")
-              in_des = true
-              cur_lang = line.match(/\+Des\.?(\w*):/)[1]
-            elsif line.start_with?("-Des")
-              in_des = false
-              pattern.description[cur_lang] = description
-              cur_lang = ""
-              description = ""
-            elsif line.start_with?("+Req:")
-              in_req = true
-              kind = "pattern"
-            elsif line.start_with?("-Req:")
-              in_req = false
-              kind = "package"
-            elsif line.start_with?("+Con:")
-              in_con = true
-              kind = "pattern"
-            elsif line.start_with?("-Con:")
-              in_con = false
-              kind = "package"
-            elsif line.start_with?("+Prv:")
-              in_prv = true
-              kind = "pattern"
-            elsif line.start_with?("-Prv:")
-              in_prv = false
-              kind = "package"
-            elsif line.start_with?("+Prc:")
-              in_rec = true
-              kind = "package"
-            elsif line.start_with?("-Prc:")
-              in_rec = false
-            elsif line.start_with?("+Prq:")
-              in_req = true
-              kind = "package"
-            elsif line.start_with?("-Prq:")
-              in_req = false
-            elsif line.start_with?("+Psg:")
-              in_sug = true
-              kind = "package"
-            elsif line.start_with?("-Psg:")
-              in_sug = false
-            elsif in_des
-              description << line
-            elsif in_con
-              pattern.conflicts[line.chomp] = kind
-            elsif in_prv
-              pattern.provides[line.chomp] = kind
-            elsif in_req
-              pattern.requires[line.chomp] = kind
-            elsif in_rec
-              pattern.recommends[line.chomp] = kind
-            elsif in_sug
-              pattern.suggests[line.chomp] = kind
             end
           end
+          patterns << pattern
         end
 
         patterns.each do |pat|
-          pattern_dir = File.join(outputdir, 'repoparts')
-          pattern_filename = File.join(pattern_dir, "pattern-#{pat.name}_0.xml")
-          FileUtils.mkdir_p(pattern_dir)
+          #pattern_dir = File.join(outputdir, 'repoparts')
+          pattern_filename = File.join(outputdir, "pattern-#{pat.name}_0.xml")
+          FileUtils.mkdir_p(outputdir)
           File.open(pattern_filename, 'w') do |f|
             log.info "write pattern #{pattern_filename}"
             pat.write_xml(f)
