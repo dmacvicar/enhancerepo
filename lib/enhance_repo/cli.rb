@@ -29,16 +29,8 @@ require 'benchmark'
 require 'fileutils'
 
 EnhanceRepo::enable_logger
+
 config = EnhanceRepo::ConfigOpts.new
-
-dir = ARGV.shift
-config.dir = Pathname.new(dir) if not dir.nil?
-
-# Check if dir is given
-if config.dir.nil?
-  EnhanceRepo.logger.fatal "Missing dir argument (try --help)"
-  exit 0
-end
 
 repomd = EnhanceRepo::RpmMd::Repo.new(config)
 
@@ -64,12 +56,14 @@ time = Benchmark.measure do
       repomd.updateinfo.generate_update(config.generate_update, File.join(config.outputdir, 'repoparts') )
     end
 
-    repomd.updateinfo.read_repoparts if config.updates  
+    repomd.updateinfo.read_repoparts if config.updates
     repomd.updateinfo.split_updates(File.join(config.outputdir, 'repoparts')) if config.split_updates
 
     repomd.patterns.split_patterns(File.join(config.outputdir, 'repoparts')) if config.split_patterns
-    repomd.patterns.generate_patterns(config.generate_patterns) if config.generate_patterns
-    repomd.patterns.read_repoparts if config.patterns || config.generate_patterns
+    if not config.generate_patterns.nil?
+      repomd.patterns.generate_patterns(config.generate_patterns, File.join(config.outputdir, 'repoparts'))
+    end
+    repomd.patterns.read_repoparts if config.patterns || ! config.generate_patterns.nil?
 
     repomd.deltainfo.create_deltas(:outputdir => config.outputdir, :n => config.create_deltas) if config.create_deltas
     repomd.deltainfo.add_deltas if config.deltas
