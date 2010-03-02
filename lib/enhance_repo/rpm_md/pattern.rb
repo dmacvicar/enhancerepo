@@ -224,11 +224,11 @@ module EnhanceRepo
       #
       # outputdir is the directory where to save the patch to.      
       def generate_patterns(files, outputdir)
-        patterns = []
+        pats = []
+        pattern = nil
         files.each do |file|
           raise "#{file} does not exist" if not File.exist?(file)
 
-          pattern = nil
           in_des = false
           in_req = false
           in_rec = false
@@ -248,7 +248,7 @@ module EnhanceRepo
             gz.each_line do |line|
               if line.start_with?("=Pat:")
                 # save the previous one
-                patterns << pattern if not pattern.nil?
+                pats << pattern if not pattern.nil?
                 # a new patern starts here
                 pattern = PatternData.new
                 v = line.split(/:\s*/, 2)
@@ -351,13 +351,12 @@ module EnhanceRepo
               end
             end
           end
-          patterns << pattern
         end
-
-        patterns.each do |pat|
-          #pattern_dir = File.join(outputdir, 'repoparts')
+        pats << pattern if not pattern.nil?
+        
+        FileUtils.mkdir_p(outputdir)
+        pats.each do |pat|
           pattern_filename = File.join(outputdir, "pattern-#{pat.name}_0.xml")
-          FileUtils.mkdir_p(outputdir)
           File.open(pattern_filename, 'w') do |f|
             log.info "write pattern #{pattern_filename}"
             pat.write_xml(f)
