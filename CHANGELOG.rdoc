@@ -1,4 +1,9 @@
 
+* the working DIR must now be given with the option --dir <DIR>
+  if --dir is not given, it defaults to "./"
+* --generate-patterns has now support for array arguments to convert
+  several patterns in one step. You can also use shell wildcards, e.g.
+    --generate-patterns /path/to/suse/setup/descr/*.pat.gz
 
 == 0.4.2
 
