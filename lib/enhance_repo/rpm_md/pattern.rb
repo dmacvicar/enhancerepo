@@ -53,18 +53,20 @@ module EnhanceRepo
           xml.pattern('xmlns' => "http://novell.com/package/metadata/suse/pattern",
                       'xmlns:rpm' => "http://linux.duke.edu/metadata/rpm") {
             xml.name pattern.name
+            xml.version 'epoch' => '0', 'ver' => pattern.version, 'rel' => pattern.release
+            xml.arch pattern.architecture
             xml.icon pattern.icon if pattern.icon
             xml.order pattern.order
             pattern.summary.each do |lang, text|
               if lang.empty?
-                xml.summary text, 'lang' => "en"
+                xml.summary text
               else
                 xml.summary text, 'lang' => "#{lang}"
               end
             end
             pattern.description.each do |lang, text|
               if lang.empty?
-                xml.description text, 'lang' => "en"
+                xml.description text
               else
                 xml.description text, 'lang' => "#{lang}"
               end
@@ -72,7 +74,7 @@ module EnhanceRepo
             xml.uservisible if pattern.visible
             pattern.category.each do |lang, text|
               if lang.empty?
-                xml.category text, 'lang' => "en"
+                xml.category text
               else
                 xml.category text, 'lang' => "#{lang}"
               end
@@ -80,63 +82,80 @@ module EnhanceRepo
             if ! pattern.conflicts.empty?
               xml['rpm'].conflicts {
                 pattern.conflicts.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  if kind == "package"
+                    xml['rpm'].entry( 'name' => pkg )
+                  else
+                    xml['rpm'].entry( 'name' => "#{kind}:#{pkg}" )
+                  end
                 end
               }
             end
             if ! pattern.supplements.empty?
               xml['rpm'].supplements {
                 pattern.supplements.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  if kind == "package"
+                    xml['rpm'].entry( 'name' => pkg )
+                  else
+                    xml['rpm'].entry( 'name' => "#{kind}:#{pkg}" )
+                  end
                 end
               }
             end
             if ! pattern.provides.empty?
               xml['rpm'].provides {
                 pattern.provides.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  if kind == "package"
+                    xml['rpm'].entry( 'name' => pkg )
+                  else
+                    xml['rpm'].entry( 'name' => "#{kind}:#{pkg}" )
+                  end
                 end
               }
             end
             if ! pattern.requires.empty?
               xml['rpm'].requires {
                 pattern.requires.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  if kind == "package"
+                    xml['rpm'].entry( 'name' => pkg )
+                  else
+                    xml['rpm'].entry( 'name' => "#{kind}:#{pkg}" )
+                  end
                 end
               }
             end
             if ! pattern.recommends.empty?
               xml['rpm'].recommends {
                 pattern.recommends.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  if kind == "package"
+                    xml['rpm'].entry( 'name' => pkg )
+                  else
+                    xml['rpm'].entry( 'name' => "#{kind}:#{pkg}" )
+                  end
                 end
               }
             end
             if ! pattern.suggests.empty?
               xml['rpm'].suggests {
                 pattern.suggests.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  if kind == "package"
+                    xml['rpm'].entry( 'name' => pkg )
+                  else
+                    xml['rpm'].entry( 'name' => "#{kind}:#{pkg}" )
+                  end
                 end
               }
             end
             if ! pattern.extends.empty?
               xml.extends {
                 pattern.extends.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  xml.name pkg
                 end
               }
             end
             if ! pattern.includes.empty?
               xml.includes {
                 pattern.includes.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
-                end
-              }
-            end
-            if ! pattern.suggests.empty?
-              xml['rpm'].suggests {
-                pattern.suggests.each do |pkg, kind|
-                  xml['rpm'].entry( 'name' => pkg, 'kind' => kind)
+                  xml.name pkg
                 end
               }
             end
@@ -153,6 +172,9 @@ module EnhanceRepo
         include PatternWriter
         
         attr_accessor :name
+        attr_accessor :version
+        attr_accessor :release
+        attr_accessor :architecture
         attr_accessor :summary
         attr_accessor :description
         attr_accessor :icon
@@ -171,6 +193,9 @@ module EnhanceRepo
         
         def initialize
           @name        = ""
+          @version     = ""
+          @release     = ""
+          @architecture = "noarch"
           @summary     = Hash.new
           @description = Hash.new
           @icon        = nil
@@ -252,7 +277,11 @@ module EnhanceRepo
                 # a new patern starts here
                 pattern = PatternData.new
                 v = line.split(/:\s*/, 2)
-                pattern.name = v[1].chomp.gsub(/\s/, '_')
+                a = v[1].chomp.split(/\s/, 4)
+                pattern.name = a[0] if a.length >= 1
+                pattern.version = a[1] if a.length >= 2
+                pattern.release = a[2] if a.length >= 3
+                pattern.architecture = a[3] if a.length >= 4
               elsif line.start_with?("=Cat")
                 v = line.match(/=Cat\.?(\w*):\s*(.*)$/)
                 pattern.category["#{v[1]}"] = v[2].chomp
@@ -371,7 +400,7 @@ module EnhanceRepo
       #
       # outputdir is the directory where to save the pattern to.
       def split_patterns(outputdir)
-        FileUtils.mkdir_p outputdir        
+        FileUtils.mkdir_p outputdir
         patternsfile = File.join(@dir, metadata_filename)
 
         # we can't split without an patterns file

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pattern xmlns:rpm="http://linux.duke.edu/metadata/rpm" xmlns="http://novell.com/package/metadata/suse/pattern">
-  <name>32bit_11_38.5_x86_64</name>
+  <name>32bit</name>
+  <version epoch="0" rel="38.5" ver="11"/>
+  <arch>x86_64</arch>
   <order>1060</order>
   <summary lang="zh_TW">32 位元執行時期環境</summary>
   <summary lang="it">Ambiente runtime 32 Bit</summary>
-  <summary lang="en">32-Bit Runtime Environment</summary>
+  <summary>32-Bit Runtime Environment</summary>
   <summary lang="ja">32ビット実行環境</summary>
   <summary lang="fr">Environnement d'exécution 32 bits</summary>
   <summary lang="de">32-Bit-Laufzeitumgebung</summary>
@@ -23,7 +25,7 @@
 </description>
   <description lang="it">Questo modello installa la variante a 32 bit di tutti i modelli selezionati, consentendo di eseguire software a 32 bit.
 </description>
-  <description lang="en">This pattern installs the 32-bit variant of all selected patterns, allowing you to execute 32-bit software.
+  <description>This pattern installs the 32-bit variant of all selected patterns, allowing you to execute 32-bit software.
 </description>
   <description lang="ja">このパターンには32ビットソフトウェアを動作させるためのソフトウェアが含まれています。
 </description>
@@ -56,7 +58,7 @@
   <uservisible/>
   <category lang="zh_TW">基本技術</category>
   <category lang="it">Tecnologie di base</category>
-  <category lang="en">Base Technologies</category>
+  <category>Base Technologies</category>
   <category lang="ja">ベーステクノロジー</category>
   <category lang="fr">Technologies de base</category>
   <category lang="de">Basistechnologien</category>

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pattern xmlns:rpm="http://linux.duke.edu/metadata/rpm" xmlns="http://novell.com/package/metadata/suse/pattern">
-  <name>multimedia_11.2_20.22.1_i586</name>
+  <name>multimedia</name>
+  <version epoch="0" rel="20.22.1" ver="11.2"/>
+  <arch>i586</arch>
   <icon>yast-tv</icon>
   <order>1580</order>
   <summary lang="zh_TW">多媒體</summary>
   <summary lang="uk">Мультимедіа</summary>
   <summary lang="it">Multimedia</summary>
-  <summary lang="en">Multimedia</summary>
+  <summary>Multimedia</summary>
   <summary lang="ja">マルチメディア</summary>
   <summary lang="hi">मल्टीमीडिया</summary>
   <summary lang="fr">Multimédia</summary>
@@ -42,7 +44,7 @@
 </description>
   <description lang="it">Lettori multimediali, strumenti di elaborazione audio, applicazioni per l'elaborazione di video e di immagini.
 </description>
-  <description lang="en">Multimedia players, sound editing tools , video and image manipulation applications.
+  <description>Multimedia players, sound editing tools , video and image manipulation applications.
 </description>
   <description lang="ja">マルチメディアプレーヤやサウンド編集ツール、映像や画像の操作を行なうアプリケーション群です。
 </description>
@@ -96,7 +98,7 @@
   <category lang="zh_TW">桌面功能</category>
   <category lang="uk">Стільничні функції</category>
   <category lang="it">Funzioni desktop</category>
-  <category lang="en">Desktop Functions</category>
+  <category>Desktop Functions</category>
   <category lang="ja">デスクトップ機能</category>
   <category lang="fr">Fonctions de bureau</category>
   <category lang="de">Desktopfunktionen</category>
@@ -124,33 +126,22 @@
   <category lang="nb">Skrivebordsfunksjoner</category>
   <category lang="en_GB">Desktop Functions</category>
   <rpm:requires>
-    <rpm:entry kind="package" name="patterns-openSUSE-multimedia"/>
+    <rpm:entry name="patterns-openSUSE-multimedia"/>
   </rpm:requires>
   <rpm:recommends>
-    <rpm:entry kind="package" name="yast2-sound"/>
-    <rpm:entry kind="package" name="vorbis-tools"/>
-    <rpm:entry kind="package" name="dvd+rw-tools"/>
+    <rpm:entry name="yast2-sound"/>
+    <rpm:entry name="vorbis-tools"/>
+    <rpm:entry name="dvd+rw-tools"/>
   </rpm:recommends>
   <rpm:suggests>
-    <rpm:entry kind="package" name="grip"/>
-    <rpm:entry kind="package" name="vdr"/>
-    <rpm:entry kind="package" name="abcde"/>
-    <rpm:entry kind="package" name="ripit"/>
-    <rpm:entry kind="package" name="xawtv"/>
-    <rpm:entry kind="package" name="timidity"/>
-    <rpm:entry kind="package" name="audacity"/>
-    <rpm:entry kind="package" name="flac"/>
-    <rpm:entry kind="package" name="gstreamer-0_10-plugins-good-extra"/>
-  </rpm:suggests>
-  <rpm:suggests>
-    <rpm:entry kind="package" name="grip"/>
-    <rpm:entry kind="package" name="vdr"/>
-    <rpm:entry kind="package" name="abcde"/>
-    <rpm:entry kind="package" name="ripit"/>
-    <rpm:entry kind="package" name="xawtv"/>
-    <rpm:entry kind="package" name="timidity"/>
-    <rpm:entry kind="package" name="audacity"/>
-    <rpm:entry kind="package" name="flac"/>
-    <rpm:entry kind="package" name="gstreamer-0_10-plugins-good-extra"/>
+    <rpm:entry name="grip"/>
+    <rpm:entry name="vdr"/>
+    <rpm:entry name="abcde"/>
+    <rpm:entry name="ripit"/>
+    <rpm:entry name="xawtv"/>
+    <rpm:entry name="timidity"/>
+    <rpm:entry name="audacity"/>
+    <rpm:entry name="flac"/>
+    <rpm:entry name="gstreamer-0_10-plugins-good-extra"/>
   </rpm:suggests>
 </pattern>
