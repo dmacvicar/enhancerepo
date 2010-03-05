@@ -35,6 +35,8 @@ module EnhanceRepo
 
   class ConfigOpts
 
+    include Logger
+
     def read_command_line
       opts = Trollop::options do
         version "enhancerepo #{EnhanceRepo::VERSION}"
@@ -93,6 +95,13 @@ EOS
         # other
         opt :debug, 'Show debug information'
       end
+      if !File.exist?(opts[:dir]) || !File.directory?(opts[:dir])
+        Trollop::die "Missing valid value for --dir"
+      end
+      if !File.directory?(File.join(opts[:dir], "repodata") ) && !(opts[:primary] || opts[:help])
+        Trollop::die :dir, "is not a valid repository directory"
+      end
+      opts
     end
     
     
@@ -139,7 +148,7 @@ EOS
       @repokeywords = Set.new
       opts = read_command_line
       read_opts(opts)
-      #dump(opts)
+      #dump
     end
     
     def read_opts(opts)
@@ -167,7 +176,7 @@ EOS
       @dir = Pathname.new(opts[:dir]) if opts[:dir]
     end
     
-    def dump(opts)
+    def dump
       logger = EnhanceRepo.logger
 
       logger.info "index #{@index}"

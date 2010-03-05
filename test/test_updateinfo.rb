@@ -31,11 +31,12 @@ require 'stringio'
 class UpdateInfo_test < Test::Unit::TestCase
 
   def setup
+#	  $stderr << "UpdateInfo_test"
   end
 
   def test_xml_output
+    ARGV << "--dir" << test_data('rpms/repo-1')
     config = EnhanceRepo::ConfigOpts.new
-    config.dir = test_data('rpms/repo-1')
     updateinfo = EnhanceRepo::RpmMd::UpdateInfo.new(config)
 
     Tempdir.open do |dir|

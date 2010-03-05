@@ -31,11 +31,12 @@ require 'stringio'
 class Patterns_test < Test::Unit::TestCase
 
   def setup
+#	  $stderr << "Patterns_test"
   end
 
   def test_xml_output
+    ARGV << "--dir" << test_data('rpms/repo-1')
     config = EnhanceRepo::ConfigOpts.new
-    #config.dir = test_data('rpms/repo-1')
     patterns = EnhanceRepo::RpmMd::Patterns.new(config)
 
     Tempdir.open do |dir|
@@ -47,20 +48,24 @@ class Patterns_test < Test::Unit::TestCase
       a << test_data('susetags-patterns/32bit-11-38.5.x86_64.pat.gz')
       patterns.generate_patterns(a, dir)
 
-      written = File.open(File.join(dir, 'pattern-multimedia_11.2_20.22.1_i586_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-multimedia_11.2_20.22.1_i586_0.xml')).read
+      written = File.open(File.join(dir, 'pattern-multimedia_0.xml')).read
+      expected = File.open(test_data('rpmmd-patterns/pattern-multimedia_0.xml')).read
+      #File.rename(File.join(dir, 'pattern-multimedia_0.xml'), "/tmp/pattern-multimedia_0.xml")
       assert_xml_equal(expected, written)
 
-      written = File.open(File.join(dir, 'pattern-base_11_38.5_x86_64_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-base_11_38.5_x86_64_0.xml')).read
+      written = File.open(File.join(dir, 'pattern-base_0.xml')).read
+      expected = File.open(test_data('rpmmd-patterns/pattern-base_0.xml')).read
+      #File.rename(File.join(dir, 'pattern-base_0.xml'), "/tmp/pattern-base_0.xml")
       assert_xml_equal(expected, written)
 
-      written = File.open(File.join(dir, 'pattern-base-32bit_11_38.5_x86_64_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-base-32bit_11_38.5_x86_64_0.xml')).read
+      written = File.open(File.join(dir, 'pattern-base-32bit_0.xml')).read
+      expected = File.open(test_data('rpmmd-patterns/pattern-base-32bit_0.xml')).read
+      #File.rename(File.join(dir, 'pattern-base-32bit_0.xml'), "/tmp/pattern-base-32bit_0.xml")
       assert_xml_equal(expected, written)
 
-      written = File.open(File.join(dir, 'pattern-32bit_11_38.5_x86_64_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-32bit_11_38.5_x86_64_0.xml')).read
+      written = File.open(File.join(dir, 'pattern-32bit_0.xml')).read
+      expected = File.open(test_data('rpmmd-patterns/pattern-32bit_0.xml')).read
+      #File.rename(File.join(dir, 'pattern-32bit_0.xml'), "/tmp/pattern-32bit_0.xml")
       assert_xml_equal(expected, written)
     end
         
