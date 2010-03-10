@@ -67,7 +67,13 @@ class Patterns_test < Test::Unit::TestCase
       expected = File.open(test_data('rpmmd-patterns/pattern-32bit_0.xml')).read
       #File.rename(File.join(dir, 'pattern-32bit_0.xml'), "/tmp/pattern-32bit_0.xml")
       assert_xml_equal(expected, written)
+
+      patterns.read_repoparts(:repoparts_path => dir)
+      buffer = StringIO.new
+      patterns.write(buffer)
+      assert buffer.size > 0, "patterns file not created"
+
     end
-        
+
   end
 end

@@ -148,14 +148,14 @@ module EnhanceRepo
             if ! pattern.extends.empty?
               xml.extends {
                 pattern.extends.each do |pkg, kind|
-                  xml.name pkg
+                  xml.item( 'pattern' => pkg ) if kind == "pattern"
                 end
               }
             end
             if ! pattern.includes.empty?
               xml.includes {
                 pattern.includes.each do |pkg, kind|
-                  xml.name pkg
+                   xml.item( 'pattern' => pkg ) if kind == "pattern"
                 end
               }
             end
@@ -435,17 +435,24 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.patterns do |b|
+        xml = builder.patterns('xmlns' => "http://novell.com/package/metadata/suse/pattern",
+                               'xmlns:rpm' => "http://linux.duke.edu/metadata/rpm") do |b|
+          pattern_regex = Regexp.new('<pattern\s+xmlns.+>\s*$');
           @patterns.each do |pattern|
-            File.open(pattern) do |f|
-              file << f.read
+            File.open(pattern).each_line do |line|
+              if ! line.start_with?("<?xml")
+                if line.match(pattern_regex)
+                  # all single pattern have the namespace attributes
+                  # we can remove them in the combined file
+                  file << "<pattern>\n"
+                else
+                  file << line
+                end
+              end
             end
           end
         end #done builder
       end
-
     end
-
-
   end
 end
