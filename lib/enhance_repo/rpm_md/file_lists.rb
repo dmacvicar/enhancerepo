@@ -32,7 +32,7 @@ module EnhanceRepo
     # See:
     # http://en.opensuse.org/Standards/Rpm_Metadata
     #
-    class FileLists
+    class FileLists < Data
 
       include Logger
         
