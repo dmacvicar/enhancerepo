@@ -10,7 +10,6 @@ lib/enhance_repo.rb
 lib/enhance_repo/array_arg.rb
 lib/enhance_repo/cli.rb
 lib/enhance_repo/config_opts.rb
-lib/enhance_repo/config_opts.rb.orig
 lib/enhance_repo/logger.rb
 lib/enhance_repo/other.rb
 lib/enhance_repo/package_id.rb
@@ -31,7 +30,6 @@ lib/enhance_repo/rpm_md/suse_data.rb
 lib/enhance_repo/rpm_md/suse_info.rb
 lib/enhance_repo/rpm_md/update.rb
 lib/enhance_repo/rpm_md/update_info.rb
-lib/enhance_repo/rpm_md/update_info.rb.orig
 lib/enhance_repo/rpm_md/update_smart_fields.rb
 lib/enhance_repo/xml_comparer.rb
 lib/tempdir.rb
@@ -44,7 +42,10 @@ test/data/repodata/update-test-11.1/other.xml.gz
 test/data/repodata/update-test-11.1/primary.xml.gz
 test/data/repodata/update-test-11.1/repomd.xml
 test/data/repomd.xml
-test/data/rpmmd-patterns/pattern-multimedia_11.2_20.22.1_i586_0.xml
+test/data/rpmmd-patterns/pattern-32bit_0.xml
+test/data/rpmmd-patterns/pattern-base-32bit_0.xml
+test/data/rpmmd-patterns/pattern-base_0.xml
+test/data/rpmmd-patterns/pattern-multimedia_0.xml
 test/data/rpms/repo-1/a-1.0-0.x86_64.rpm
 test/data/rpms/repo-1/a-1.0_2.0-0_0.x86_64.delta.rpm
 test/data/rpms/repo-1/a-2.0-0.x86_64.rpm
@@ -77,6 +78,9 @@ test/data/rpms/update-test-factory/update-test-optional-0-9999.1.2.noarch.rpm
 test/data/rpms/update-test-factory/update-test-reboot-needed-0-9999.1.2.noarch.rpm
 test/data/rpms/update-test-factory/update-test-relogin-suggested-0-9999.1.2.noarch.rpm
 test/data/rpms/update-test-factory/update-test-security-0-9999.1.2.noarch.rpm
+test/data/susetags-patterns/32bit-11-38.5.x86_64.pat.gz
+test/data/susetags-patterns/base-11-38.5.x86_64.pat.gz
+test/data/susetags-patterns/base-32bit-11-38.5.x86_64.pat.gz
 test/data/susetags-patterns/dvd-11.2-20.22.1.i586.pat.gz
 test/test_arg_array.rb
 test/test_deltainfo.rb
