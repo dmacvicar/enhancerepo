@@ -34,9 +34,11 @@ module EnhanceRepo
     attr_accessor :path
     attr_accessor :rpm
     
+    include Logger
+    
     def initialize(rpmfile)
       @path = rpmfile
-      @rpm = RPM::Package.open(rpmfile)    
+      @rpm = RPM::Package.open(rpmfile)
       @checksum = Digest::SHA1.hexdigest(File.new(rpmfile).read)
     end
 
@@ -53,6 +55,15 @@ module EnhanceRepo
       @checksum == other.checksum
     end
     
+    def arch
+      s = self[RPM::TAG_SOURCERPM]
+      if s.nil?
+        return "src"
+      else
+        return @rpm.arch
+      end
+    end
+
     # match function at name and nvr level
     def matches(ident)
       # if the name matches, then it is sufficient
