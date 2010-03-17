@@ -40,9 +40,8 @@ class Repo_test < Test::Unit::TestCase
       # copy the repodata of a repository to a temp directory
       FileUtils.cp_r File.join(test_data('rpms/repo-with-product/repodata')), dir
 
-      config = EnhanceRepo::ConfigOpts.new
+      config = EnhanceRepo::ConfigOpts.new(dir)
       config.outputdir = dir
-      config.dir = dir
       
       repo = EnhanceRepo::RpmMd::Repo.new(config)
       assert_equal 4, repo.index.resources.size, "repository index has 4 resources"

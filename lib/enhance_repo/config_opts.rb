@@ -44,15 +44,16 @@ module EnhanceRepo
 enhancerepo is a rpm-md metadata tool
 
 Usage:
-        enhancerepo [options]
+        enhancerepo [options] DIR
+
+        DIR: The repo base directory ( where repodata/ directory is located )
 
 EOS
         opt :help, 'Show help'
-        opt :dir, 'The repo base directory ( where repodata/ directory is located )', :short => :r, :type => :string, :default => "./"
         opt :outputdir, 'Generate metadata to a different directory', :short => :o, :type => :string
         opt :index, "Reindex the metadata and regenerates repomd.xml, even if nothing was changed using enhancerepo. Use this if you did manual changes to the metadata", :short => :x
         opt :benchmark, 'Show benchmark statistics at the end'
-  
+
         opt :primary, 'Add data from rpm files and generate primary.xml (EXPERIMENTAL)', :short => :p
         opt :sign, 'Generates signature for the repository using key keyid', :short => :s, :type => :string
         opt :updates, 'Add updates from *.updates files and generate updateinfo.xml', :short => :u
@@ -60,13 +61,13 @@ EOS
         opt :updates_base_dir, 'Looks for package also in <dir> Useful if you keep old packages in a different repos and updates in this one.', :type => :string
         opt :split_updates, 'Splits current updateinfo.xml into update parts files in repoparts/'
         opt :indent, 'Generate indented xml. Default: no', :short => :i
-  
+
         opt :expire, 'Set repository expiration hint (Can be used to detect dead mirrors)', :type => :date, :short => :e
         opt :repo_product, 'Adds product compatibility information', :type => :strings
         opt :repo_keyword, 'Tags repository with keyword', :type => :strings
 
   # === SUSE specific package data (susedata.xml)
-  
+
         opt :eulas, 'Reads packagename.eula files and add the information to susedata.xml', :short => :l
         opt :keywords, 'Reads packagename.keywords files and add keyword metadata to susedata.xml', :short => :k
         opt :disk_usage, 'Reads rpm packages, generates disk usage information on susedata.xml', :short => :d
@@ -87,19 +88,19 @@ EOS
         opt :products, 'Reads release packages and generating product information in products.xml based on the information contained in the .prod files included in the packages.'
 
   # === Pattern information support
-  
+
         opt :patterns, 'Add patterns from pattern-*.xml files and generate patterns.xml', :short => :P
         opt :generate_patterns, 'Generate patterns.xml from the old style pattern given as parameter to this option', :type => :strings
         opt :split_patterns, 'Splits current patterns.xml into pattern parts files in repoparts/'
-  
+
         # other
         opt :debug, 'Show debug information'
       end
-      if !File.exist?(opts[:dir]) || !File.directory?(opts[:dir])
-        Trollop::die "Missing valid value for --dir"
+      if !File.exist?(@dir) || !File.directory?(@dir)
+        Trollop::die "'#{@dir}' is not a valid directory."
       end
-      if !File.directory?(File.join(opts[:dir], "repodata") ) && !(opts[:primary] || opts[:help])
-        Trollop::die :dir, "is not a valid repository directory"
+      if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
+        Trollop::die @dir, "is not a valid repository directory"
       end
       opts
     end
@@ -143,7 +144,8 @@ EOS
 
     end
     
-    def initialize
+    def initialize(dir)
+      @dir = dir
       @repoproducts = Set.new
       @repokeywords = Set.new
       opts = read_command_line
@@ -173,7 +175,6 @@ EOS
       @generate_patterns = Array.new(opts[:generate_patterns]) if opts[:generate_patterns]
       @updatesbasedir = Pathname.new(opts[:updates_base_dir]) if opts[:updates_base_dir]
       @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
-      @dir = Pathname.new(opts[:dir]) if opts[:dir]
     end
     
     def dump

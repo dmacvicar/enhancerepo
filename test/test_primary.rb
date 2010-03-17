@@ -35,7 +35,6 @@ class Primary_test < Test::Unit::TestCase
   end
 
   def test_xml_output
-    ARGV << "--dir" << test_data('rpms/repo-1')
     primary = EnhanceRepo::RpmMd::Primary.new(test_data('rpms/repo-1'))
     primary.read_packages
 
