@@ -1,31 +1,48 @@
-$: << File.join(File.dirname(__FILE__), "test")
-require 'rubygems'
-gem 'hoe', '>= 2.1.0'
-require 'hoe'
+require "rake"
+require "rake/rdoctask"
+require "rake/testtask"
 
-task :default => [:docs, :test]
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
+require "enhance_repo"
 
-Hoe.plugin :yard
-
-HOE = Hoe.spec 'enhancerepo' do
-  developer('Duncan Mac-Vicar P.', 'dmacvicar@suse.de')
-# s.homepage  =   "http://en.opensuse.org/Enhancerepo"
-  self.summary = "Adds additional information to repomd repositories"
-  self.description = "enhancerepo adds additional metadata to repommd repositories and
-servers as the testbed for the specification"
-  self.readme_file = ['README', ENV['HLANG'], 'rdoc'].compact.join('.')
-  self.history_file = ['CHANGELOG', ENV['HLANG'], 'rdoc'].compact.join('.')
-  self.extra_rdoc_files = FileList['*.rdoc']
-
-  self.extra_deps << ['trollop', '>= 1.0.5']
-  self.extra_deps << ['log4r', '>= 1.0.5']
-  self.extra_deps << ['nokogiri', '>= 1.4']
-  self.extra_deps << ['activesupport', '>= 2.3']
-
-  self.extra_dev_deps << ['shoulda', '>= 0']
-  self.extra_dev_deps << ['mocha', '>= 0']
-  self.extra_dev_deps << ['yard', '>= 0']
+task :build do
+  system "gem build enhancerepo.gemspec"
 end
+
+task :install => :build do
+  system "sudo gem install enhancerepo-#{EnhanceRepo::VERSION}.gem"
+end
+
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/test*.rb']
+  t.verbose = true
+end
+
+extra_docs = ['README*', 'TODO*', 'CHANGELOG*']
+
+begin
+ require 'yard'
+  YARD::Rake::YardocTask.new(:doc) do |t|
+    t.files   = ['lib/**/*.rb', *extra_docs]
+  end
+rescue LoadError
+  STDERR.puts "Install yard if you want prettier docs"
+  Rake::RDocTask.new(:doc) do |rdoc|
+    if File.exist?("VERSION.yml")
+      config = File.read("VERSION")
+      version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
+    else
+      version = ""
+    end
+    rdoc.rdoc_dir = "doc"
+    rdoc.title = "enhancerepo #{version}"
+    extra_docs.each { |ex| rdoc.rdoc_files.include ex }
+  end
+end
+
+task :default => ["test"]
+
 
 desc "Insert GPL into all source files"
 task :GPL do
