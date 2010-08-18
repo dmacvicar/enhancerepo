@@ -22,12 +22,9 @@
 #
 #++
 #
-module EnhanceRepo
-  VERSION = "0.4.3"
-end
-
 lib = File.dirname(__FILE__)
 
+require File.join(lib, 'enhance_repo', 'version.rb')
 require File.join(lib, 'enhance_repo', 'logger.rb')
 require File.join(lib, 'enhance_repo', 'config_opts.rb')
 require File.join(lib, 'enhance_repo', 'rpm_md.rb')
