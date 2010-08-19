@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
-require "enhance_repo"
+require "enhance_repo/version"
 
 Gem::Specification.new do |s|
   s.name        = "enhancerepo"
@@ -16,6 +16,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   # s.rubyforge_project         = ""
 
+  s.add_dependency('ruby-rpm')
+  s.add_dependency('builder')
   s.add_dependency("nokogiri", [">= 1.4"])
   s.add_dependency("trollop", [">= 1.0.5"])
   s.add_dependency("log4r", [">= 1.0.5"])
