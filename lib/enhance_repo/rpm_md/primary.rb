@@ -32,23 +32,23 @@ module EnhanceRepo
     #
     class Primary < Data
       attr_accessor :indent
-      
+
       def initialize(dir)
         @indent = false
         @dir = dir
         @rpmfiles = []
       end
-      
+
       def read_packages
         Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
           @rpmfiles << rpmfile
-        end  
+        end
       end
 
       def size
         @rpmfiles.size
       end
-      
+
       def empty?
         @rpmfiles.empty?
       end
@@ -76,7 +76,7 @@ module EnhanceRepo
             b.tag!('rpm:buildhost', pkgid[RPM::TAG_BUILDHOST])
             b.tag!('rpm:sourcerpm', pkgid[RPM::TAG_SOURCERPM])
             #b.tag!('rpm:header-range', pkgid[RPM::TAG_SOURCERPM])
-            
+
             # serialize dependencies
             [:provides, :requires, :obsoletes, :conflicts, :obsoletes].each do |deptype|
               b.tag!("rpm:#{deptype}") do |b|
@@ -105,7 +105,7 @@ module EnhanceRepo
         end
         #  done package tag
       end
-      
+
       # write primary.xml
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=> @indent ? 2 : 0)
@@ -116,7 +116,7 @@ module EnhanceRepo
           end
         end# next package
       end
-      
+
     end
 
   end
