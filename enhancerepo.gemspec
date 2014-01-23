@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   # s.rubyforge_project         = ""
 
-  s.add_dependency('ruby-rpm')
+  s.add_dependency('rpm')
   s.add_dependency('builder')
   s.add_dependency("nokogiri", [">= 1.4"])
   s.add_dependency("trollop", [">= 1.0.5"])
