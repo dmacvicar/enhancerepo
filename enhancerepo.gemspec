@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency('rpm')
   s.add_dependency('builder')
   s.add_dependency("nokogiri", [">= 1.4"])
-  s.add_dependency("trollop", [">= 1.0.5"])
+  s.add_dependency("trollop", ["~> 2.0"])
   s.add_dependency("log4r", [">= 1.0.5"])
   s.add_dependency("activesupport", [">= 2.3"])
 
