@@ -78,7 +78,7 @@ module EnhanceRepo
     # see Enumerable
     def each
       block_given? ?
-        expanded.each { |x| yield x } : Enumerable::Enumerator.new(expanded)
+        expanded.each { |x| yield x } : Enumerator.new(expanded)
     end
         
   end
