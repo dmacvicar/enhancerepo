@@ -102,7 +102,7 @@ module EnhanceRepo
       end
       attr_accessor :issued
       def issued
-          @issued ||= Time.now.to_1
+          @issued ||= Time.now.to_i
       end
       attr_accessor :references
       def references
