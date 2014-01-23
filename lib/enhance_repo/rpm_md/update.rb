@@ -76,17 +76,50 @@ module EnhanceRepo
       # update description
       include UpdateSmartFields
       
-      attr_accessor_with_default :updateid, "unknown"
-      attr_accessor_with_default :status, "stable"
-      attr_accessor_with_default :from, "#{ENV['USER']}@#{ENV['HOST']}"
-      attr_accessor_with_default :type, "optional"
-      attr_accessor_with_default :version, 1
-      attr_accessor_with_default :release, "unknown"
-      attr_accessor_with_default :issued, Time.now.to_i
-      attr_accessor_with_default :references, []
-      attr_accessor_with_default :description, ""
-      attr_accessor_with_default :title, "untitled update"
-      attr_accessor_with_default :packages, []
+      attr_accessor :updateid
+      def updateid
+          @updateid ||= "unknown"
+      end
+      attr_accessor :status
+      def status
+          @status ||= "stable"
+      end
+      attr_accessor :from
+      def from
+          @from ||= "#{ENV['USER']}@#{ENV['HOST']}"
+      end
+      attr_accessor :type
+      def type
+          @type ||= "optional"
+      end
+      attr_accessor :version
+      def version
+          @version ||= 1
+      end
+      attr_accessor :release
+      def release
+          @release ||= "unknown"
+      end
+      attr_accessor :issued
+      def issued
+          @issued ||= Time.now.to_1
+      end
+      attr_accessor :references
+      def references
+          @references ||= []
+      end
+      attr_accessor :description
+      def description
+          @description ||= ""
+      end
+      attr_accessor :title
+      def title
+          @title ||= "untitled update"
+      end
+      attr_accessor :packages
+      def packages
+          @packages ||= []
+      end
       
       def initialize
       end
