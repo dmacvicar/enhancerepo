@@ -28,24 +28,24 @@ require 'stringio'
 require 'zlib'
 require 'nokogiri'
 
-class Index_test < Test::Unit::TestCase
+describe EnhanceRepo::RpmMd::Index do
 
-  def setup
+  before do
+    @index = EnhanceRepo::RpmMd::Index.new
+    @repomdfile = File.join(test_data('rpms/repo-with-product'), @index.metadata_filename)
+    @index.read_file(File.new(@repomdfile))
   end
 
-  def test_reading_existing_index
-    index = EnhanceRepo::RpmMd::Index.new
-    repomdfile = File.join(test_data('rpms/repo-with-product'), index.metadata_filename)
-    index.read_file(File.new(repomdfile))
+  it "should have four resources" do
+    @index.resources.size.must_equal 4
+  end
 
-    assert_equal 4, index.resources.size
-
-    # now test that saving back produces the same result
+  it "saving it back should produce the same initial xml" do
     buffer = StringIO.new
-    index.write(buffer)
+    @index.write(buffer)
 
-    File.open(repomdfile) do |f|
-      assert_xml_equal(f.read, buffer.string)
-    end
+
+    original = File.read(@repomdfile)
+    original.must_equal_xml_structure buffer.string
   end
 end

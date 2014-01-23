@@ -26,10 +26,15 @@ require 'rubygems'
 require 'test/unit'
 require 'mocha'
 
+require 'minitest/spec'
+require 'minitest/autorun'
+
 $: << File.join(File.dirname(__FILE__), "..", "lib")
 require 'enhance_repo'
 require 'enhance_repo/xml_comparer'
 require 'active_support'
+require 'test_xml'
+require 'test_xml/mini_test'
 
 EnhanceRepo::enable_logger
 
@@ -48,5 +53,7 @@ module Test
     end
   end
 end
-        
-                                           
+
+class MiniTest::Spec
+  include TestXml::Assertions
+end
