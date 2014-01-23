@@ -30,12 +30,12 @@ module EnhanceRepo
 
     # represents the repomd index
     class Index < Data
-      
+
       include EnhanceRepo::Logger
-      
+
       attr_accessor :products, :keywords
       attr_accessor :resources
-      
+
       # constructor
       # log logger object
       def initialize
@@ -47,9 +47,9 @@ module EnhanceRepo
       def should_compress?
         false
       end
-      
+
       # add a file resource. Takes care of setting
-      # all the metadata.      
+      # all the metadata.
       def add_file_resource(abspath, path, type=nil)
         r = Resource.new
         r.type = type
@@ -64,7 +64,7 @@ module EnhanceRepo
           ext = File.extname(base)
           base = File.basename(base, ext)
         end
-        
+
         r.type = base if r.type.nil?
         r.location = path
         r.timestamp = File.mtime(abspath).to_i.to_s
@@ -78,7 +78,7 @@ module EnhanceRepo
           r.opensize = (Zlib::GzipReader.new(File.new(abspath)).read).bytesize
         end
         add_resource(r)
-        
+
       end
 
       # add resource
@@ -96,7 +96,7 @@ module EnhanceRepo
           @resources[index] = r
         end
       end
-      
+
       # read data from a file
       def read_file(file)
         doc = REXML::Document.new(file)
@@ -124,7 +124,7 @@ module EnhanceRepo
           add_resource(resource)
         end # iterate over data elements
       end
-      
+
       # write the index to xml file
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
@@ -135,19 +135,19 @@ module EnhanceRepo
               b.location('href' => resource.location)
               b.checksum(resource.checksum, 'type' => 'sha')
               b.timestamp(resource.timestamp)
-              b.size(resource.size)
-              b.tag!('open-size', resource.opensize)
+              b.size(resource.size) if resource.size
+              b.tag!('open-size', resource.opensize) if resource.opensize
               b.tag!('open-checksum', resource.openchecksum, 'type' => 'sha')
             end
           end
-          
+
         end #builder
-        
+
       end
-      
+
     end
 
-    
+
   end
 
 end
