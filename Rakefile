@@ -1,5 +1,5 @@
 require "rake"
-require "rake/rdoctask"
+require 'rdoc/task'
 require "rake/testtask"
 
 $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
