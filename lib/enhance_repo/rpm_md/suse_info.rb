@@ -54,7 +54,7 @@ module EnhanceRepo
       end
 
       def empty?
-        @expire.nil? and @products.empty? and @keywords.empty?
+        @expire.nil? && @products.empty? && @keywords.empty?
       end
 
       def write(file)
