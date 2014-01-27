@@ -81,7 +81,7 @@ module EnhanceRepo
             # serialize dependencies
             [:provides, :requires, :obsoletes, :conflicts, :obsoletes].each do |deptype|
               b.tag!("rpm:#{deptype}") do |b|
-                pkgid.send(deptype).reverse.each { |dep|
+                pkgid.send(deptype).reverse.each do |dep|
                   flag = nil
                   flag = 'LT' if dep.lt?
                   flag = 'GT' if dep.gt?
@@ -97,7 +97,7 @@ module EnhanceRepo
                     attrs['rel'] =dep.version.r
                   end
                   b.tag!('rpm:entry', attrs)
-                }
+                end
               end
               #####
             end

@@ -57,8 +57,8 @@ class TempdirTest < Test::Unit::TestCase
   end
 
   def test_tempfile
-    Tempdir::Tempfile.open {|f|
+    Tempdir::Tempfile.open do|f|
       assert f
-    }
+    end
   end
 end

@@ -36,9 +36,9 @@ class Tempdir
 
   private
   def add_exit
-    at_exit {
+    at_exit do
       self.close if self
-    }
+    end
   end
 
   def create_tmpdir(name)
