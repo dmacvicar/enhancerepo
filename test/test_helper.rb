@@ -37,8 +37,7 @@ require 'active_support'
 require 'diffy'
 require 'equivalent-xml'
 
-
-EnhanceRepo::enable_logger
+EnhanceRepo.enable_logger
 
 def test_data(name)
   File.join(File.dirname(__FILE__), "data", name)

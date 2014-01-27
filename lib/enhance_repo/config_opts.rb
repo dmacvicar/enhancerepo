@@ -149,7 +149,6 @@ EOS
       opts
     end
 
-
     attr_accessor :index
     attr_accessor :indent
     attr_accessor :repoproducts

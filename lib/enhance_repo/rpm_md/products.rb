@@ -136,7 +136,6 @@ module EnhanceRepo
         io.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
 
-
     end
 
   end

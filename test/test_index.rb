@@ -45,7 +45,6 @@ describe EnhanceRepo::RpmMd::Index do
     buffer = StringIO.new
     @index.write(buffer)
 
-
     original = File.read(@repomdfile)
     buffer.string.must_be_xml_equivalent_with original
   end

@@ -40,7 +40,6 @@ require 'enhance_repo/pattern'
 module EnhanceRepo
   module RpmMd
 
-
     class Patterns < Data
 
       def initialize(config)
