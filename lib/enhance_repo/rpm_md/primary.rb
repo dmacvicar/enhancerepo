@@ -90,7 +90,7 @@ module EnhanceRepo
                   flag = 'GE' if dep.ge?
                   attrs = {'name'=>dep.name}
                   if not flag.nil?
-                    attrs['pre'] = 1 if (deptype == :requires) and dep.pre?
+                    attrs['pre'] = 1 if (deptype == :requires) && dep.pre?
                     attrs['flags'] = flag
                     attrs['ver'] =dep.version.v
                     attrs['epoch'] = dep.version.e.nil? ? "0" : dep.version.e.to_s
