@@ -39,7 +39,7 @@ module EnhanceRepo
     include Logger
 
     def read_command_line
-      opts = Trollop::options do
+      opts = Trollop.options do
         version "enhancerepo #{EnhanceRepo::VERSION}"
         banner <<-EOS
 enhancerepo is a rpm-md metadata tool
@@ -141,10 +141,10 @@ EOS
         opt :debug, 'Show debug information'
       end
       if !File.exist?(@dir) || !File.directory?(@dir)
-        Trollop::die "'#{@dir}' is not a valid directory."
+        Trollop.die "'#{@dir}' is not a valid directory."
       end
       if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
-        Trollop::die @dir, "is not a valid repository directory"
+        Trollop.die @dir, "is not a valid repository directory"
       end
       opts
     end

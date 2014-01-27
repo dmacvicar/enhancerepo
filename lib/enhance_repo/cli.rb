@@ -29,7 +29,7 @@ require 'pathname'
 require 'benchmark'
 require 'fileutils'
 
-EnhanceRepo::enable_logger
+EnhanceRepo.enable_logger
 
 dir = "."
 if ! (ARGV.include?("--help") || ARGV.include?("-h") ||
@@ -89,7 +89,7 @@ time = Benchmark.measure do
     repomd.sign(config.signkey) if not config.signkey.nil?
   rescue Exception => excp
     EnhanceRepo.logger.fatal excp.message
-    if EnhanceRepo::enable_debug
+    if EnhanceRepo.enable_debug
       EnhanceRepo.logger.fatal excp.class
       EnhanceRepo.logger.fatal(excp.backtrace.join("\n"))
     else
