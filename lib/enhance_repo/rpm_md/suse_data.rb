@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -59,7 +59,7 @@ module EnhanceRepo
         @pkgid = pkgid
         @rpmfile = rpmfile
       end
-      
+
       def write(builder, pkgid)
         dirsizes = Hash.new
         dircount = Hash.new
@@ -67,7 +67,7 @@ module EnhanceRepo
           file, size = line.split
           dirsizes[File.dirname(file)] = 0 if not dirsizes.has_key?(File.dirname(file))
           dircount[File.dirname(file)] = 0 if not dircount.has_key?(File.dirname(file))
-          
+
           dirsizes[File.dirname(file)] += size.to_i
           dircount[File.dirname(file)] += 1
         end
@@ -78,9 +78,9 @@ module EnhanceRepo
               b.dir('name' => k, 'size' => v, 'count' => dircount[k] )
             end
           end
-        end      
+        end
       end
-      
+
     end
 
     # represents SUSE extensions to
@@ -110,7 +110,7 @@ module EnhanceRepo
         end
         @properties[pkgid][prop.name] = prop
       end
-      
+
       def add_eulas
         # add eulas
         Dir["#{@dir}/**/*.eula"].each do |eulafile|
@@ -174,7 +174,7 @@ module EnhanceRepo
           end # iterate over properties
         end #done builder
       end
-      
+
       def add_disk_usage
         @diskusage_enabled = true
         log.info "Calculating disk usage..."
@@ -184,7 +184,7 @@ module EnhanceRepo
           add_attribute(pkgid, DiskUsageProperty.new(pkgid, rpmfile))
         end
       end
-      
+
     end
 
   end

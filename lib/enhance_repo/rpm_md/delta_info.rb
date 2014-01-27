@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -37,7 +37,7 @@ module EnhanceRepo
 
     class DeltaRpm < PackageId
       attr_accessor :sequence, :sourcerpm
-      
+
       def initialize(filename)
         super(filename)
         `applydeltarpm -i '#{filename}'`.each_line do |line|
@@ -55,7 +55,7 @@ module EnhanceRepo
       def eql?(other)
         ident == other.ident
       end
-      
+
     end
 
     class DeltaInfo < Data
@@ -72,7 +72,7 @@ module EnhanceRepo
       def delta_count
         @deltas.size
       end
-      
+
       def empty?
         return @deltas.empty?
       end
@@ -102,11 +102,11 @@ module EnhanceRepo
         #log.info "Creating deltarpms : level #{n}"
         # make a hash name -> array of packages
         pkgs = Hash.new
-        
+
         Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
           #puts "Delta: #{rpmfile}"
           rpm = PackageId.new(rpmfile)
-          
+
           pkgs[rpm.name] = Array.new if not pkgs.has_key?(rpm.name)
           pkgs[rpm.name] << rpm
         end
@@ -118,7 +118,7 @@ module EnhanceRepo
           pkglist.reverse!
           # now that the list is sorted, the new rpm is the first
           newpkg = pkglist.shift
-          c = 0 
+          c = 0
           if not pkglist.empty?
             for pkg in pkglist
               break if c == n
@@ -132,7 +132,7 @@ module EnhanceRepo
               # calculate directory where to save the delta. Use the newpkg
               # relative to the origin directory,
               # this only works because we know the rpm is inside @dir
-              subdir = Pathname.new(newpkg.path).relative_path_from(Pathname.new(@dir)).dirname              
+              subdir = Pathname.new(newpkg.path).relative_path_from(Pathname.new(@dir)).dirname
               # calculate the deltarpm name
               deltafile = File.join(outputdir, subdir, delta_package_name(oldpkg,newpkg))
               FileUtils.mkdir_p File.dirname(deltafile)
@@ -141,7 +141,7 @@ module EnhanceRepo
               c += 1
             end
           end
-          
+
         end
 
       end
@@ -157,7 +157,7 @@ module EnhanceRepo
           deltarpm = "#{oldpkg.name}-#{oldpkg.version.v}_#{newpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
         end
       end
-      
+
       def add_deltas
         Dir["#{@dir}/**/*.delta.rpm"].each do |deltafile|
           delta = DeltaRpm.new(deltafile)
@@ -197,7 +197,7 @@ module EnhanceRepo
         # ready builder
         file.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
-      
+
     end
 
 

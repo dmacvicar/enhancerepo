@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -34,12 +34,12 @@ module EnhanceRepo
     # with a particular package (so with primary.xml semantics
     class ExtraPrimaryData
       include Logger
-      
+
       # initialize the extra data with a name
       def initialize(name)
         @name = name
       end
     end
-    
+
   end
 end

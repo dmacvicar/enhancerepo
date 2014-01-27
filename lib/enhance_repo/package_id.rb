@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -33,9 +33,9 @@ module EnhanceRepo
     attr_accessor :checksum
     attr_accessor :path
     attr_accessor :rpm
-    
+
     include Logger
-    
+
     def initialize(rpmfile)
       @path = rpmfile
       @rpm = RPM::Package.open(rpmfile)
@@ -46,7 +46,7 @@ module EnhanceRepo
     def method_missing(sym, *args)
       @rpm.send(sym, *args)
     end
-    
+
     def hash
       @checksum.hash
     end
@@ -54,7 +54,7 @@ module EnhanceRepo
     def eql?(other)
       @checksum == other.checksum
     end
-    
+
     def arch
       s = self[RPM::TAG_SOURCERPM]
       if s.nil?
@@ -86,7 +86,7 @@ module EnhanceRepo
     def ident
       "#{@rpm.to_s}.#{@rpm.arch}"
     end
-    
+
   end
 
 end

@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Copyright (C) 2009, Jordi Massager Pla <jordi.massagerpla@opensuse.org>
@@ -39,7 +39,7 @@ module EnhanceRepo
   module RpmMd
 
     class UpdateInfo < Data
-      
+
       def initialize(config)
         @dir = config.dir
         @basedir = config.updatesbasedir
@@ -98,7 +98,7 @@ module EnhanceRepo
 
         log.info "`-> #{rpmfiles.size} rpm packages were not discarded"
         log.debug "    #{rpmfiles.map { |x| File.basename(x) }.join(', ')}"
-        
+
         # now index all rpms per package name in a hash table
         # which goes from name => list of versions
         rpmfiles.each do |rpmfile|
@@ -106,7 +106,7 @@ module EnhanceRepo
           # now that we have the real name, reject if it is not part
           # of the requested packages to generate updates for
           next if not packages.include?(rpm.name)
-          
+
           package_index[rpm.name] = Array.new if not package_index.has_key?(rpm.name)
           # add the rpm if there is no other rpm with the same version
           package_index[rpm.name] << rpm if not package_index[rpm.name].select { |x| x.version == rpm.version && x.name == rpm.name }.first
@@ -125,7 +125,7 @@ module EnhanceRepo
         end
 
         update = Update.new
-        
+
         packages.each do |pkgname|
           pkglist = package_index[pkgname]
           log.info "`-> #{pkglist.size} versions for '#{pkgname}'"
@@ -138,37 +138,37 @@ module EnhanceRepo
           # if there is only one package then we don't need changelog
           if pkglist.size > 1
             # we know that there are no duplicate versions so we can
-            # take the first and the second            
+            # take the first and the second
             first = pkglist.shift
             second = pkglist.shift
             diff = first.changelog - second.changelog || []
-            #diff = first.changelog[0, first.changelog.size - second.changelog.size] || []                        
+            #diff = first.changelog[0, first.changelog.size - second.changelog.size] || []
             log.info "`-> found change #{first.ident} and #{second.ident}."
-            
+
             log.info "`-> '#{pkgname}' has #{diff.size} change entries (#{first.changelog.size}/#{second.changelog.size})"
             update.packages << first
             diff.each do |entry|
-              update.description << entry.text << "\n"          
+              update.description << entry.text << "\n"
             end
           else
             # jump to next pkgname
             next
           end
-          
+
         end
 
         # do not save it if there are no packages
         if update.empty?
 
         end
-        
+
         # before writing the update, figure out more
         # information
         update.smart_fill_blank_fields
 
         log.info "`-> update has #{update.references.size} references"
         log.debug "    #{update.references.join(',')} "
-        
+
         filename = ""
 
         FileUtils.mkdir_p outputdir
@@ -177,7 +177,7 @@ module EnhanceRepo
           update.version += 1
         end
         log.info "Saving update part to '#{filename}'."
-        
+
         File.open(filename, 'w') do |f|
           update.write(f)
         end
@@ -192,12 +192,12 @@ module EnhanceRepo
       #
       # outputdir is the directory where to save the patch to.
       def split_updates(outputdir)
-        FileUtils.mkdir_p outputdir        
+        FileUtils.mkdir_p outputdir
         updateinfofile = File.join(@dir, metadata_filename)
 
         # we can't split without an updateinfo file
         raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)
-        Zlib::GzipReader.open(updateinfofile) do |gz|        
+        Zlib::GzipReader.open(updateinfofile) do |gz|
           document = REXML::Document.new(gz)
           root = document.root
           root.each_element("update") do |updateElement|
@@ -222,7 +222,7 @@ module EnhanceRepo
           end
         end
       end
-      
+
       # write a update out
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
@@ -236,7 +236,7 @@ module EnhanceRepo
           end
         end #done builder
       end
-      
+
     end
 
 

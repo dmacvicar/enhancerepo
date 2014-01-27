@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -53,7 +53,7 @@ time = Benchmark.measure do
     repomd.suseinfo.products.merge(config.repoproducts)
     repomd.suseinfo.keywords.merge(config.repokeywords)
 
-    repomd.susedata.add_eulas if config.eulas  
+    repomd.susedata.add_eulas if config.eulas
     repomd.susedata.add_keywords if config.keywords
     repomd.susedata.add_disk_usage if config.diskusage
 
@@ -85,7 +85,7 @@ time = Benchmark.measure do
     repomd.write
 
     # perform signature of the repository
-    repomd.sign(config.signkey) if not config.signkey.nil?  
+    repomd.sign(config.signkey) if not config.signkey.nil?
   rescue Exception => excp
     EnhanceRepo.logger.fatal excp.message
     if EnhanceRepo::enable_debug

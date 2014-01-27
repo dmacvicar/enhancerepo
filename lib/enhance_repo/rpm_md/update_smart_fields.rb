@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 #
@@ -26,7 +26,7 @@
 
 module EnhanceRepo
   module RpmMd
-    
+
     module UpdateSmartFields
       # detects references for the given
       # configuration
@@ -81,7 +81,7 @@ module EnhanceRepo
         each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) {|x| yield x}
         each_reference_for(:keyword => 'cve', :href => 'http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-:id', :title => 'CVE-:id', :type => 'cve' ) {|x| yield x}
       end
-      
+
       # automatically set empty fields
       # needs the description to be set to
       # be somehow smart
@@ -95,7 +95,7 @@ module EnhanceRepo
         end
 
         update.title = "#{update.type} update #{update.version} "
-        
+
         # now figure out the title
         # if there is only package
         if update.packages.size == 1
@@ -119,9 +119,9 @@ module EnhanceRepo
         end
 
         # now figure out and fill references
-        each_detected_reference { |ref| update.references << ref }       
+        each_detected_reference { |ref| update.references << ref }
       end
-      
+
     end
   end
 end

@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -27,7 +27,7 @@ require 'trollop'
 require 'enhance_repo/array_arg'
 
 module EnhanceRepo
-  
+
   # Configuration class to hold the options
   # passed from the command line to the
   # components doing the work
@@ -104,8 +104,8 @@ EOS
       end
       opts
     end
-    
-    
+
+
     attr_accessor :index
     attr_accessor :indent
     attr_accessor :repoproducts
@@ -137,13 +137,13 @@ EOS
     attr_accessor :patterns
     attr_accessor :generate_patterns
     attr_accessor :split_patterns
-    
+
     def outputdir
       return @dir if @outputdir.nil?
       return @outputdir
 
     end
-    
+
     def initialize(dir)
       @dir = dir
       @repoproducts = Set.new
@@ -152,7 +152,7 @@ EOS
       read_opts(opts)
       #dump
     end
-    
+
     def read_opts(opts)
       @index = opts[:index]
       @expire = opts[:expire]
@@ -176,7 +176,7 @@ EOS
       @updatesbasedir = Pathname.new(opts[:updates_base_dir]) if opts[:updates_base_dir]
       @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
     end
-    
+
     def dump
       logger = EnhanceRepo.logger
 
@@ -206,7 +206,7 @@ EOS
       logger.info "updatesbasedir #{@updatesbasedir}"
       logger.info "outputdir #{@outputdir}"
       logger.info "dir #{@dir}"
-      
+
     end
   end
 end

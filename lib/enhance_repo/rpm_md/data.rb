@@ -29,7 +29,7 @@ module EnhanceRepo
     # represents a metadata unit
     class Data
       include Logger
-      
+
       # initialize the extra data with a name
       # or use the class name as default
       def initialize(name)
@@ -39,7 +39,7 @@ module EnhanceRepo
       def name
         defined?(@name) ? @name : self.class.to_s.split("::").last.downcase
       end
-      
+
       def metadata_filename
         "repodata/#{name}.xml#{should_compress? ? '.gz' : ''}"
       end
@@ -48,8 +48,7 @@ module EnhanceRepo
       def should_compress?
         true
       end
-      
     end
-    
+
   end
 end

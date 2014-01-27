@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -44,7 +44,7 @@ require 'enhance_repo/rpm_md/index'
 
 module EnhanceRepo
   module RpmMd
-    
+
     include REXML
 
     class Repo

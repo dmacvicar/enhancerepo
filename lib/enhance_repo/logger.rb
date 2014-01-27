@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -43,11 +43,11 @@ module EnhanceRepo
   def self.using_log4r?
     (! (Object.const_get(:Log4r) rescue nil).nil?)
   end
-  
+
   def self.enable_debug
     EnhanceRepo.logger.level = using_log4r? ? Log4r::DEBUG : ::Logger::DEBUG
   end
-  
+
   def self.logger
     @logger
   end
@@ -55,7 +55,7 @@ module EnhanceRepo
   def self.logger=(logger)
       @logger = logger
   end
-  
+
   # provide easy access to classes to the
   # global logger
   module Logger
@@ -63,5 +63,5 @@ module EnhanceRepo
       EnhanceRepo.logger
     end
   end
-  
+
 end

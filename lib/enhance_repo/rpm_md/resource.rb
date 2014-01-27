@@ -37,8 +37,8 @@ module EnhanceRepo
       def ==(other)
         return (location == other.location) if other.is_a?(Resource)
         false
-      end      
+      end
     end
-    
+
   end
 end

@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -31,7 +31,7 @@ module EnhanceRepo
   # file name
   #
   class ArrayArg
-    
+
     include Enumerable
 
     # initialize the wrapper with an array
@@ -74,13 +74,13 @@ module EnhanceRepo
     def method_missing(method, *args)
       each.to_a.send(method, *args)
     end
-        
+
     # see Enumerable
     def each
       block_given? ?
         expanded.each { |x| yield x } : Enumerator.new(expanded)
     end
-        
+
   end
 end
-    
+

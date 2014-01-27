@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -30,4 +30,4 @@ require File.join(lib, 'enhance_repo', 'config_opts.rb')
 require File.join(lib, 'enhance_repo', 'rpm_md.rb')
 
 
-  
+

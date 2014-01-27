@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -39,7 +39,7 @@ module EnhanceRepo
     def read
       Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
         @rpmfiles << rpmfile
-      end  
+      end
     end
 
     def empty?
@@ -61,7 +61,7 @@ module EnhanceRepo
         end
       end
     end
-    
+
     # write filelists.xml
     def write(file)
       #builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
@@ -74,7 +74,7 @@ module EnhanceRepo
       # next package
       #end
     end
-    
+
   end
 
 end

@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Copyright (C) 2009, Jordi Massager Pla <jordi.massagerpla@opensuse.org>

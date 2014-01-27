@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -34,7 +34,7 @@ module EnhanceRepo
     # products.xml metadata generator
     # reads the release files from a repository
     class Products < Data
-      
+
       # Holder for products we read from the
       # release files
       class ProductData
@@ -47,7 +47,7 @@ module EnhanceRepo
         attr_accessor :summary
         attr_accessor :description
       end
-      
+
       def initialize(dir)
         @dir = dir
         @products = []
@@ -111,7 +111,7 @@ module EnhanceRepo
       def size
         @products.size
       end
-      
+
       def write(io)
         builder = Nokogiri::XML::Builder.new do |xml|
           xml.products do
@@ -125,7 +125,7 @@ module EnhanceRepo
                 xml.arch product.arch
                 xml.vendor product.vendor
                 xml.summary product.summary
-                xml.description product.description                
+                xml.description product.description
               end
             end
           end
@@ -135,8 +135,8 @@ module EnhanceRepo
         io.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
 
-      
+
     end
-    
+
   end
 end

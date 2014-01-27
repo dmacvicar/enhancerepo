@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -28,7 +28,7 @@ require 'builder'
 
 module EnhanceRepo
   module RpmMd
-    
+
     # represents SUSE extensions to repository
     # metadata (not associated with packages)
     #
@@ -55,7 +55,7 @@ module EnhanceRepo
       def empty?
         @expire.nil? and @products.empty? and @keywords.empty?
       end
-      
+
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
