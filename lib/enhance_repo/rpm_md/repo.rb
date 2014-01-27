@@ -35,7 +35,7 @@ require 'enhance_repo/rpm_md/primary'
 require 'enhance_repo/rpm_md/file_lists'
 require 'enhance_repo/rpm_md/other'
 require 'enhance_repo/rpm_md/update_info'
-require 'enhance_repo/rpm_md/pattern'
+require 'enhance_repo/rpm_md/patterns'
 require 'enhance_repo/rpm_md/suse_info'
 require 'enhance_repo/rpm_md/suse_data'
 require 'enhance_repo/rpm_md/delta_info'
@@ -46,11 +46,11 @@ module EnhanceRepo
   module RpmMd
     
     include REXML
-    
+
     class Repo
 
       include Logger
-      
+
       attr_accessor :index
 
       # extensions
@@ -65,10 +65,10 @@ module EnhanceRepo
         if File.exist?(repomdfile)
           @index.read_file(File.new(repomdfile))
         end
-        
+
         @primary = Primary.new(config.dir)
         @primary.indent = config.indent
-        
+
         @filelists = FileLists.new(config.dir)
         @other = Other.new(config.dir)
         @susedata = SuseData.new(config.dir)
@@ -119,11 +119,11 @@ module EnhanceRepo
         missing_files = []
         # files present in the index, but not on disk
         superflous_files = []
-        
+
         # now look for files that changed or dissapeared
         Dir.chdir(@dir) do
           # look all files except the index itself
-          metadata_files = Dir["repodata/*.xml*"].reject do |x|            
+          metadata_files = Dir["repodata/*.xml*"].reject do |x|
             x  =~ /#{@index.metadata_filename}/ ||
             x =~ /\.key$/ ||
             x =~ /\.asc$/
@@ -134,7 +134,7 @@ module EnhanceRepo
             log.info "Removing not existing #{resource.location} from index" if reject
             reject
           end
-          
+
           non_empty_files = non_empty_data.map { |x| x.metadata_filename }
           # ignore it if it is already in the non_empty_list
           # as it will be added to the index anyway
@@ -153,7 +153,7 @@ module EnhanceRepo
             end
           end
         end
-        
+
         # write down changed datas
         non_empty_data.each do |data|
           write_gz_extension_file(data)
@@ -169,12 +169,12 @@ module EnhanceRepo
           log.info "Adding missing #{f} to #{@index.metadata_filename} index"
           @index.add_file_resource(File.join(@outputdir, f), f)
         end
-                
+
         changed_files.each do |f|
           log.info "Replacing changed #{f} on #{@index.metadata_filename} index"
           @index.add_file_resource(File.join(@outputdir, f), f)
         end
-        
+
         # now write the index
         File.open((@outputdir + @index.metadata_filename), 'w') do |f|
           log.info "Saving #{@index.metadata_filename} .."
@@ -197,7 +197,7 @@ module EnhanceRepo
           data.write(gz)
         end
       end
-      
+
     end
 
   end

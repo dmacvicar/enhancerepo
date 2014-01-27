@@ -1,0 +1,53 @@
+<pattern xmlns="http://novell.com/package/metadata/suse/pattern" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
+<name>32bit</name>
+<arch>x86_64</arch>
+<version epoch="0" ver="11" rel="38.44.33"/>
+<summary>32-Bit Runtime Environment</summary>
+<description>
+This pattern installs the 32-bit variant of all selected patterns, allowing you to execute 32-bit software.
+</description>
+<category>Base Technologies</category>
+<uservisible/>
+</pattern>
+<pattern xmlns="http://novell.com/package/metadata/suse/pattern" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
+<name>Basis-Devel</name>
+<arch>x86_64</arch>
+<version epoch="0" ver="11" rel="38.44.33"/>
+<summary>C/C++ Compiler and Tools</summary>
+<description>
+Minimal set of tools for compiling and linking applications
+</description>
+<category>Development</category>
+<uservisible/>
+<rpm:requires>
+<rpm:entry name="pattern:basesystem"/>
+<rpm:entry name="autoconf"/>
+<rpm:entry name="automake"/>
+<rpm:entry name="cvs"/>
+</rpm:requires>
+<rpm:recommends>
+<rpm:entry name="aspell-ispell"/>
+<rpm:entry name="bison"/>
+<rpm:entry name="emacs"/>
+<rpm:entry name="emacs-info"/>
+<rpm:entry name="emacs-x11"/>
+<rpm:entry name="flex"/>
+<rpm:entry name="gcc"/>
+<rpm:entry name="gcc-c++"/>
+<rpm:entry name="gcc-info"/>
+<rpm:entry name="gcc-locale"/>
+<rpm:entry name="gcc-z9"/>
+<rpm:entry name="gdbm-devel"/>
+<rpm:entry name="glibc-devel"/>
+<rpm:entry name="glibc-info"/>
+<rpm:entry name="itrace"/>
+<rpm:entry name="kernel-source"/>
+<rpm:entry name="libaio-devel"/>
+<rpm:entry name="libstdc++-devel"/>
+<rpm:entry name="libstdc++-doc"/>
+<rpm:entry name="ncurses-devel"/>
+<rpm:entry name="pkg-config"/>
+<rpm:entry name="rcs"/>
+<rpm:entry name="texinfo"/>
+</rpm:recommends>
+</pattern>

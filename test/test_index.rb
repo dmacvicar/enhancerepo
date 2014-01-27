@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -46,6 +46,6 @@ describe EnhanceRepo::RpmMd::Index do
 
 
     original = File.read(@repomdfile)
-    original.must_equal_xml_structure buffer.string
+    buffer.string.must_be_xml_equivalent_with original
   end
 end

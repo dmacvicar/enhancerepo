@@ -27,24 +27,23 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 require 'enhance_repo'
 require 'stringio'
 
-class DeltaInfo_test < Test::Unit::TestCase
+describe EnhanceRepo::RpmMd::DeltaInfo do
 
-  def setup
+  before do
+    @deltainfo = EnhanceRepo::RpmMd::DeltaInfo.new(test_data('rpms/repo-1'))
+    @deltainfo.add_deltas
   end
 
-  def test_xml_output
-    deltainfo = EnhanceRepo::RpmMd::DeltaInfo.new(test_data('rpms/repo-1'))
-    deltainfo.add_deltas
-
-    assert ! deltainfo.empty?
-    assert_equal 1, deltainfo.delta_count
+  it "should generate the expected xml" do
+    @deltainfo.wont_be_empty
+    @deltainfo.delta_count.must_equal 1
 
     Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/deltainfo.xml.gz')) do |expected_deltainfo|
 
       buffer = StringIO.new
-      deltainfo.write(buffer)
+      @deltainfo.write(buffer)
 
-      assert_xml_equal(expected_deltainfo.read, buffer.string)
+      buffer.string.must_be_xml_equivalent_with expected_deltainfo.read
     end
   end
 end

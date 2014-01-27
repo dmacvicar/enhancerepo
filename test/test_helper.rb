@@ -33,8 +33,9 @@ $: << File.join(File.dirname(__FILE__), "..", "lib")
 require 'enhance_repo'
 require 'enhance_repo/xml_comparer'
 require 'active_support'
-require 'test_xml'
-require 'test_xml/mini_test'
+require 'diffy'
+require 'equivalent-xml'
+
 
 EnhanceRepo::enable_logger
 
@@ -42,18 +43,24 @@ def test_data(name)
   File.join(File.dirname(__FILE__), "data", name)
 end
 
-# compare xml files
-module Test
-  module Unit
-    module Assertions
-      def assert_xml_equal(expected, result)
-        comparer = XmlComparer.new(:show_messages => true)
-        assert comparer.compare(expected, result)
-      end
+module MiniTest::Assertions
+
+  def assert_xml_equivalent(expected, actual, message = nil)
+
+    expected = Nokogiri::XML(expected) do |config|
+      config.default_xml.noblanks
     end
+    actual = Nokogiri::XML(actual) do |config|
+      config.default_xml.noblanks
+    end
+
+    equal = EquivalentXml.equivalent?(expected, actual,
+      opts = { :element_order => false, :normalize_whitespace => true })
+
+    diff = Diffy::Diff.new(expected.to_xml(:indent => 2), actual.to_xml(:indent => 2)).to_s(:color)
+    assert equal, diff
   end
 end
 
-class MiniTest::Spec
-  include TestXml::Assertions
-end
+String.infect_an_assertion :assert_xml_equivalent, :must_be_xml_equivalent_with, :only_one_argument
+

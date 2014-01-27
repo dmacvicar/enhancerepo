@@ -37,7 +37,7 @@ class RpmMd_test < Test::Unit::TestCase
     @rpms1 = rpms + 'update-test-11.1'
     @rpms3 = rpms + 'update-test-factory'
   end
-  
+
   # def teardown
   # end
 
@@ -51,12 +51,9 @@ class RpmMd_test < Test::Unit::TestCase
     out = StringIO.new
     @repo.primary.write(out)
     #puts out.string
-    
   end
 
   def test_update_info
     #config.generate_update = packages
   end
-
-  
 end

@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -28,24 +28,28 @@ require 'enhance_repo'
 require 'stringio'
 require 'zlib'
 
-class Products_test < Test::Unit::TestCase
+describe EnhanceRepo::RpmMd::Products do
 
-  def setup
-  end
+  describe "a generated products should be what is expected" do
+    before do
+      @products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-with-prouct'))
+    end
 
-  def test_xml_output
-    products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-with-product'))
-    products.read_packages
+    it "should not be empty" do
+      @products.wont_be_empty
+    end
 
-    assert ! products.empty?
-    
-    assert_equal 1, products.size
+    it "should have 3 elements" do
+      @products.size.must_equal 1
+    end
 
-    Zlib::GzipReader.open(test_data('rpms/repo-with-product/repodata/products.xml.gz')) do |expected_products|
+    it "should generate the right xml" do
+      Zlib::GzipReader.open(test_data('rpms/repo-with-product/repodata/products.xml.gz')) do |expected_products|
 
-      buffer = StringIO.new
-      products.write(buffer)
-      assert_xml_equal(expected_products.read, buffer.string)
+        buffer = StringIO.new
+        @products.write(buffer)
+        assert_xml_equivalent(expected_products.read, buffer.string)
+      end
     end
   end
 end

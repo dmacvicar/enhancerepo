@@ -57,7 +57,7 @@ module EnhanceRepo
       def to_s
        "#{type}##{referenceid}"
       end
-      
+
       # initialize a reference, per default a novell
       # bugzilla type
       def initialize
@@ -75,7 +75,7 @@ module EnhanceRepo
       # methods to automatically grab data from the
       # update description
       include UpdateSmartFields
-      
+
       attr_accessor :updateid
       def updateid
           @updateid ||= "unknown"
@@ -120,7 +120,7 @@ module EnhanceRepo
       def packages
           @packages ||= []
       end
-      
+
       def initialize
       end
 
@@ -134,14 +134,13 @@ module EnhanceRepo
         "update-#{updateid}-#{version}"
       end
 
-      
       # write a update out
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         append_to_builder(builder)
       end
-      
-      def append_to_builder(builder)  
+
+      def append_to_builder(builder)
         builder.update('status' => 'stable', 'from' => from, 'version' => version, 'type' => type) do |b|
           b.title(title)
           b.id(updateid)
@@ -151,7 +150,7 @@ module EnhanceRepo
           # serialize attr_reader :eferences
           b.references do |b|
             references.each do |r|
-              b.reference('href' => r.href, 'id' => r.referenceid, 'title' => r.title, 'type' => r.type )   
+              b.reference('href' => r.href, 'id' => r.referenceid, 'title' => r.title, 'type' => r.type )
             end
           end
           # done with references
@@ -167,7 +166,7 @@ module EnhanceRepo
           # done with the packagelist
         end
       end
-      
+
     end
 
   end

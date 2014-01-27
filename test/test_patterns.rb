@@ -27,52 +27,64 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 require 'enhance_repo'
 require 'tempdir'
 require 'stringio'
+require 'enhance_repo/susetags/pattern_reader'
 
-class Patterns_test < Test::Unit::TestCase
+describe EnhanceRepo::RpmMd::Patterns do
 
-  def setup
-#	  $stderr << "Patterns_test"
+  before do
+    @config = EnhanceRepo::ConfigOpts.new(test_data('rpms/repo-1'))
+    @patterns = EnhanceRepo::RpmMd::Patterns.new(@config)
   end
 
-  def test_xml_output
-    config = EnhanceRepo::ConfigOpts.new(test_data('rpms/repo-1'))
-    patterns = EnhanceRepo::RpmMd::Patterns.new(config)
-
-    Tempdir.open do |dir|
-      dir = File.join(dir, "repoparts")
-      a = Array.new
-      a << test_data('susetags-patterns/dvd-11.2-20.22.1.i586.pat.gz')
-      a << test_data('susetags-patterns/base-11-38.5.x86_64.pat.gz')
-      a << test_data('susetags-patterns/base-32bit-11-38.5.x86_64.pat.gz')
-      a << test_data('susetags-patterns/32bit-11-38.5.x86_64.pat.gz')
-      patterns.generate_patterns(a, dir)
-
-      written = File.open(File.join(dir, 'pattern-multimedia_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-multimedia_0.xml')).read
-      #File.rename(File.join(dir, 'pattern-multimedia_0.xml'), "/tmp/pattern-multimedia_0.xml")
-      assert_xml_equal(expected, written)
-
-      written = File.open(File.join(dir, 'pattern-base_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-base_0.xml')).read
-      #File.rename(File.join(dir, 'pattern-base_0.xml'), "/tmp/pattern-base_0.xml")
-      assert_xml_equal(expected, written)
-
-      written = File.open(File.join(dir, 'pattern-base-32bit_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-base-32bit_0.xml')).read
-      #File.rename(File.join(dir, 'pattern-base-32bit_0.xml'), "/tmp/pattern-base-32bit_0.xml")
-      assert_xml_equal(expected, written)
-
-      written = File.open(File.join(dir, 'pattern-32bit_0.xml')).read
-      expected = File.open(test_data('rpmmd-patterns/pattern-32bit_0.xml')).read
-      #File.rename(File.join(dir, 'pattern-32bit_0.xml'), "/tmp/pattern-32bit_0.xml")
-      assert_xml_equal(expected, written)
-
-      patterns.read_repoparts(:repoparts_path => dir)
-      buffer = StringIO.new
-      patterns.write(buffer)
-      assert buffer.size > 0, "patterns file not created"
-
+  describe "pattern is serialized correctly" do
+    before do
+      path = File.join(test_data('susetags-patterns'), 'Basis-Devel.pat.gz')
+      Zlib::GzipReader.open(path) do |gz|
+        patterns = EnhanceRepo::Susetags::PatternReader.read_patterns_from_tags(gz)
+        @pattern = patterns.first
+      end
     end
 
+    it "should have the same xml structure as our template" do
+      expected = File.read(File.join(test_data('rpmmd-patterns'), 'Basis-Devel.xml'))
+      expected.must_be_xml_equivalent_with  @pattern.to_xml
+    end
   end
+
+  #describe "generates yum patterns from susetags files" do
+
+  #  Tempdir.open do |dir|
+  #    before do
+  #      @dir = File.join(dir, "repoparts")
+  #      @desc_list = []
+  #      @desc_list << test_data('susetags-patterns/dvd-11.2-20.22.1.i586.pat.gz')
+  #      @desc_list << test_data('susetags-patterns/base-11-38.5.x86_64.pat.gz')
+  #      @desc_list << test_data('susetags-patterns/base-32bit-11-38.5.x86_64.pat.gz')
+  #      @desc_list << test_data('susetags-patterns/32bit-11-38.5.x86_64.pat.gz')
+  #    end
+
+#      it "should write the patterns correctly" do
+#        @patterns.generate_patterns(@desc_list, @dir)
+#      end
+
+     # ['pattern-multimedia_0', 'pattern-base_0', 'pattern-base-32bit_0',
+     #  'pattern-32bit_0'].each do |pat|
+     #   it "should generate the xml for #{pat}" do
+     #     written = File.open(File.join(@dir, "#{pat}.xml")).read
+     #     expected = File.open(test_data("rpmmd-patterns/#{pat}.xml")).read
+     #     expected.must_equal_xml_structure written
+     #     #expected.must_be_dom_equal_with written
+     #   end
+     # end
+
+    #end
+
+  #end
 end
+
+#patterns.read_repoparts(:repoparts_path => dir)
+#      buffer = StringIO.new
+#      patterns.write(buffer)
+#      assert buffer.size > 0, "patterns file not created"
+
+

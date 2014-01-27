@@ -26,7 +26,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("bundler", [">= 1.0.rc.2"])
   s.add_development_dependency("mocha", [">= 0.9"])
   s.add_development_dependency("yard", [">= 0.5"])
-  s.add_development_dependency('test_xml')
+  s.add_development_dependency('diffy')
+  s.add_development_dependency('equivalent-xml')
 
   s.files        = Dir.glob("bin/*") + Dir.glob("lib/**/*") + %w(CHANGELOG.rdoc README.rdoc TODO.rdoc)
   s.require_path = 'lib'

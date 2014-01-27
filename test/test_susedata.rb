@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -28,26 +28,31 @@ require 'enhance_repo'
 require 'stringio'
 require 'zlib'
 
-class SuseData_test < Test::Unit::TestCase
+describe EnhanceRepo::RpmMd::SuseData do
 
-  def setup
-  end
+  describe "a generated susedata should be what is expected" do
+    before do
+      @susedata = EnhanceRepo::RpmMd::SuseData.new(test_data('rpms/repo-1'))
+      @susedata.add_disk_usage
+      @susedata.add_keywords
+      @susedata.add_eulas
+    end
 
-  def test_xml_output
-    susedata = EnhanceRepo::RpmMd::SuseData.new(test_data('rpms/repo-1'))
-    susedata.add_disk_usage
-    susedata.add_keywords
-    susedata.add_eulas
+    it "should not be empty" do
+      @susedata.wont_be_empty
+    end
 
-    assert ! susedata.empty?
-    
-    assert_equal 3, susedata.size
+    it "should have 3 elements" do
+      @susedata.size.must_equal 3
+    end
 
-    Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/susedata.xml.gz')) do |expected_susedata|
+    it "should generate the right xml" do
+      Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/susedata.xml.gz')) do |expected_susedata|
 
-      buffer = StringIO.new
-      susedata.write(buffer)
-      assert_xml_equal(expected_susedata.read, buffer.string)
+        buffer = StringIO.new
+        @susedata.write(buffer)
+        assert_xml_equivalent(expected_susedata.read, buffer.string)
+      end
     end
   end
 end

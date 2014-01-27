@@ -26,7 +26,7 @@ require 'rpm'
 require 'tempdir'
 require 'pathname'
 require 'nokogiri'
-require 'ftools'
+#require 'ftools'
 
 module EnhanceRepo
   module RpmMd

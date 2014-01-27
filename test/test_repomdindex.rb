@@ -1,5 +1,5 @@
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -25,34 +25,23 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 require 'enhance_repo'
 
-class TC_RepoMdIndex < Test::Unit::TestCase
+describe EnhanceRepo::RpmMd::Index do
 
-#  def assert_not_diff(one, second, message = nil)
-#    
-#    message = build_message message, '<?> is not false or nil.', boolean
-#    assert_block message do
-#      not boolean
-#    end
-#  end
-  
-  def setup
+  before do
     @index = EnhanceRepo::RpmMd::Index.new
   end
-  
-  # def teardown
-  # end
 
-  def test_read_write
+  it "should write the same that we read" do
     repomdpath = test_data('repomd.xml')
     index_content = File.new(repomdpath).read
     @index.read_file(File.new(repomdpath))
 
     # now that the file is parsed, lets test wether it
     # is parsed correctly
-    assert_equal(3, @index.resources.size)
-    
+    @index.resources.size.must_equal 3
+
     dump_content = String.new
     @index.write(dump_content)
-    assert_xml_equal(index_content, dump_content)
+    index_content.must_be_xml_equivalent_with dump_content
   end
 end
