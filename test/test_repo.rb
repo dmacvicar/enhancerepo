@@ -1,5 +1,6 @@
+# Encoding: utf-8
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -42,7 +43,7 @@ class Repo_test < Test::Unit::TestCase
 
       config = EnhanceRepo::ConfigOpts.new(dir)
       config.outputdir = dir
-      
+
       repo = EnhanceRepo::RpmMd::Repo.new(config)
       assert_equal 4, repo.index.resources.size, "repository index has 4 resources"
       FileUtils.rm File.join(dir, 'repodata/filelists.xml.gz')
@@ -61,11 +62,11 @@ class Repo_test < Test::Unit::TestCase
       File.open(File.join(dir, "repodata/newdata3.xml"), 'w') do |f|
         f.write('<xml></xml>')
       end
-      
+
       repo.write
 
       repo = EnhanceRepo::RpmMd::Repo.new(config)
-      assert_equal 6, repo.index.resources.size, "repository index has 6 resources, after adding three"      
+      assert_equal 6, repo.index.resources.size, "repository index has 6 resources, after adding three"
     end
   end
 end

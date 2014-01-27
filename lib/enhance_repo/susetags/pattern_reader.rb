@@ -1,4 +1,7 @@
+# Encoding: utf-8
+
 require 'enhance_repo/pattern'
+
 module EnhanceRepo
 
   module Susetags

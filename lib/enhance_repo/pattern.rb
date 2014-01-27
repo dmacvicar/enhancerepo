@@ -1,3 +1,5 @@
+# Encoding: utf-8
+
 require 'enhance_repo/rpm_md/pattern_writer'
 
 module EnhanceRepo

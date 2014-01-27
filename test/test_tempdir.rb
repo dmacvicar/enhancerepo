@@ -1,3 +1,5 @@
+# Encoding: utf-8
+#
 # Author::    Yuichi Tateno <hotchpotch@gmail.com>
 # Copyright:: Copyright (c) 2008 Yuichi Tateno
 # License::   MIT

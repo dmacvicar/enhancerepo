@@ -1,5 +1,6 @@
+# Encoding: utf-8
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -28,24 +29,24 @@ require 'tempdir'
 require 'stringio'
 
 class ArrayWrapper_test < Test::Unit::TestCase
-  
+
   def test_array_arg
     # write a temporary file and write
     orig_array = ['barcelona', 'paris', 'newyork' ]
-    Tempdir.open do |dir|     
+    Tempdir.open do |dir|
       # Create a file
       file_name = File.join(dir, 'somefile.txt')
       file_array = ['lyon', 'zebra', 'wolf']
       File.open(file_name, 'w+') do |f|
         file_array.each do |element|
           f.puts element
-        end        
+        end
       end
 
       # add the file name
       array = orig_array
       array.insert(1, file_name)
-      
+
       arg = EnhanceRepo::ArrayArg.new(array)
 
       assert_equal(6, arg.size)
@@ -55,6 +56,6 @@ class ArrayWrapper_test < Test::Unit::TestCase
       end
       assert_equal("barcelona,lyon,zebra,wolf,paris,newyork", arg.join(','))
     end
-  
+
   end
 end

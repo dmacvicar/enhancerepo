@@ -1,6 +1,6 @@
-
+# Encoding: utf-8
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -76,5 +76,5 @@ class Update_test < Test::Unit::TestCase
     assert_equal 5, refs.size, "4 bugs should be detected"
 
   end
-  
+
 end

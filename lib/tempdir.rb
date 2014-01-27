@@ -1,3 +1,5 @@
+# Encoding: utf-8
+#
 # Author::    Yuichi Tateno <hotchpotch@gmail.com>
 # Copyright:: Copyright (c) 2008 Yuichi Tateno
 # License::   MIT
@@ -16,7 +18,7 @@ class Tempdir
     @dir.mkpath
     @exit_proc = add_exit
     if block_given?
-      begin 
+      begin
         yield @dir
       ensure
         close

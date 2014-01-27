@@ -8,7 +8,7 @@
 # Offence count: 2
 # Cop supports --auto-correct.
 AlignParameters:
-  Enabled: false
+  Enabled: true
 
 # Offence count: 1
 AmbiguousOperator:

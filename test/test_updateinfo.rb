@@ -1,6 +1,6 @@
-
+# Encoding: utf-8
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -41,19 +41,19 @@ class UpdateInfo_test < Test::Unit::TestCase
     Tempdir.open do |dir|
       updateinfo.generate_update(['a', 'b'], File.join(dir, 'repoparts'))
       puts Dir[File.join(dir, '*')]
-      
+
       updateinfo.read_repoparts(:repoparts_path => File.join(dir, 'repoparts'))
 
       assert ! updateinfo.empty?, "updateinfo can't be empty"
       assert_equal 1, updateinfo.size, "updateinfo contains 1 update"
-      
+
       Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/updateinfo.xml.gz')) do |expected_updateinfo|
         buffer = StringIO.new
         updateinfo.write(buffer)
 #        assert_xml_equal(expected_updateinfo.read, buffer.string)
       end
-      
+
     end
-        
+
   end
 end

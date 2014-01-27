@@ -1,5 +1,6 @@
+# Encoding: utf-8
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -55,7 +56,9 @@ module MiniTest::Assertions
     end
 
     equal = EquivalentXml.equivalent?(expected, actual,
-      opts = { :element_order => false, :normalize_whitespace => true })
+                                      opts = {
+                                        :element_order => false,
+                                        :normalize_whitespace => true })
 
     diff = Diffy::Diff.new(expected.to_xml(:indent => 2), actual.to_xml(:indent => 2)).to_s(:color)
     assert equal, diff
