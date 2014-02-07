@@ -118,6 +118,8 @@ module EnhanceRepo
               resource.size = attrel.text
             when 'open-size'
               resource.opensize = attrel.text
+            when 'database_version'
+              resource.database_version = attrel.text
             else
               raise "unknown tag #{attrel.name}"
             end # case
@@ -139,6 +141,7 @@ module EnhanceRepo
               b.size(resource.size) if resource.size
               b.tag!('open-size', resource.opensize) if resource.opensize
               b.tag!('open-checksum', resource.openchecksum, 'type' => 'sha')
+              b.tag!('database_version', resource.database_version) if resource.database_version
             end
           end
 

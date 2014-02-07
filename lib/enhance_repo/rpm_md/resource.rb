@@ -30,7 +30,7 @@ module EnhanceRepo
     # represents a resource in repomd.xml
     class Resource
       attr_accessor :type
-      attr_accessor :location, :checksum, :timestamp, :openchecksum, :size, :opensize
+      attr_accessor :location, :checksum, :timestamp, :openchecksum, :size, :opensize, :database_version
 
       # define equality based on the location
       # as it has no sense to have two resources for the
