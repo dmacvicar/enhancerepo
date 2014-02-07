@@ -141,10 +141,10 @@ EOS
         opt :debug, 'Show debug information'
       end
       if !File.exist?(@dir) || !File.directory?(@dir)
-        Trollop.die "'#{@dir}' is not a valid directory."
+        opts.die "'#{@dir}' is not a valid directory."
       end
       if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
-        Trollop.die @dir, "is not a valid repository directory"
+        opts.die @dir, "is not a valid repository directory"
       end
       opts
     end
