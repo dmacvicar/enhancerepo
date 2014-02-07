@@ -177,6 +177,9 @@ module EnhanceRepo
         end
 
         # now write the index
+        if !File.exist?(File.dirname(@outputdir + @index.metadata_filename))
+          FileUtils.mkdir_p(File.dirname(@outputdir + @index.metadata_filename))
+        end
         File.open((@outputdir + @index.metadata_filename), 'w') do |f|
           log.info "Saving #{@index.metadata_filename} .."
           @index.write(f)
