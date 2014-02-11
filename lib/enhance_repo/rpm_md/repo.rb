@@ -26,7 +26,6 @@
 require 'rubygems'
 require 'builder'
 require 'rexml/document'
-require 'digest/sha1'
 require 'zlib'
 require 'yaml'
 
@@ -177,7 +176,10 @@ module EnhanceRepo
         end
 
         # now write the index
-        File.open((@outputdir + @index.metadata_filename), 'w') do |f|
+        if !File.exist?(File.dirname(File.join(@outputdir, @index.metadata_filename)))
+          FileUtils.mkdir_p(File.dirname(File.join(@outputdir, @index.metadata_filename)))
+        end
+        File.open(File.join(@outputdir, @index.metadata_filename), 'w') do |f|
           log.info "Saving #{@index.metadata_filename} .."
           @index.write(f)
         end

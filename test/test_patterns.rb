@@ -32,7 +32,7 @@ require 'enhance_repo/susetags/pattern_reader'
 describe EnhanceRepo::RpmMd::Patterns do
 
   before do
-    @config = EnhanceRepo::ConfigOpts.new(test_data('rpms/repo-1'))
+    @config = EnhanceRepo::ConfigOpts.instance.parse_args!(test_data('rpms/repo-1'))
     @patterns = EnhanceRepo::RpmMd::Patterns.new(@config)
   end
 

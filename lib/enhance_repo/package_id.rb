@@ -24,7 +24,6 @@
 #++
 #
 
-require 'digest/sha1'
 require 'rpm'
 
 module EnhanceRepo
@@ -40,7 +39,7 @@ module EnhanceRepo
     def initialize(rpmfile)
       @path = rpmfile
       @rpm = RPM::Package.open(rpmfile)
-      @checksum = Digest::SHA1.hexdigest(File.new(rpmfile).read)
+      @checksum = EnhanceRepo::ConfigOpts.instance.digest_class.hexdigest(File.new(rpmfile).read)
     end
 
     # Forward other methods

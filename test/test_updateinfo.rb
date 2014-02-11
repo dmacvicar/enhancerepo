@@ -35,7 +35,7 @@ class UpdateInfo_test < Test::Unit::TestCase
   end
 
   def test_xml_output
-    config = EnhanceRepo::ConfigOpts.new(test_data('rpms/repo-1'))
+    config = EnhanceRepo::ConfigOpts.instance.parse_args!(test_data('rpms/repo-1'))
     updateinfo = EnhanceRepo::RpmMd::UpdateInfo.new(config)
 
     Tempdir.open do |dir|

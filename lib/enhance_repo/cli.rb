@@ -36,7 +36,7 @@ if ! (ARGV.include?("--help") || ARGV.include?("-h") ||
       ARGV.include?("--version") || ARGV.include?("-v"))
   dir = ARGV.pop
 end
-config = EnhanceRepo::ConfigOpts.new(dir)
+config = EnhanceRepo::ConfigOpts.instance.parse_args!(dir)
 
 repomd = EnhanceRepo::RpmMd::Repo.new(config)
 

@@ -23,9 +23,11 @@
 #
 #++
 #
+require 'digest'
 require 'set'
 require 'trollop'
 require 'enhance_repo/array_arg'
+require 'singleton'
 
 module EnhanceRepo
 
@@ -35,7 +37,7 @@ module EnhanceRepo
   #
 
   class ConfigOpts
-
+    include Singleton
     include Logger
 
     def read_command_line
@@ -82,6 +84,9 @@ EOS
             :type => :strings
         opt :repo_keyword, 'Tags repository with keyword',
             :type => :strings
+
+        opt :digest_type, 'Algorithm used to compute the digests. Default SHA1',
+            :type => :string
 
   # === SUSE specific package data (susedata.xml)
 
@@ -141,10 +146,10 @@ EOS
         opt :debug, 'Show debug information'
       end
       if !File.exist?(@dir) || !File.directory?(@dir)
-        Trollop.die "'#{@dir}' is not a valid directory."
+        opts.die "'#{@dir}' is not a valid directory."
       end
       if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
-        Trollop.die @dir, "is not a valid repository directory"
+        opts.die @dir, "is not a valid repository directory"
       end
       opts
     end
@@ -180,6 +185,7 @@ EOS
     attr_accessor :patterns
     attr_accessor :generate_patterns
     attr_accessor :split_patterns
+    attr_accessor :digest_name, :digest_class
 
     def outputdir
       return @dir if @outputdir.nil?
@@ -187,13 +193,18 @@ EOS
 
     end
 
-    def initialize(dir)
+    def initialize
+      @digest_name, @digest_class = allocate_digest(nil)
+    end
+
+    def parse_args!(dir)
       @dir = dir
       @repoproducts = Set.new
       @repokeywords = Set.new
       opts = read_command_line
       read_opts(opts)
       #dump
+      self
     end
 
     def read_opts(opts)
@@ -218,6 +229,7 @@ EOS
       @generate_patterns = Array.new(opts[:generate_patterns]) if opts[:generate_patterns]
       @updatesbasedir = Pathname.new(opts[:updates_base_dir]) if opts[:updates_base_dir]
       @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
+      @digest_name, @digest_class = allocate_digest(opts[:digest_type])
     end
 
     def dump
@@ -251,5 +263,29 @@ EOS
       logger.info "dir #{@dir}"
 
     end
+
+    private
+
+    def allocate_digest(digest_name)
+      return ['sha', Digest::SHA1] unless digest_name
+
+      valid_names = %w(sha sha1 sha2 sha256 md5)
+      if !valid_names.include?(digest_name.downcase)
+        warn "Invalid digest type #{digest_name}"
+        warn "Accepted types: #{valid_names.join(', ')}"
+        exit 1
+      end
+
+      case digest_name.downcase
+      when /^(sha2|sha256)$/
+        ['sha256', Digest::SHA2]
+      when /^(sha|sha1)$/
+        ['sha', Digest::SHA1]
+      when 'md5'
+        ['md5', Digest::MD5]
+      end
+    end
+
+
   end
 end
