@@ -188,7 +188,7 @@ module EnhanceRepo
                     b.filename relative_path
                     b.sequence(delta.sequence)
                     b.size(File.size(delta.path))
-                    b.checksum(delta.checksum, 'type'=>'sha')
+                    b.checksum(delta.checksum, 'type'=> EnhanceRepo::ConfigOpts.instance.digest_name)
                   end # </delta>
                 end
               end # </newpackage>

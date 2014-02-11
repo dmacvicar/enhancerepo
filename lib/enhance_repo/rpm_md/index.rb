@@ -69,13 +69,13 @@ module EnhanceRepo
         r.type = base if r.type.nil?
         r.location = path
         r.timestamp = File.mtime(abspath).to_i.to_s
-        r.checksum = Digest::SHA1.hexdigest(File.new(abspath).read)
+        r.checksum = EnhanceRepo::ConfigOpts.instance.digest_class.hexdigest(File.new(abspath).read)
         r.openchecksum = r.checksum
         r.size = File.size(abspath)
         r.opensize = r.size
         if File.extname(abspath) == '.gz'
           # we have a different openchecksum
-          r.openchecksum = Digest::SHA1.hexdigest(Zlib::GzipReader.new(File.new(abspath)).read)
+          r.openchecksum = EnhanceRepo::ConfigOpts.instance.digest_class.hexdigest(Zlib::GzipReader.new(File.new(abspath)).read)
           r.opensize = (Zlib::GzipReader.new(File.new(abspath)).read).bytesize
         end
         add_resource(r)
@@ -136,11 +136,11 @@ module EnhanceRepo
           @resources.each do |resource|
             b.data('type' => resource.type) do |b|
               b.location('href' => resource.location)
-              b.checksum(resource.checksum, 'type' => 'sha')
+              b.checksum(resource.checksum, 'type' => EnhanceRepo::ConfigOpts.instance.digest_name)
               b.timestamp(resource.timestamp)
               b.size(resource.size) if resource.size
               b.tag!('open-size', resource.opensize) if resource.opensize
-              b.tag!('open-checksum', resource.openchecksum, 'type' => 'sha')
+              b.tag!('open-checksum', resource.openchecksum, 'type' => EnhanceRepo::ConfigOpts.instance.digest_name)
               b.tag!('database_version', resource.database_version) if resource.database_version
             end
           end

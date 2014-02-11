@@ -61,7 +61,7 @@ module EnhanceRepo
           b.name pkgid.name
           b.arch pkgid.arch
           b.version('epoch' => pkgid.version.e.nil? ? "0" : pkgid.version.e.to_s, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
-          b.checksum(pkgid.checksum, 'type'=>'sha', 'pkgid'=>'YES')
+          b.checksum(pkgid.checksum, 'type'=> EnhanceRepo::ConfigOpts.instance.digest_name, 'pkgid'=>'YES')
           b.summary pkgid[RPM::TAG_SUMMARY]
           b.description pkgid[RPM::TAG_DESCRIPTION]
           b.packager pkgid[RPM::TAG_PACKAGER]

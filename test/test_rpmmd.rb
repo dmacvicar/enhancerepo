@@ -44,7 +44,7 @@ class RpmMd_test < Test::Unit::TestCase
 
   def test_disk_info
     ARGV << "--outputdir" << File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}') << "--primary"
-    config = EnhanceRepo::ConfigOpts.new(@rpms1)
+    config = EnhanceRepo::ConfigOpts.instance.parse_args!(@rpms1)
     #config.outputdir = Pathname.new(File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}'))
     #config.dir = @rpms1
     @repo = EnhanceRepo::RpmMd::Repo.new(config)

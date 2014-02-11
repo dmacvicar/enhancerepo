@@ -26,7 +26,6 @@
 require 'rubygems'
 require 'builder'
 require 'rexml/document'
-require 'digest/sha1'
 require 'zlib'
 require 'yaml'
 
