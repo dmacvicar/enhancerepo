@@ -45,7 +45,6 @@ end
 module MiniTest::Assertions
 
   def assert_xml_equivalent(expected, actual, message = nil)
-
     expected = Nokogiri::XML(expected) do |config|
       config.default_xml.noblanks
     end
