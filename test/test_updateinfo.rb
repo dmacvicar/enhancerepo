@@ -28,7 +28,7 @@ require 'enhance_repo'
 require 'tempdir'
 require 'stringio'
 
-class UpdateInfo_test < Test::Unit::TestCase
+class UpdateInfoTest < MiniTest::Test
 
   def setup
 #	  $stderr << "UpdateInfo_test"

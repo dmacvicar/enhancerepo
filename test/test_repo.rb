@@ -31,7 +31,7 @@ require 'nokogiri'
 require 'tempdir'
 require 'fileutils'
 
-class Repo_test < Test::Unit::TestCase
+class Repo_test < MiniTest::Test
 
   def setup
   end

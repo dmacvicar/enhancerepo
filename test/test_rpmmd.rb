@@ -30,7 +30,7 @@ require 'rubygems'
 require 'enhance_repo'
 require 'stringio'
 
-class RpmMd_test < Test::Unit::TestCase
+class RpmMd_test < MiniTest::Test
 
   def setup
 #    $stderr << "RpmMd_test"

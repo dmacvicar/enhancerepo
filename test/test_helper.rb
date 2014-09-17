@@ -24,11 +24,10 @@
 #++
 #
 require 'rubygems'
-require 'test/unit'
 require 'mocha'
 
-require 'minitest/spec'
 require 'minitest/autorun'
+require 'minitest/spec'
 
 $: << File.join(File.dirname(__FILE__), "..", "lib")
 require 'enhance_repo'

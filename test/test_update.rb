@@ -30,7 +30,7 @@ require 'enhance_repo/rpm_md/update'
 require 'tempdir'
 require 'stringio'
 
-class Update_test < Test::Unit::TestCase
+class UpdateTest <MiniTest::Test
 
   def setup
   end

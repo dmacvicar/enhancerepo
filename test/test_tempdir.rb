@@ -6,11 +6,10 @@
 
 require File.dirname(__FILE__) + '/test_helper.rb'
 
-require "test/unit"
 require "tempdir"
 require "tempdir/tempfile"
 
-class TempdirTest < Test::Unit::TestCase
+class TempdirTest < MiniTest::Test
   def test_open
     _dir = nil
     Tempdir.open do |dir|
