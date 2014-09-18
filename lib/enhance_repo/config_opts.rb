@@ -186,6 +186,7 @@ EOS
     attr_accessor :generate_patterns
     attr_accessor :split_patterns
     attr_accessor :digest_name, :digest_class
+    attr_reader :digest_chosen_by_user
 
     def outputdir
       return @dir if @outputdir.nil?
@@ -194,7 +195,7 @@ EOS
     end
 
     def initialize
-      @digest_name, @digest_class = allocate_digest(nil)
+      use_digest(nil)
     end
 
     def parse_args!(dir)
@@ -229,7 +230,8 @@ EOS
       @generate_patterns = Array.new(opts[:generate_patterns]) if opts[:generate_patterns]
       @updatesbasedir = Pathname.new(opts[:updates_base_dir]) if opts[:updates_base_dir]
       @outputdir = Pathname.new(opts[:outputdir]) if opts[:outputdir]
-      @digest_name, @digest_class = allocate_digest(opts[:digest_type])
+      @digest_chosen_by_user = opts[:digest_type]
+      use_digest(opts[:digest_type])
     end
 
     def dump
@@ -264,19 +266,23 @@ EOS
 
     end
 
-    private
+    def use_digest(digest)
+      return if digest == @digest_name
 
-    def allocate_digest(digest_name)
-      return ['sha', Digest::SHA1] unless digest_name
+      if digest.nil?
+        @digest_name = 'sha'
+        @digest_class = Digest::SHA1
+        return
+      end
 
       valid_names = %w(sha sha1 sha2 sha256 md5)
-      if !valid_names.include?(digest_name.downcase)
-        warn "Invalid digest type #{digest_name}"
+      if !valid_names.include?(digest.downcase)
+        warn "Invalid digest type #{digest}"
         warn "Accepted types: #{valid_names.join(', ')}"
         exit 1
       end
 
-      case digest_name.downcase
+      @digest_name, @digest_class = case digest.downcase
       when /^(sha2|sha256)$/
         ['sha256', Digest::SHA2]
       when /^(sha|sha1)$/
@@ -285,7 +291,6 @@ EOS
         ['md5', Digest::MD5]
       end
     end
-
-
   end
+
 end

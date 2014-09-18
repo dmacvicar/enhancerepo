@@ -117,6 +117,9 @@ module EnhanceRepo
               resource.location = attrel.attributes['href']
             when 'checksum'
               resource.checksum = attrel.text
+              if attrel.attributes['type'] && EnhanceRepo::ConfigOpts.instance.digest_chosen_by_user.nil?
+                EnhanceRepo::ConfigOpts.instance.use_digest(attrel.attributes['type'])
+              end
             when 'timestamp'
               resource.timestamp = attrel.text
             when 'open-checksum'
