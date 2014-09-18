@@ -35,6 +35,7 @@ require 'enhance_repo/xml_comparer'
 require 'active_support'
 require 'diffy'
 require 'equivalent-xml'
+require 'stringio'
 
 EnhanceRepo.enable_logger
 
@@ -63,4 +64,7 @@ module MiniTest::Assertions
 end
 
 String.infect_an_assertion :assert_xml_equivalent, :must_be_xml_equivalent_with, :only_one_argument
+
+# Suppress log messages during test execution, they just pollute the output
+EnhanceRepo.logger = Logger.new(StringIO.new)
 
