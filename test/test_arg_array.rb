@@ -44,7 +44,7 @@ class ArrayWrapper_test < MiniTest::Test
       end
 
       # add the file name
-      array = orig_array
+      array = orig_array.dup
       array.insert(1, file_name)
 
       arg = EnhanceRepo::ArrayArg.new(array)

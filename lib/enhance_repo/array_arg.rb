@@ -78,8 +78,12 @@ module EnhanceRepo
 
     # see Enumerable
     def each
-      block_given? ?
-        expanded.each { |x| yield x } : Enumerator.new(expanded)
+      if block_given?
+        expanded.each { |x| yield x}
+      else
+        ret = expanded
+        ret.to_enum
+      end
     end
 
   end
