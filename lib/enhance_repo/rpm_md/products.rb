@@ -85,7 +85,7 @@ module EnhanceRepo
 
       # scan the products from the rpm files in the repository
       def read_packages
-#        log.info "Looking for product release packages"
+        log.debug "Looking for product release packages"
         Dir["#{@dir}/**/*-release-*.rpm", "#{@dir}/**/*-migration-*.rpm"].each do |rpmfile|
           pkg = RPM::Package.new(rpmfile)
           # we dont care for packages not providing a product

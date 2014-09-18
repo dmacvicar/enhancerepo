@@ -33,7 +33,8 @@ describe EnhanceRepo::RpmMd::Products do
 
   describe "a generated products should be what is expected" do
     before do
-      @products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-with-prouct'))
+      @products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-with-product'))
+      @products.read_packages
     end
 
     it "should not be empty" do
