@@ -66,7 +66,14 @@ module EnhanceRepo
           base = File.basename(base, ext)
         end
 
-        r.type = base if r.type.nil?
+        if r.type.nil?
+          if base.include?('-')
+            # Do not add the checksum to the type attribute
+            r.type = base.split('-', 2)[1]
+          else
+            r.type = base
+          end
+        end
         r.location = path
         r.timestamp = File.mtime(abspath).to_i.to_s
         r.checksum = EnhanceRepo::ConfigOpts.instance.digest_class.hexdigest(File.new(abspath).read)
