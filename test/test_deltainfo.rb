@@ -30,6 +30,7 @@ require 'stringio'
 describe EnhanceRepo::RpmMd::DeltaInfo do
 
   before do
+    EnhanceRepo::ConfigOpts.instance.use_digest('sha1')
     @deltainfo = EnhanceRepo::RpmMd::DeltaInfo.new(test_data('rpms/repo-1'))
     @deltainfo.add_deltas
   end

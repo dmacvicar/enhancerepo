@@ -26,7 +26,7 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 require 'enhance_repo'
 
-class Extensions_test < Test::Unit::TestCase
+class Extensions_test < MiniTest::Test
   def setup
   end
 

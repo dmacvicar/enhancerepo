@@ -24,11 +24,10 @@
 #++
 #
 require 'rubygems'
-require 'test/unit'
 require 'mocha'
 
-require 'minitest/spec'
 require 'minitest/autorun'
+require 'minitest/spec'
 
 $: << File.join(File.dirname(__FILE__), "..", "lib")
 require 'enhance_repo'
@@ -36,6 +35,7 @@ require 'enhance_repo/xml_comparer'
 require 'active_support'
 require 'diffy'
 require 'equivalent-xml'
+require 'stringio'
 
 EnhanceRepo.enable_logger
 
@@ -46,7 +46,6 @@ end
 module MiniTest::Assertions
 
   def assert_xml_equivalent(expected, actual, message = nil)
-
     expected = Nokogiri::XML(expected) do |config|
       config.default_xml.noblanks
     end
@@ -65,4 +64,7 @@ module MiniTest::Assertions
 end
 
 String.infect_an_assertion :assert_xml_equivalent, :must_be_xml_equivalent_with, :only_one_argument
+
+# Suppress log messages during test execution, they just pollute the output
+EnhanceRepo.logger = Logger.new(StringIO.new)
 

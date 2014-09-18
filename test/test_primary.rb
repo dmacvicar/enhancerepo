@@ -29,7 +29,7 @@ require 'enhance_repo'
 require 'stringio'
 require 'zlib'
 
-class Primary_test < Test::Unit::TestCase
+class Primary_test < MiniTest::Test
 
   def setup
 #	  $stderr << "Primary_test"

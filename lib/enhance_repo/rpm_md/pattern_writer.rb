@@ -50,7 +50,6 @@ module EnhanceRepo
       def self.write_xml_dependency(xml, pattern, name)
         dep = name.to_sym
         list = pattern.send(dep).keys.sort do |a, b|
-          puts a
           if pattern.send(dep)[a] == 'pattern' &&
             pattern.send(dep)[b] != 'pattern'
             -1
@@ -103,6 +102,7 @@ module EnhanceRepo
               end
             end
             xml.uservisible if pattern.visible
+
             write_xml_dependency(xml, pattern, :conflicts)
             write_xml_dependency(xml, pattern, :supplements)
             write_xml_dependency(xml, pattern, :provides)

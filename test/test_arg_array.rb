@@ -28,7 +28,7 @@ require 'enhance_repo/array_arg'
 require 'tempdir'
 require 'stringio'
 
-class ArrayWrapper_test < Test::Unit::TestCase
+class ArrayWrapper_test < MiniTest::Test
 
   def test_array_arg
     # write a temporary file and write
@@ -44,7 +44,7 @@ class ArrayWrapper_test < Test::Unit::TestCase
       end
 
       # add the file name
-      array = orig_array
+      array = orig_array.dup
       array.insert(1, file_name)
 
       arg = EnhanceRepo::ArrayArg.new(array)

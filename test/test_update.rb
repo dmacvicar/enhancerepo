@@ -30,7 +30,7 @@ require 'enhance_repo/rpm_md/update'
 require 'tempdir'
 require 'stringio'
 
-class Update_test < Test::Unit::TestCase
+class UpdateTest <MiniTest::Test
 
   def setup
   end
@@ -47,7 +47,6 @@ class Update_test < Test::Unit::TestCase
     update.each_reference_for(:keyword => 'bnc', :href => 'http://novell.com/:id', :title => 'novell bug #:id') do |r|
       refs << r
     end
-    refs.each { |r| puts r.inspect }
     assert_equal 3, refs.size, "3 references should be detected"
 
     # test for FOO xxxx-yyyy
@@ -55,7 +54,6 @@ class Update_test < Test::Unit::TestCase
     update.each_reference_for(:keyword => 'cve', :href => 'http://cve.com/:id', :title => 'cve advisory #:id') do |r|
       refs << r
     end
-    refs.each { |r| puts r.inspect }
     assert_equal 2, refs.size, "2 CVE references should be detected"
 
     # test for multiple keywords
@@ -63,7 +61,6 @@ class Update_test < Test::Unit::TestCase
     update.each_reference_for(:keywords => ['bug', 'bnc'], :href => 'http://novell.com/:id', :title => 'bug #:id') do |r|
       refs << r
     end
-    refs.each { |r| puts r.inspect }
     assert_equal 4, refs.size, "4 bugs should be detected"
 
     # test the pre-configured reference detectors
@@ -71,8 +68,6 @@ class Update_test < Test::Unit::TestCase
     update.each_detected_reference do |r|
       refs << r
     end
-    puts
-    refs.each { |r| puts r.inspect }
     assert_equal 5, refs.size, "4 bugs should be detected"
 
   end

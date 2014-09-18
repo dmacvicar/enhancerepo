@@ -24,7 +24,7 @@
 #++
 #
 require 'rpm'
-require 'tempdir'
+require 'tmpdir'
 require 'pathname'
 require 'nokogiri'
 #require 'ftools'
@@ -55,8 +55,7 @@ module EnhanceRepo
       end
 
       def rpm_extract_file(rpmpath, path)
-        Tempdir.open do |tmppath|
-          File.makedirs(tmppath)
+        Dir.mktmpdir do |tmppath|
           Dir.chdir(tmppath) do
             `rpm2cpio '#{rpmpath}' | cpio -iv --make-directories #{File.join(".", path)} 2>/dev/null`
           end
@@ -85,7 +84,7 @@ module EnhanceRepo
 
       # scan the products from the rpm files in the repository
       def read_packages
-#        log.info "Looking for product release packages"
+        log.debug "Looking for product release packages"
         Dir["#{@dir}/**/*-release-*.rpm", "#{@dir}/**/*-migration-*.rpm"].each do |rpmfile|
           pkg = RPM::Package.new(rpmfile)
           # we dont care for packages not providing a product
@@ -93,7 +92,7 @@ module EnhanceRepo
           log.info "Found product release package #{rpmfile}"
           # this package contains a product
           # go over each product file
-          pkg.files.map {|x| x.to_s }.each do |path|
+          pkg.files.map {|x| x.path }.each do |path|
             next if not ( File.extname(path) == ".prod" && File.dirname(path) == "/etc/products.d" )
             # we have a product file. Extract it
             log.info "`-> product file : #{path}"

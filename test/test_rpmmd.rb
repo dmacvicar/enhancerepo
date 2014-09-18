@@ -30,7 +30,7 @@ require 'rubygems'
 require 'enhance_repo'
 require 'stringio'
 
-class RpmMd_test < Test::Unit::TestCase
+class RpmMd_test < MiniTest::Test
 
   def setup
 #    $stderr << "RpmMd_test"
@@ -51,7 +51,6 @@ class RpmMd_test < Test::Unit::TestCase
     @repo.primary.read_packages
     out = StringIO.new
     @repo.primary.write(out)
-    #puts out.string
   end
 
   def test_update_info

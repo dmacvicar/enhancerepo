@@ -28,7 +28,7 @@ require 'enhance_repo'
 require 'tempdir'
 require 'stringio'
 
-class UpdateInfo_test < Test::Unit::TestCase
+class UpdateInfoTest < MiniTest::Test
 
   def setup
 #	  $stderr << "UpdateInfo_test"
@@ -40,7 +40,6 @@ class UpdateInfo_test < Test::Unit::TestCase
 
     Tempdir.open do |dir|
       updateinfo.generate_update(['a', 'b'], File.join(dir, 'repoparts'))
-      puts Dir[File.join(dir, '*')]
 
       updateinfo.read_repoparts(:repoparts_path => File.join(dir, 'repoparts'))
 
