@@ -51,7 +51,6 @@ class RpmMd_test < MiniTest::Test
     @repo.primary.read_packages
     out = StringIO.new
     @repo.primary.write(out)
-    #puts out.string
   end
 
   def test_update_info

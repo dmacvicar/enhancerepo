@@ -40,7 +40,6 @@ class UpdateInfoTest < MiniTest::Test
 
     Tempdir.open do |dir|
       updateinfo.generate_update(['a', 'b'], File.join(dir, 'repoparts'))
-      puts Dir[File.join(dir, '*')]
 
       updateinfo.read_repoparts(:repoparts_path => File.join(dir, 'repoparts'))
 
