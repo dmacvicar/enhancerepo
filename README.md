@@ -2,7 +2,7 @@
 # enhancerepo
 
 ![reviving](https://img.shields.io/badge/stability-reviving-yellow.svg)
-![maintained](https://img.shields.io/maintenance/yes/2017.svg)
+![maintained](https://img.shields.io/maintenance/yes/2014.svg)
 [![Build Status](https://travis-ci.org/openSUSE/enhancerepo.svg?branch=master)](https://travis-ci.org/openSUSE/enhancerepo)
 
 * http://en.opensuse.org/Enhancerepo
