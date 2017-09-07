@@ -15,9 +15,11 @@ requires ruby-rpm.
 
 ## TODO
 
- [ ] replace accessors and initialization with ActiveSupport's
-     attr_accessor_with_default or something similar.
-
+- [ ] give some love to rpm-ffi to supress warnings
+- [ ] cleanup rubocop issues (see .rubocop_todo.yml)
+- [ ] re-do rpm package
+- [ ] get rid of ActiveSupport
+- [ ] refactor CLI (may be subcommands)
 
 ## Authors
 
