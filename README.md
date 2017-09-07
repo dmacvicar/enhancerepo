@@ -1,7 +1,7 @@
 
 # enhancerepo
 
-[reviving](https://img.shields.io/badge/stability-reviving-yellow.svg)
+![reviving](https://img.shields.io/badge/stability-reviving-yellow.svg)
 ![maintained](https://img.shields.io/maintenance/yes/2017.svg)
 [![Build Status](https://travis-ci.org/openSUSE/enhancerepo.svg?branch=master)](https://travis-ci.org/openSUSE/enhancerepo)
 
@@ -13,9 +13,7 @@ Reference implementation for future rpmmd extensions.
 
 requires ruby-rpm.
 
-## Links
-
-== Authors
+## Authors
 
 * Duncan Mac-Vicar P. <dmacvicar@suse.de>
 
