@@ -74,7 +74,7 @@ module EnhanceRepo
         end
 
         builder.diskusage do |b|
-          b.dirs do |b|
+          b.dirs do
             dirsizes.each do |k, v|
               b.dir('name' => k, 'size' => v, 'count' => dircount[k] )
             end

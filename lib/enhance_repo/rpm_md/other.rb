@@ -55,7 +55,7 @@ module EnhanceRepo
         xml = builder.tag!("otherdata", 'xmlns' => 'xmlns="http://linux.duke.edu/metadata/other"', 'packages'=> @rpmfiles.size ) do |b|
           @rpmfiles.each do |rpmfile|
             pkgid = PackageId.new(rpmfile)
-            b.package('pkgid'=>pkgid.checksum, 'name' => pkgid.name, 'arch'=>pkgid.arch ) do | b |
+            b.package('pkgid'=>pkgid.checksum, 'name' => pkgid.name, 'arch'=>pkgid.arch ) do
               b.version('epoch' => pkgid.version.e, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
             end
             #  done package tag
