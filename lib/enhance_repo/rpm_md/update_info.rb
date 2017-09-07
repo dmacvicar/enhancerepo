@@ -228,7 +228,7 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.updates do |b|
+        builder.updates do |b|
           @updates.each do |update|
             File.open(update) do |f|
               file << f.read

@@ -52,7 +52,7 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.tag!("otherdata", 'xmlns' => 'xmlns="http://linux.duke.edu/metadata/other"', 'packages'=> @rpmfiles.size ) do |b|
+        builder.tag!("otherdata", 'xmlns' => 'xmlns="http://linux.duke.edu/metadata/other"', 'packages'=> @rpmfiles.size ) do |b|
           @rpmfiles.each do |rpmfile|
             pkgid = PackageId.new(rpmfile)
             b.package('pkgid'=>pkgid.checksum, 'name' => pkgid.name, 'arch'=>pkgid.arch ) do
