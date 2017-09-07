@@ -28,7 +28,6 @@ require 'enhance_repo'
 require 'stringio'
 require 'zlib'
 require 'nokogiri'
-require 'tempdir'
 require 'fileutils'
 
 class Repo_test < Test::Unit::TestCase
@@ -37,7 +36,7 @@ class Repo_test < Test::Unit::TestCase
   end
 
   def test_reading_existing_repo
-    Tempdir.open do |dir|
+    Dir.mktmpdir do |dir|
       # copy the repodata of a repository to a temp directory
       FileUtils.cp_r File.join(test_data('rpms/repo-with-product/repodata')), dir
 

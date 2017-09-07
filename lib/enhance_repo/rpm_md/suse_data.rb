@@ -162,18 +162,18 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.tag!(name) {
+        builder.tag!(name) do |b|
           @properties.each do |pkgid, props|
             #log.info "Dumping package #{pkgid.to_s}"
-            b.package('pkgid' => pkgid.checksum, 'name' => pkgid.name) {
+            b.package('pkgid' => pkgid.checksum, 'name' => pkgid.name) do
               b.version('ver' => pkgid.version.v, 'rel' => pkgid.version.r, 'arch' => pkgid.arch, 'epoch' => 0.to_s )
               props.each do |propname, prop|
                 #log.info "   -> property #{prop.name}"
                 prop.write(builder, pkgid)
               end
-            }
+            end
           end # iterate over properties
-        }
+        end
       end
 
       def add_disk_usage

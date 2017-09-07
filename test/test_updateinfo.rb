@@ -25,7 +25,6 @@
 #
 require_relative 'helper'
 require 'enhance_repo'
-require 'tempdir'
 require 'stringio'
 
 class UpdateInfo_test < Test::Unit::TestCase
@@ -38,7 +37,7 @@ class UpdateInfo_test < Test::Unit::TestCase
     config = EnhanceRepo::ConfigOpts.instance.parse_args!(test_data('rpms/repo-1'))
     updateinfo = EnhanceRepo::RpmMd::UpdateInfo.new(config)
 
-    Tempdir.open do |dir|
+    Dir.mktmpdir do |dir|
       updateinfo.generate_update(['a', 'b'], File.join(dir, 'repoparts'))
       puts Dir[File.join(dir, '*')]
 

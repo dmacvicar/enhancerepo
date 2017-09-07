@@ -24,7 +24,6 @@
 #++
 #
 require_relative 'helper'
-require 'tmpdir'
 require 'enhance_repo'
 require 'stringio'
 require 'zlib'

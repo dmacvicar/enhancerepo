@@ -25,7 +25,6 @@
 #
 require_relative 'helper'
 require 'enhance_repo'
-require 'tempdir'
 require 'stringio'
 require 'enhance_repo/susetags/pattern_reader'
 
@@ -53,7 +52,7 @@ describe EnhanceRepo::RpmMd::Patterns do
 
   #describe "generates yum patterns from susetags files" do
 
-  #  Tempdir.open do |dir|
+  #  Dir.mktmpdir do |dir|
   #    before do
   #      @dir = File.join(dir, "repoparts")
   #      @desc_list = []

@@ -24,7 +24,6 @@
 #++
 #
 require_relative 'helper'
-require 'tmpdir'
 require 'pathname'
 require 'rubygems'
 require 'enhance_repo'

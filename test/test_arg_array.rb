@@ -25,7 +25,6 @@
 #
 require_relative 'helper'
 require 'enhance_repo/array_arg'
-require 'tempdir'
 require 'stringio'
 
 class ArrayWrapper_test < Test::Unit::TestCase
@@ -33,7 +32,7 @@ class ArrayWrapper_test < Test::Unit::TestCase
   def test_array_arg
     # write a temporary file and write
     orig_array = ['barcelona', 'paris', 'newyork' ]
-    Tempdir.open do |dir|
+    Dir.mktmpdir do |dir|
       # Create a file
       file_name = File.join(dir, 'somefile.txt')
       file_array = ['lyon', 'zebra', 'wolf']
