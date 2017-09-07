@@ -55,7 +55,7 @@ module EnhanceRepo
       end
 
       def write_package(file, rpmfile)
-        b = Builder::XmlMarkup.new(:target=>file, :indent=> @indent ? 2 : 0, :indent=> @indent ? 2 : 0)
+        b = Builder::XmlMarkup.new(:target=>file, :indent=> @indent ? 2 : 0)
         b.package('type' => 'rpm') {
           pkgid = PackageId.new(rpmfile)
           b.name pkgid.name
