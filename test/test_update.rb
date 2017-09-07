@@ -23,7 +23,7 @@
 #
 #++
 #
-require File.join(File.dirname(__FILE__), 'test_helper')
+require_relative 'helper'
 require 'enhance_repo'
 require 'enhance_repo/rpm_md/update'
 

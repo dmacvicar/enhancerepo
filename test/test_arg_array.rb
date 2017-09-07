@@ -23,7 +23,7 @@
 #
 #++
 #
-require File.join(File.dirname(__FILE__), 'test_helper')
+require_relative 'helper'
 require 'enhance_repo/array_arg'
 require 'tempdir'
 require 'stringio'

@@ -23,19 +23,17 @@
 #
 #++
 #
-require 'rubygems'
+$LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'test/unit'
 require 'mocha'
-
 require 'minitest/spec'
 require 'minitest/autorun'
-
-$: << File.join(File.dirname(__FILE__), "..", "lib")
-require 'enhance_repo'
-require 'enhance_repo/xml_comparer'
 require 'active_support'
 require 'diffy'
 require 'equivalent-xml'
+
+require 'enhance_repo'
+require 'enhance_repo/xml_comparer'
 
 EnhanceRepo.enable_logger
 

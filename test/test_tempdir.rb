@@ -4,8 +4,7 @@
 # Copyright:: Copyright (c) 2008 Yuichi Tateno
 # License::   MIT
 
-require File.dirname(__FILE__) + '/test_helper.rb'
-
+require_relative 'helper'
 require "test/unit"
 require "tempdir"
 require "tempdir/tempfile"
