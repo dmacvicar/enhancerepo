@@ -45,6 +45,7 @@ describe EnhanceRepo::RpmMd::Patterns do
 
     it 'should have the same xml structure as our template' do
       expected = File.read(File.join(test_data('rpmmd-patterns'), 'Basis-Devel.xml'))
+      File.write('/tmp/pat.xml', @pattern.to_xml)
       expected.must_be_xml_equivalent_with @pattern.to_xml
     end
   end

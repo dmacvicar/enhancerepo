@@ -1,42 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pattern xmlns="http://novell.com/package/metadata/suse/pattern" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
-<name>Basis-Devel</name>
-<arch>x86_64</arch>
-<version epoch="0" ver="11" rel="38.44.33"/>
-<summary>C/C++ Compiler and Tools</summary>
-<description>Minimal set of tools for compiling and linking applications
+  <name>Basis-Devel</name>
+  <arch>x86_64</arch>
+  <version epoch="0" ver="11" rel="38.44.33"/>
+  <icon>pattern-basis-devel</icon>
+  <order>4010</order>
+  <summary>C/C++ Compiler and Tools</summary>
+  <summary lang="ar">المحول البرمجي C/C++ والأدوات</summary>
+  <summary lang="cs">Kompilátor a nástroje pro jazyky C a C++</summary>
+  <summary lang="da">C/C++ kompiler og værktøjer</summary>
+  <summary lang="de">C/C++: Compiler und Werkzeuge</summary>
+  <summary lang="es">Compilador y herramientas para C/C++</summary>
+  <summary lang="fi">C/C++ -kääntäjä ja -työkalut</summary>
+  <summary lang="fr">Compilateur et outils C/C++</summary>
+  <summary lang="hu">C/C++ fordító és segédeszközök</summary>
+  <summary lang="it">Strumenti e compilatore C/C++</summary>
+  <summary lang="ja">C/C++コンパイラとツール</summary>
+  <summary lang="ko">C/C++ 컴파일러 및 도구</summary>
+  <summary lang="nb">C/C++-kompilator og -verktøy</summary>
+  <summary lang="nl">C/C++ compiler en tools</summary>
+  <summary lang="pl">Kompilator i narzędzia C/C++</summary>
+  <summary lang="pt_BR">Compilador e Ferramentas C/C++</summary>
+  <summary lang="ru">Компилятор и инструментальные средства C/C++</summary>
+  <summary lang="sv">Kompilerare och verktyg för C/C++</summary>
+  <summary lang="zh_CN">C/C++ 编译器和工具</summary>
+  <summary lang="zh_TW">C/C++ 編譯器及工具</summary>
+  <description lang="ar">الحد الأدنى لمجموعة الأدوات لتطبيقات التحويل البرمجي والارتباط
 </description>
-<category>Development</category>
-<uservisible/>
-<rpm:requires>
-<rpm:entry name="pattern:basesystem"/>
-<rpm:entry name="autoconf"/>
-<rpm:entry name="automake"/>
-<rpm:entry name="cvs"/>
-</rpm:requires>
-<rpm:recommends>
-<rpm:entry name="aspell-ispell"/>
-<rpm:entry name="bison"/>
-<rpm:entry name="emacs"/>
-<rpm:entry name="emacs-info"/>
-<rpm:entry name="emacs-x11"/>
-<rpm:entry name="flex"/>
-<rpm:entry name="gcc"/>
-<rpm:entry name="gcc-c++"/>
-<rpm:entry name="gcc-info"/>
-<rpm:entry name="gcc-locale"/>
-<rpm:entry name="gcc-z9"/>
-<rpm:entry name="gdbm-devel"/>
-<rpm:entry name="glibc-devel"/>
-<rpm:entry name="glibc-info"/>
-<rpm:entry name="itrace"/>
-<rpm:entry name="kernel-source"/>
-<rpm:entry name="libaio-devel"/>
-<rpm:entry name="libstdc++-devel"/>
-<rpm:entry name="libstdc++-doc"/>
-<rpm:entry name="ncurses-devel"/>
-<rpm:entry name="pkg-config"/>
-<rpm:entry name="rcs"/>
-<rpm:entry name="texinfo"/>
-</rpm:recommends>
+  <description lang="cs">Minimální sada nástrojů potřebná pro kompilaci a linkování aplikací
+</description>
+  <description lang="da">Minimalt sæt af værktøjer til kompilering og linking af programmer
+</description>
+  <description lang="de">Mindestsatz an Werkzeugen für das Kompilieren und Verknüpfen von Anwendungen
+</description>
+  <description>Minimal set of tools for compiling and linking applications
+</description>
+  <description lang="es">Conjunto mínimo de herramientas para compilar y enlazar aplicaciones
+</description>
+  <description lang="fi">Mahdollisimman pieni työkalupaketti ohjelmien kääntämistä ja linkittämistä varten
+</description>
+  <description lang="fr">Ensemble minimum d'outils pour compiler et relier des applications
+</description>
+  <description lang="hu">Minimális eszközkészlet alkalmazások lefordításához és összeszerkesztéséhez
+</description>
+  <description lang="it">Insieme di strumenti di base per la compilazione e il collegamento delle applicazioni
+</description>
+  <description lang="ja">コンパイルおよびリンク用アプリケーションの最小ツールセット
+</description>
+  <description lang="ko">응용 프로그램 컴파일 및 연결을 위한 최소 도구 세트
+</description>
+  <description lang="nb">Grunnleggende verktøysett for kompilering og konfigurasjon av programmer
+</description>
+  <description lang="nl">Minimale set hulpmiddelen voor het compileren en linken van toepassingen.
+</description>
+  <description lang="pl">Minimalny zestaw narzędzi do kompilowania i konsolidacji programów
+</description>
+  <description lang="pt_BR">Conjunto mínimo de ferramentas para compilar e vincular aplicativos
+</description>
+  <description lang="ru">Минимальный набор инструментальных средств для компиляции и компоновки приложений
+</description>
+  <description lang="sv">Basverktyg för kompilering och länkning av program
+</description>
+  <description lang="zh_CN">用于编译和链接应用程序的最小工具集
+</description>
+  <description lang="zh_TW">用於編譯與連結應用程式的精簡工具組。
+</description>
+  <category lang="ar">تطوير</category>
+  <category lang="cs">Vývoj</category>
+  <category lang="da">Udvikling</category>
+  <category lang="de">Entwicklung</category>
+  <category>Development</category>
+  <category lang="es">Desarrollo</category>
+  <category lang="fi">Kehitys</category>
+  <category lang="fr">Développement</category>
+  <category lang="hu">Fejlesztés</category>
+  <category lang="it">Sviluppo</category>
+  <category lang="ja">開発</category>
+  <category lang="ko">개발</category>
+  <category lang="nb">Utvikling</category>
+  <category lang="nl">Ontwikkeling</category>
+  <category lang="pl">Programowanie</category>
+  <category lang="pt_BR">Desenvolvimento</category>
+  <category lang="ru">Разработка</category>
+  <category lang="sv">Utveckling</category>
+  <category lang="zh_CN">开发</category>
+  <category lang="zh_TW">開發</category>
+  <uservisible/>
+  <rpm:requires>
+    <rpm:entry name="pattern:basesystem"/>
+    <rpm:entry name="autoconf"/>
+    <rpm:entry name="automake"/>
+    <rpm:entry name="cvs"/>
+  </rpm:requires>
+  <rpm:recommends>
+    <rpm:entry name="aspell-ispell"/>
+    <rpm:entry name="bison"/>
+    <rpm:entry name="emacs"/>
+    <rpm:entry name="emacs-info"/>
+    <rpm:entry name="emacs-x11"/>
+    <rpm:entry name="flex"/>
+    <rpm:entry name="gcc"/>
+    <rpm:entry name="gcc-c++"/>
+    <rpm:entry name="gcc-info"/>
+    <rpm:entry name="gcc-locale"/>
+    <rpm:entry name="gcc-z9"/>
+    <rpm:entry name="gdbm-devel"/>
+    <rpm:entry name="glibc-devel"/>
+    <rpm:entry name="glibc-info"/>
+    <rpm:entry name="itrace"/>
+    <rpm:entry name="kernel-source"/>
+    <rpm:entry name="libaio-devel"/>
+    <rpm:entry name="libstdc++-devel"/>
+    <rpm:entry name="libstdc++-doc"/>
+    <rpm:entry name="ncurses-devel"/>
+    <rpm:entry name="pkg-config"/>
+    <rpm:entry name="rcs"/>
+    <rpm:entry name="texinfo"/>
+  </rpm:recommends>
 </pattern>
