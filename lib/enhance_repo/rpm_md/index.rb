@@ -132,7 +132,7 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.repomd('xmlns' => "http://linux.duke.edu/metadata/repo") do |b|
+        builder.repomd('xmlns' => "http://linux.duke.edu/metadata/repo") do |b|
           @resources.each do |resource|
             b.data('type' => resource.type) do
               b.location('href' => resource.location)

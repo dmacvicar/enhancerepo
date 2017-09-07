@@ -24,9 +24,7 @@
 #++
 #
 require_relative 'helper'
-require 'enhance_repo'
 require 'stringio'
-require 'enhance_repo/susetags/pattern_reader'
 
 describe EnhanceRepo::RpmMd::Patterns do
 

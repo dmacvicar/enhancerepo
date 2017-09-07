@@ -137,7 +137,7 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.patterns('xmlns' => "http://novell.com/package/metadata/suse/pattern",
+        builder.patterns('xmlns' => "http://novell.com/package/metadata/suse/pattern",
                                'xmlns:rpm' => "http://linux.duke.edu/metadata/rpm") do |b|
           pattern_regex = Regexp.new('<pattern\s+xmlns.+>\s*$');
           @patterns.each do |pattern|

@@ -24,7 +24,6 @@
 #++
 #
 require_relative 'helper'
-require 'enhance_repo'
 
 class Extensions_test < Test::Unit::TestCase
   def setup

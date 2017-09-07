@@ -24,7 +24,6 @@
 #++
 #
 require_relative 'helper'
-require 'enhance_repo'
 
 describe EnhanceRepo::RpmMd::Index do
 

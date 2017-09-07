@@ -145,12 +145,6 @@ EOS
         # other
         opt :debug, 'Show debug information'
       end
-      if !File.exist?(@dir) || !File.directory?(@dir)
-        opts.die "'#{@dir}' is not a valid directory."
-      end
-      if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
-        opts.die @dir, "is not a valid repository directory"
-      end
       opts
     end
 
@@ -197,12 +191,23 @@ EOS
       @digest_name, @digest_class = allocate_digest(nil)
     end
 
-    def parse_args!(dir)
-      @dir = dir
+    def parse_args!
       @repoproducts = Set.new
       @repokeywords = Set.new
       opts = read_command_line
       read_opts(opts)
+
+      @dir = ARGV.shift
+      unless @dir
+        Trollop::die "Need to specify target directory."
+      end
+
+      if !File.exist?(@dir) || !File.directory?(@dir)
+        Trollop::die "'#{@dir}' is not a valid directory."
+      end
+      if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
+        Trollop::die "'#{@dir}' is not a valid repository directory"
+      end
       #dump
       self
     end

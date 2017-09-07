@@ -24,7 +24,6 @@
 #++
 #
 require_relative 'helper'
-require 'enhance_repo/array_arg'
 require 'stringio'
 
 class ArrayWrapper_test < Test::Unit::TestCase

@@ -24,8 +24,6 @@
 #++
 #
 require_relative 'helper'
-require 'enhance_repo'
-require 'enhance_repo/rpm_md/update'
 
 require 'stringio'
 

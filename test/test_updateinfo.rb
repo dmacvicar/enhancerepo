@@ -24,7 +24,6 @@
 #++
 #
 require_relative 'helper'
-require 'enhance_repo'
 require 'stringio'
 
 class UpdateInfo_test < Test::Unit::TestCase

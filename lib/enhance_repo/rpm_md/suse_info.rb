@@ -60,27 +60,26 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        xml = builder.suseinfo {
-
+        builder.suseinfo do
           # add expire tag
           b.expire(@expire.to_i.to_s) if not @expire.nil?
 
           if not @keywords.empty?
-            b.keywords {
+            b.keywords do
               @keywords.each do |k|
                 b.k(k)
               end
-            }
+            end
           end
-
+          
           if not @products.empty?
-            b.products {
+            b.products do
               @products.each do |p|
                 b.id(p)
               end
-            }
+            end
           end
-        }
+        end
       end
     end
 

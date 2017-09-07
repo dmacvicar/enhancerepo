@@ -23,20 +23,14 @@
 #
 #++
 #
-require 'rubygems'
-require 'enhance_repo'
 require 'pathname'
 require 'benchmark'
 require 'fileutils'
+require 'enhance_repo'
 
 EnhanceRepo.enable_logger
 
-dir = "."
-if ! (ARGV.include?("--help") || ARGV.include?("-h") ||
-      ARGV.include?("--version") || ARGV.include?("-v"))
-  dir = ARGV.pop
-end
-config = EnhanceRepo::ConfigOpts.instance.parse_args!(dir)
+config = EnhanceRepo::ConfigOpts.instance.parse_args!
 
 repomd = EnhanceRepo::RpmMd::Repo.new(config)
 

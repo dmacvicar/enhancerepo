@@ -26,7 +26,6 @@
 require_relative 'helper'
 require 'pathname'
 require 'rubygems'
-require 'enhance_repo'
 require 'stringio'
 
 class RpmMd_test < Test::Unit::TestCase

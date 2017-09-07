@@ -23,12 +23,12 @@
 #
 #++
 #
-lib = File.dirname(__FILE__)
-
-require File.join(lib, 'enhance_repo', 'version.rb')
-require File.join(lib, 'enhance_repo', 'logger.rb')
-require File.join(lib, 'enhance_repo', 'config_opts.rb')
-require File.join(lib, 'enhance_repo', 'rpm_md.rb')
+require 'enhance_repo/version'
+require 'enhance_repo/logger'
+require 'enhance_repo/config_opts'
+require 'enhance_repo/rpm_md'
+require 'enhance_repo/array_arg'
+require 'enhance_repo/cli'
 
 
 
