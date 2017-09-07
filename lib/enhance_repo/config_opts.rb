@@ -54,51 +54,51 @@ Usage:
 EOS
         opt :help, 'Show help'
         opt :outputdir, 'Generate metadata to a different directory',
-            :short => :o, :type => :string
+            short: :o, type: :string
         opt :index, "Reindex the metadata and regenerates repomd.xml, '\
             'even if nothing was changed using enhancerepo.'\
             ' Use this if you did manual changes to the metadata",
-            :short => :x
+            short: :x
         opt :benchmark, 'Show benchmark statistics at the end'
 
         opt :primary, 'Add data from rpm files and generate primary.xml (EXPERIMENTAL)',
-            :short => :p
+            short: :p
         opt :sign, 'Generates signature for the repository using key keyid',
-            :short => :s, :type => :string
+            short: :s, type: :string
         opt :updates, 'Add updates from *.updates files and generate updateinfo.xml',
-            :short => :u
+            short: :u
         opt :generate_update, 'Generates an update from the given package list'\
             ' comparing package\'s last version changes',
-            :type => :strings
+            type: :strings
         opt :updates_base_dir, 'Looks for package also in <dir> Useful if you'\
             ' keep old packages in a different repos and updates in this one.',
-            :type => :string
+            type: :string
         opt :split_updates, 'Splits current updateinfo.xml into update parts'\
             ' files in repoparts/'
         opt :indent, 'Generate indented xml. Default: no',
-            :short => :i
+            short: :i
 
         opt :expire, 'Set repository expiration hint (Can be used to detect dead mirrors)',
-            :type => :date, :short => :e
+            type: :date, short: :e
         opt :repo_product, 'Adds product compatibility information',
-            :type => :strings
+            type: :strings
         opt :repo_keyword, 'Tags repository with keyword',
-            :type => :strings
+            type: :strings
 
         opt :digest_type, 'Algorithm used to compute the digests. Default SHA1',
-            :type => :string
+            type: :string
 
         # === SUSE specific package data (susedata.xml)
 
         opt :eulas,
             'Reads packagename.eula files and add the information to susedata.xml',
-            :short => :l
+            short: :l
         opt :keywords,
             'Reads packagename.keywords files and add keyword metadata to susedata.xml',
-            :short => :k
+            short: :k
         opt :disk_usage,
             'Reads rpm packages, generates disk usage information on susedata.xml',
-            :short => :d
+            short: :d
 
         # Note: your .eula or .keywords file will be added to
         # a package if it matches its name. If you want to add
@@ -114,7 +114,7 @@ EOS
             ' version 3 to 4, while num=2 will create one from'\
             ' 2 to 4 too. This does not index the deltas.'\
             ' Use --deltas for that.',
-            :default => 1
+            default: 1
         opt :deltas,
             'Reads all *.delta.rpm files and add the information'\
             ' to deltainfo.xml. This indexes existing deltas, but'\
@@ -133,11 +133,11 @@ EOS
         opt :patterns,
             'Add patterns from pattern-*.xml files and generate'\
             ' patterns.xml',
-            :short => :P
+            short: :P
         opt :generate_patterns,
             'Generate patterns.xml from the old style'\
             ' pattern given as parameter to this option',
-            :type => :strings
+            type: :strings
         opt :split_patterns,
             'Splits current patterns.xml into pattern'\
             ' parts files in repoparts/'
@@ -183,7 +183,7 @@ EOS
 
     def outputdir
       return @dir if @outputdir.nil?
-      return @outputdir
+      @outputdir
     end
 
     def initialize
@@ -197,17 +197,15 @@ EOS
       read_opts(opts)
 
       @dir = ARGV.shift
-      unless @dir
-        Trollop.die "Need to specify target directory."
-      end
+      Trollop.die 'Need to specify target directory.' unless @dir
 
       if !File.exist?(@dir) || !File.directory?(@dir)
         Trollop.die "'#{@dir}' is not a valid directory."
       end
-      if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
+      if !File.directory?(File.join(@dir, 'repodata')) && !(opts[:primary] || opts[:help])
         Trollop.die "'#{@dir}' is not a valid repository directory"
       end
-      #dump
+      # dump
       self
     end
 

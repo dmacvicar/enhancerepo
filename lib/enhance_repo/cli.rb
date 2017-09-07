@@ -54,7 +54,7 @@ time = Benchmark.measure do
     repomd.susedata.add_disk_usage if config.diskusage
 
     unless config.generate_update.nil?
-      repomd.updateinfo.generate_update(config.generate_update, File.join(config.outputdir, 'repoparts') )
+      repomd.updateinfo.generate_update(config.generate_update, File.join(config.outputdir, 'repoparts'))
     end
 
     repomd.updateinfo.read_repoparts if config.updates
@@ -64,9 +64,9 @@ time = Benchmark.measure do
     unless config.generate_patterns.nil?
       repomd.patterns.generate_patterns(config.generate_patterns, File.join(config.outputdir, 'repoparts'))
     end
-    repomd.patterns.read_repoparts if config.patterns || ! config.generate_patterns.nil?
+    repomd.patterns.read_repoparts if config.patterns || !config.generate_patterns.nil?
 
-    repomd.deltainfo.create_deltas(:outputdir => config.outputdir, :n => config.create_deltas) if config.create_deltas
+    repomd.deltainfo.create_deltas(outputdir: config.outputdir, n: config.create_deltas) if config.create_deltas
     repomd.deltainfo.add_deltas if config.deltas
 
     repomd.products.read_packages if config.products
@@ -88,7 +88,7 @@ time = Benchmark.measure do
       EnhanceRepo.logger.fatal excp.class
       EnhanceRepo.logger.fatal(excp.backtrace.join("\n"))
     else
-      EnhanceRepo.logger.info "Pass --debug for more information..."
+      EnhanceRepo.logger.info 'Pass --debug for more information...'
     end
   end
 end

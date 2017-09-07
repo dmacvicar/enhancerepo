@@ -29,20 +29,20 @@ require 'stringio'
 require 'zlib'
 
 describe EnhanceRepo::RpmMd::Products do
-  describe "a generated products should be what is expected" do
+  describe 'a generated products should be what is expected' do
     before do
       @products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-with-prouct'))
     end
 
-    it "should not be empty" do
+    it 'should not be empty' do
       @products.wont_be_empty
     end
 
-    it "should have 3 elements" do
+    it 'should have 3 elements' do
       @products.size.must_equal 1
     end
 
-    it "should generate the right xml" do
+    it 'should generate the right xml' do
       Zlib::GzipReader.open(test_data('rpms/repo-with-product/repodata/products.xml.gz')) do |expected_products|
         buffer = StringIO.new
         @products.write(buffer)

@@ -31,7 +31,7 @@ describe EnhanceRepo::RpmMd::Index do
     @index = EnhanceRepo::RpmMd::Index.new
   end
 
-  it "should write the same that we read" do
+  it 'should write the same that we read' do
     repomdpath = test_data('repomd.xml')
     index_content = File.new(repomdpath).read
     @index.read_file(File.new(repomdpath))
@@ -40,7 +40,7 @@ describe EnhanceRepo::RpmMd::Index do
     # is parsed correctly
     @index.resources.size.must_equal 3
 
-    dump_content = String.new
+    dump_content = ''
     @index.write(dump_content)
     index_content.must_be_xml_equivalent_with dump_content
   end

@@ -59,7 +59,7 @@ module EnhanceRepo
       # add all updates in a repoparts directory
       # by default look in repoparts/
       # otherwise pass the :repoparts_path option
-      def read_repoparts(opts={})
+      def read_repoparts(opts = {})
         repoparts_path = opts[:repoparts_path] || File.join(@dir, 'repoparts')
         log.info "Reading update parts from #{repoparts_path}"
         Dir[File.join(repoparts_path, 'update-*.xml')].each do |updatefile|
@@ -81,7 +81,7 @@ module EnhanceRepo
 
         # look all rpms in the old packages base directory plus
         # the ones in the current one
-        rpmfiles = [ Dir["#{@dir}/**/*.rpm"], @basedir.nil? ? [] : Dir["#{@basedir}/**/*.rpm"]].flatten
+        rpmfiles = [Dir["#{@dir}/**/*.rpm"], @basedir.nil? ? [] : Dir["#{@basedir}/**/*.rpm"]].flatten
         log.info "`-> #{rpmfiles.size} rpm packages"
         # reject unwanted files
         rpmfiles.reject! do |rpmfile|
@@ -107,7 +107,7 @@ module EnhanceRepo
           # of the requested packages to generate updates for
           next unless packages.include?(rpm.name)
 
-          package_index[rpm.name] = Array.new unless package_index.key?(rpm.name)
+          package_index[rpm.name] = [] unless package_index.key?(rpm.name)
           # add the rpm if there is no other rpm with the same version
           package_index[rpm.name] << rpm unless package_index[rpm.name].select { |x| x.version == rpm.version && x.name == rpm.name }.first
         end
@@ -131,7 +131,7 @@ module EnhanceRepo
           log.info "`-> #{pkglist.size} versions for '#{pkgname}'"
           log.debug "    #{package_index[pkgname].map(&:version).join(', ')}"
           # sort them by version
-          pkglist.sort! { |a,b| a.version <=> b.version }
+          pkglist.sort! { |a, b| a.version <=> b.version }
           pkglist.reverse!
           # now that the list is sorted, the new rpm is the first
 
@@ -142,7 +142,7 @@ module EnhanceRepo
             first = pkglist.shift
             second = pkglist.shift
             diff = first.changelog - second.changelog || []
-            #diff = first.changelog[0, first.changelog.size - second.changelog.size] || []
+            # diff = first.changelog[0, first.changelog.size - second.changelog.size] || []
             log.info "`-> found change #{first.ident} and #{second.ident}."
 
             log.info "`-> '#{pkgname}' has #{diff.size} change entries (#{first.changelog.size}/#{second.changelog.size})"
@@ -168,11 +168,11 @@ module EnhanceRepo
         log.info "`-> update has #{update.references.size} references"
         log.debug "    #{update.references.join(',')} "
 
-        filename = ""
+        filename = ''
 
         FileUtils.mkdir_p outputdir
         # increase version until version is available
-        while File.exist?(filename = File.join(outputdir, update.suggested_filename + ".xml") )
+        while File.exist?(filename = File.join(outputdir, update.suggested_filename + '.xml'))
           update.version += 1
         end
         log.info "Saving update part to '#{filename}'."
@@ -199,18 +199,18 @@ module EnhanceRepo
         Zlib::GzipReader.open(updateinfofile) do |gz|
           document = REXML::Document.new(gz)
           root = document.root
-          root.each_element("update") do |updateElement|
+          root.each_element('update') do |updateElement|
             id = nil
-            updateElement.each_element("id") do |elementId|
+            updateElement.each_element('id') do |elementId|
               id = elementId.text
             end
-            if id == nil
+            if id.nil?
               log.warning 'No id found. Setting id to NON_ID_FOUND'
               id = 'NON_ID_FOUND'
             end
             version = 0
-            updatefilename = ""
-            while File.exist?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version}.xml") ) 
+            updatefilename = ''
+            while File.exist?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version}.xml"))
               version += 1
             end
             log.info "Saving update part to '#{updatefilename}'."
@@ -224,16 +224,16 @@ module EnhanceRepo
 
       # write a update out
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+        builder = Builder::XmlMarkup.new(target: file, indent: 2)
         builder.instruct!
         builder.updates do |_b|
           @updates.each do |update|
             File.open(update) do |f|
               file << f.read
             end
-            #update.append_to_builder(b)
+            # update.append_to_builder(b)
           end
-        end #done builder
+        end # done builder
       end
     end
   end

@@ -36,11 +36,11 @@ describe EnhanceRepo::RpmMd::Index do
     @index.read_file(File.new(@repomdfile))
   end
 
-  it "should have four resources" do
+  it 'should have four resources' do
     @index.resources.size.must_equal 4
   end
 
-  it "saving it back should produce the same initial xml" do
+  it 'saving it back should produce the same initial xml' do
     buffer = StringIO.new
     @index.write(buffer)
 

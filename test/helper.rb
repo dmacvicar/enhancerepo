@@ -39,7 +39,7 @@ require 'enhance_repo/xml_comparer'
 EnhanceRepo.enable_logger
 
 def test_data(name)
-  File.join(File.dirname(__FILE__), "data", name)
+  File.join(File.dirname(__FILE__), 'data', name)
 end
 
 module MiniTest::Assertions
@@ -53,14 +53,13 @@ module MiniTest::Assertions
 
     equal = EquivalentXml.equivalent?(expected, actual,
                                       opts = {
-                                        :element_order => false,
-                                        :normalize_whitespace => true 
+                                        element_order: false,
+                                        normalize_whitespace: true
                                       })
 
-    diff = Diffy::Diff.new(expected.to_xml(:indent => 2), actual.to_xml(:indent => 2)).to_s(:color)
+    diff = Diffy::Diff.new(expected.to_xml(indent: 2), actual.to_xml(indent: 2)).to_s(:color)
     assert equal, diff
   end
 end
 
 String.infect_an_assertion :assert_xml_equivalent, :must_be_xml_equivalent_with, :only_one_argument
-

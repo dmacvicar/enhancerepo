@@ -29,7 +29,7 @@ require 'stringio'
 require 'zlib'
 
 describe EnhanceRepo::RpmMd::SuseData do
-  describe "a generated susedata should be what is expected" do
+  describe 'a generated susedata should be what is expected' do
     before do
       @susedata = EnhanceRepo::RpmMd::SuseData.new(test_data('rpms/repo-1'))
       @susedata.add_disk_usage
@@ -37,15 +37,15 @@ describe EnhanceRepo::RpmMd::SuseData do
       @susedata.add_eulas
     end
 
-    it "should not be empty" do
+    it 'should not be empty' do
       @susedata.wont_be_empty
     end
 
-    it "should have 3 elements" do
+    it 'should have 3 elements' do
       @susedata.size.must_equal 3
     end
 
-    it "should generate the right xml" do
+    it 'should generate the right xml' do
       Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/susedata.xml.gz')) do |expected_susedata|
         buffer = StringIO.new
         @susedata.write(buffer)

@@ -50,7 +50,7 @@ module EnhanceRepo
 
       # add a file resource. Takes care of setting
       # all the metadata.
-      def add_file_resource(abspath, path, type=nil)
+      def add_file_resource(abspath, path, type = nil)
         r = Resource.new
         r.type = type
         # figure out the type of resource
@@ -91,7 +91,7 @@ module EnhanceRepo
           @resources << r
         else
           # replace it
-          #log.warn("Resource #{r.location} already exists. Replacing.")
+          # log.warn("Resource #{r.location} already exists. Replacing.")
           @resources[index] = r
         end
       end
@@ -128,9 +128,9 @@ module EnhanceRepo
 
       # write the index to xml file
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+        builder = Builder::XmlMarkup.new(target: file, indent: 2)
         builder.instruct!
-        builder.repomd('xmlns' => "http://linux.duke.edu/metadata/repo") do |b|
+        builder.repomd('xmlns' => 'http://linux.duke.edu/metadata/repo') do |b|
           @resources.each do |resource|
             b.data('type' => resource.type) do
               b.location('href' => resource.location)
@@ -142,7 +142,7 @@ module EnhanceRepo
               b.tag!('database_version', resource.database_version) if resource.database_version
             end
           end
-        end #builder
+        end # builder
       end
     end
   end

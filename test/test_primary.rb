@@ -37,7 +37,7 @@ class Primary_test < Test::Unit::TestCase
     primary = EnhanceRepo::RpmMd::Primary.new(test_data('rpms/repo-1'))
     primary.read_packages
 
-    assert ! primary.empty?
+    assert !primary.empty?
     assert_equal 3, primary.size
 
     Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/primary.xml.gz')) do |_expected_primary|

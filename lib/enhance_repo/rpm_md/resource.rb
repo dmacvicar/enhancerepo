@@ -34,7 +34,7 @@ module EnhanceRepo
 
       # define equality based on the location
       # as it has no sense to have two resources for the
-      #same location
+      # same location
       def ==(other)
         return (location == other.location) if other.is_a?(Resource)
         false

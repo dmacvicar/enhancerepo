@@ -44,8 +44,8 @@ module EnhanceRepo
         `applydeltarpm -i '#{filename}'`.each_line do |line|
           key, value = line.chop.split(':')
           value.delete!(' ')
-          @sequence = value if key == "sequence"
-          @sourcerpm = value if key == "source rpm"
+          @sequence = value if key == 'sequence'
+          @sourcerpm = value if key == 'source rpm'
         end
       end
 
@@ -65,7 +65,7 @@ module EnhanceRepo
         # we index by new package
         # and in every slot we store an
         # array with such deltas
-        @deltas = Hash.new
+        @deltas = {}
       end
 
       def delta_count
@@ -73,7 +73,7 @@ module EnhanceRepo
       end
 
       def empty?
-        return @deltas.empty?
+        @deltas.empty?
       end
 
       # Create delta rpms for the last
@@ -93,26 +93,26 @@ module EnhanceRepo
       # options are :n => number of deltas (default 1)
       # and :outputdir => defaulting to the same
       # input directory
-      def create_deltas(opts={})
+      def create_deltas(opts = {})
         outputdir = opts[:outputdir] || @dir
         n = opts[:n] || 1
 
         log.info "Scanning rpms for delta generation (#{n} levels)"
-        #log.info "Creating deltarpms : level #{n}"
+        # log.info "Creating deltarpms : level #{n}"
         # make a hash name -> array of packages
-        pkgs = Hash.new
+        pkgs = {}
 
         Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
-          #puts "Delta: #{rpmfile}"
+          # puts "Delta: #{rpmfile}"
           rpm = PackageId.new(rpmfile)
 
-          pkgs[rpm.name] = Array.new unless pkgs.key?(rpm.name)
+          pkgs[rpm.name] = [] unless pkgs.key?(rpm.name)
           pkgs[rpm.name] << rpm
         end
 
         # now that we have al packages, sort them by version
         pkgs.each do |_pkgname, pkglist|
-          pkglist.sort! { |a,b| a.version <=> b.version }
+          pkglist.sort! { |a, b| a.version <=> b.version }
           pkglist.reverse!
           # now that the list is sorted, the new rpm is the first
           newpkg = pkglist.shift
@@ -126,15 +126,15 @@ module EnhanceRepo
             next if newpkg.arch != pkg.arch
             oldpkg = pkg
             # use the same dir as the new rpm
-            log.info "`-> creating delta - #{oldpkg} -> #{newpkg} (#{c+1}/#{n})"
+            log.info "`-> creating delta - #{oldpkg} -> #{newpkg} (#{c + 1}/#{n})"
             # calculate directory where to save the delta. Use the newpkg
             # relative to the origin directory,
             # this only works because we know the rpm is inside @dir
             subdir = Pathname.new(newpkg.path).relative_path_from(Pathname.new(@dir)).dirname
             # calculate the deltarpm name
-            deltafile = File.join(outputdir, subdir, delta_package_name(oldpkg,newpkg))
+            deltafile = File.join(outputdir, subdir, delta_package_name(oldpkg, newpkg))
             FileUtils.mkdir_p File.dirname(deltafile)
-            #puts "makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}"
+            # puts "makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}"
             `makedeltarpm '#{oldpkg.path}' '#{newpkg.path}' '#{deltafile}'`
             c += 1
           end
@@ -143,21 +143,21 @@ module EnhanceRepo
 
       # figure out the name of a delta rpm
       def delta_package_name(oldpkg, newpkg)
-        deltarpm = ""
-        deltarpm = if ( oldpkg.version.v == newpkg.version.v )
-          # if the version is the same, then it is specified only once, and the range
-          # is used for the releases
-          "#{oldpkg.name}-#{oldpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
+        deltarpm = ''
+        deltarpm = if oldpkg.version.v == newpkg.version.v
+                     # if the version is the same, then it is specified only once, and the range
+                     # is used for the releases
+                     "#{oldpkg.name}-#{oldpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
                    else
-          "#{oldpkg.name}-#{oldpkg.version.v}_#{newpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
+                     "#{oldpkg.name}-#{oldpkg.version.v}_#{newpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
                    end
       end
 
       def add_deltas
         Dir["#{@dir}/**/*.delta.rpm"].each do |deltafile|
           delta = DeltaRpm.new(deltafile)
-          #puts "Delta: #{deltafile} for '#{delta.ident}'"      
-          @deltas[delta] = Array.new if @deltas[delta].nil?
+          # puts "Delta: #{deltafile} for '#{delta.ident}'"
+          @deltas[delta] = [] if @deltas[delta].nil?
           @deltas[delta] << delta
         end
       end
@@ -167,13 +167,13 @@ module EnhanceRepo
         builder = Nokogiri::XML::Builder.new do |b|
           b.deltainfo do
             @deltas.each do |ident, deltas|
-              b.newpackage( 'name' => ident.name, 'arch' => ident.arch,
-                            'version' => ident.version.v,
-                            'release' => ident.version.r ) do
+              b.newpackage('name' => ident.name, 'arch' => ident.arch,
+                           'version' => ident.version.v,
+                           'release' => ident.version.r) do
                 deltas.each do |delta|
                   # get the edition by getting the name out
                   version = RPM::Version.new(delta.sourcerpm.gsub(/#{Regexp.escape(delta.name)}-/, ''))
-                  b.delta('oldepoch'=>0, 'oldversion'=>version.v, 'oldrelease'=>version.r) do
+                  b.delta('oldepoch' => 0, 'oldversion' => version.v, 'oldrelease' => version.r) do
                     # remove the base dir, make it relative
                     delta_abs_path = Pathname.new(delta.path).realpath
                     base_dir_abs_path = Pathname.new(@dir).realpath
@@ -181,15 +181,15 @@ module EnhanceRepo
                     b.filename relative_path
                     b.sequence(delta.sequence)
                     b.size(File.size(delta.path))
-                    b.checksum(delta.checksum, 'type'=> EnhanceRepo::ConfigOpts.instance.digest_name)
+                    b.checksum(delta.checksum, 'type' => EnhanceRepo::ConfigOpts.instance.digest_name)
                   end # </delta>
                 end
               end # </newpackage>
             end # each delta
-          end #</deltainfo>
+          end # </deltainfo>
         end
         # ready builder
-        file.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
+        file.write(builder.doc.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
     end
   end

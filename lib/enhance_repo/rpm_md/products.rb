@@ -27,7 +27,7 @@
 require 'rpm'
 require 'pathname'
 require 'nokogiri'
-#require 'ftools'
+# require 'ftools'
 
 module EnhanceRepo
   module RpmMd
@@ -55,7 +55,7 @@ module EnhanceRepo
       def rpm_extract_file(rpmpath, path)
         Dir.mktmpdir do |tmppath|
           Dir.chdir(tmppath) do
-            `rpm2cpio '#{rpmpath}' | cpio -iv --make-directories #{File.join(".", path)} 2>/dev/null`
+            `rpm2cpio '#{rpmpath}' | cpio -iv --make-directories #{File.join('.', path)} 2>/dev/null`
           end
           File.open(File.join(tmppath, path)) do |f|
             yield f if block_given?
@@ -68,7 +68,7 @@ module EnhanceRepo
         products = []
         rpm_extract_file(rpmpath, path) do |f|
           doc = Nokogiri::XML(f)
-          #print doc.to_s
+          # print doc.to_s
           product = ProductData.new
           # set attributes of the product based on the xml data
           %i[name version release arch vendor summary description].each do |attr|
@@ -86,12 +86,12 @@ module EnhanceRepo
         Dir["#{@dir}/**/*-release-*.rpm", "#{@dir}/**/*-migration-*.rpm"].each do |rpmfile|
           pkg = RPM::Package.new(rpmfile)
           # we dont care for packages not providing a product
-          next if pkg.provides.select { |x| x.name == "product()" }.empty?
+          next if pkg.provides.select { |x| x.name == 'product()' }.empty?
           log.info "Found product release package #{rpmfile}"
           # this package contains a product
           # go over each product file
           pkg.files.map(&:to_s).each do |path|
-            next unless ( File.extname(path) == ".prod" && File.dirname(path) == "/etc/products.d" )
+            next unless File.extname(path) == '.prod' && File.dirname(path) == '/etc/products.d'
             # we have a product file. Extract it
             log.info "`-> product file : #{path}"
             products_in_file_in_rpm(File.expand_path(rpmfile), File.expand_path(path)) do |product|
@@ -118,8 +118,8 @@ module EnhanceRepo
                 xml.name product.name
                 version = RPM::Version.new("#{product.version}-#{product.release}")
                 epoch = version.e
-                epoch ||= "0"
-                xml.version :epoch => epoch, :ver => version.v, :rel => version.r
+                epoch ||= '0'
+                xml.version epoch: epoch, ver: version.v, rel: version.r
                 xml.arch product.arch
                 xml.vendor product.vendor
                 xml.summary product.summary
@@ -129,8 +129,8 @@ module EnhanceRepo
           end
         end
         # write the result
-        #io.write(builder.to_xml)
-        io.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
+        # io.write(builder.to_xml)
+        io.write(builder.doc.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
     end
   end

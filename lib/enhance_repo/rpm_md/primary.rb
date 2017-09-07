@@ -56,20 +56,20 @@ module EnhanceRepo
       end
 
       def write_package(file, rpmfile)
-        b = Builder::XmlMarkup.new(:target=>file, :indent=> @indent ? 2 : 0)
+        b = Builder::XmlMarkup.new(target: file, indent: @indent ? 2 : 0)
         b.package('type' => 'rpm') do
           pkgid = PackageId.new(rpmfile)
           b.name pkgid.name
           b.arch pkgid.arch
-          b.version('epoch' => pkgid.version.e.nil? ? "0" : pkgid.version.e.to_s, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
-          b.checksum(pkgid.checksum, 'type'=> EnhanceRepo::ConfigOpts.instance.digest_name, 'pkgid'=>'YES')
+          b.version('epoch' => pkgid.version.e.nil? ? '0' : pkgid.version.e.to_s, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
+          b.checksum(pkgid.checksum, 'type' => EnhanceRepo::ConfigOpts.instance.digest_name, 'pkgid' => 'YES')
           b.summary pkgid[RPM::TAG_SUMMARY]
           b.description pkgid[RPM::TAG_DESCRIPTION]
           b.packager pkgid[RPM::TAG_PACKAGER]
           b.url pkgid[RPM::TAG_URL]
-          b.time('file'=>File.mtime(rpmfile).to_i, 'build'=>pkgid[RPM::TAG_BUILDTIME])
-          b.tag!('size', 'archive'=>pkgid[RPM::TAG_ARCHIVESIZE], 'installed'=>pkgid[RPM::TAG_SIZE], 'package'=>File.size(rpmfile))
-          b.location('href'=>File.basename(rpmfile))
+          b.time('file' => File.mtime(rpmfile).to_i, 'build' => pkgid[RPM::TAG_BUILDTIME])
+          b.tag!('size', 'archive' => pkgid[RPM::TAG_ARCHIVESIZE], 'installed' => pkgid[RPM::TAG_SIZE], 'package' => File.size(rpmfile))
+          b.location('href' => File.basename(rpmfile))
           # now the format tags
           b.format do
             b.tag!('rpm:license', pkgid[RPM::TAG_LICENSE])
@@ -77,7 +77,7 @@ module EnhanceRepo
             b.tag!('rpm:group', pkgid[RPM::TAG_GROUP])
             b.tag!('rpm:buildhost', pkgid[RPM::TAG_BUILDHOST])
             b.tag!('rpm:sourcerpm', pkgid[RPM::TAG_SOURCERPM])
-            #b.tag!('rpm:header-range', pkgid[RPM::TAG_SOURCERPM])
+            # b.tag!('rpm:header-range', pkgid[RPM::TAG_SOURCERPM])
 
             # serialize dependencies
             %i[provides requires obsoletes conflicts obsoletes].each do |deptype|
@@ -89,13 +89,13 @@ module EnhanceRepo
                   flag = 'EQ' if dep.eq?
                   flag = 'LE' if dep.le?
                   flag = 'GE' if dep.ge?
-                  attrs = {'name'=>dep.name}
+                  attrs = { 'name' => dep.name }
                   unless flag.nil?
                     attrs['pre'] = 1 if (deptype == :requires) && dep.pre?
                     attrs['flags'] = flag
-                    attrs['ver'] =dep.version.v
-                    attrs['epoch'] = dep.version.e.nil? ? "0" : dep.version.e.to_s
-                    attrs['rel'] =dep.version.r
+                    attrs['ver'] = dep.version.v
+                    attrs['epoch'] = dep.version.e.nil? ? '0' : dep.version.e.to_s
+                    attrs['rel'] = dep.version.r
                   end
                   b.tag!('rpm:entry', attrs)
                 end
@@ -109,9 +109,9 @@ module EnhanceRepo
 
       # write primary.xml
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=> @indent ? 2 : 0)
+        builder = Builder::XmlMarkup.new(target: file, indent: @indent ? 2 : 0)
         builder.instruct!
-        builder.tag!("metadata", 'xmlns' => 'http://linux.duke.edu/metadata/common', 'xmlns:rpm' => 'http://linux.duke.edu/metadata/rpm', 'xmlns:suse'=>'http://novell.com/package/metadata/suse/common', 'packages'=> @rpmfiles.size ) do |_b|
+        builder.tag!('metadata', 'xmlns' => 'http://linux.duke.edu/metadata/common', 'xmlns:rpm' => 'http://linux.duke.edu/metadata/rpm', 'xmlns:suse' => 'http://novell.com/package/metadata/suse/common', 'packages' => @rpmfiles.size) do |_b|
           @rpmfiles.each do |rpmfile|
             write_package(file, rpmfile)
           end

@@ -58,7 +58,7 @@ module EnhanceRepo
     def arch
       s = self[RPM::TAG_SOURCERPM]
       if s.nil?
-        return "src"
+        return 'src'
       else
         return @rpm.arch
       end
@@ -76,7 +76,7 @@ module EnhanceRepo
       return true if ident == "#{@rpm.name}-#{@rpm.version.v}-#{@rpm.version.r}"
       # and finally arch
       return true if ident == "#{@rpm.name}-#{@rpm.version.v}-#{@rpm.version.r}.#{@rpm.arch}"
-      return false
+      false
     end
 
     def to_s

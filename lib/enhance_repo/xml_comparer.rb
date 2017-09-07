@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #
 # The MIT License
 #
@@ -22,6 +23,7 @@ class XmlComparer
     @custom_matcher = options.delete(:custom_matcher)
     @show_messages = options.delete(:show_messages)
   end
+
   def compare(target, sample)
     @target_doc = Nokogiri::XML::Document.parse(target, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS)
     @sample_doc = Nokogiri::XML::Document.parse(sample, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS)
@@ -49,24 +51,23 @@ class XmlComparer
   def missing_result_messages
     puts "\nFollowing nodes are missing:\n" unless @missing_nodes.empty?
     @missing_nodes.each do |node|
-      puts "#{node.to_s} at #{node.path}\n"
+      puts "#{node} at #{node.path}\n"
     end
   end
 
   def superfluous_nodes_messages
     puts "\nFollowing nodes are superfluous:\n" unless @superfluous_nodes.empty?
     @superfluous_nodes.each do |node|
-      puts "#{node.to_s} at #{node.path}\n"
+      puts "#{node} at #{node.path}\n"
     end
   end
 
   def different_nodes_messages
     puts "\nFollowing nodes are different:\n" unless @different_nodes.empty?
     @different_nodes.each do |node_pair|
-      puts "#{node_pair[0].to_s} vs #{node_pair[1].to_s} at #{node_pair[0].path}\n"
+      puts "#{node_pair[0]} vs #{node_pair[1]} at #{node_pair[0].path}\n"
     end
   end
-
 
   def standard_traverse_and_compare
     traverse_and_compare(@target_doc, @sample_doc)

@@ -57,7 +57,7 @@ module EnhanceRepo
       end
 
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+        builder = Builder::XmlMarkup.new(target: file, indent: 2)
         builder.instruct!
         builder.suseinfo do
           # add expire tag
@@ -70,7 +70,7 @@ module EnhanceRepo
               end
             end
           end
-          
+
           unless @products.empty?
             b.products do
               @products.each do |p|

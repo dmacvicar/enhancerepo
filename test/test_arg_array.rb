@@ -48,11 +48,11 @@ class ArrayWrapper_test < Test::Unit::TestCase
       arg = EnhanceRepo::ArrayArg.new(array)
 
       assert_equal(6, arg.size)
-      assert(!arg.include?(file_name), "orginal file should not be included")
+      assert(!arg.include?(file_name), 'orginal file should not be included')
       (orig_array + file_array).all? do |x|
         assert arg.include?(x), "element '#{x}' should be included"
       end
-      assert_equal("barcelona,lyon,zebra,wolf,paris,newyork", arg.join(','))
+      assert_equal('barcelona,lyon,zebra,wolf,paris,newyork', arg.join(','))
     end
   end
 end

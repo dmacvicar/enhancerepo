@@ -45,7 +45,7 @@ module EnhanceRepo
       #  :type => 'bugzilla'
       #    type is just passed and set in the reference that match
       #    this options
-      def each_reference_for(opts={})
+      def each_reference_for(opts = {})
         update = self
         keywords = Set.new
         keywords << opts[:keyword] if opts.key?(:keyword)
@@ -75,12 +75,12 @@ module EnhanceRepo
       # ones
       # in the update description
       def each_detected_reference
-        each_reference_for(:keyword => 'bnc', :href => 'http://bugzilla.novell.com/:id', :title => 'Novell bugzilla #:id', :type => 'bugzilla' ) { |x| yield x }
-        each_reference_for(:keywords => ['rh', 'rhbz'], :href => 'http://bugzilla.redhat.com/:id', :title => 'Redhat bugzilla #:id', :type => 'bugzilla' ) { |x| yield x }
-        each_reference_for(:keyword => 'bgo', :href => 'http://bugzilla.gnome.org/:id', :title => 'Gnome bug #:id', :type => 'bugzilla' ) { |x| yield x }
-        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) { |x| yield x }
-        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) { |x| yield x }
-        each_reference_for(:keyword => 'cve', :href => 'http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-:id', :title => 'CVE-:id', :type => 'cve' ) { |x| yield x }
+        each_reference_for(keyword: 'bnc', href: 'http://bugzilla.novell.com/:id', title: 'Novell bugzilla #:id', type: 'bugzilla') { |x| yield x }
+        each_reference_for(keywords: %w[rh rhbz], href: 'http://bugzilla.redhat.com/:id', title: 'Redhat bugzilla #:id', type: 'bugzilla') { |x| yield x }
+        each_reference_for(keyword: 'bgo', href: 'http://bugzilla.gnome.org/:id', title: 'Gnome bug #:id', type: 'bugzilla') { |x| yield x }
+        each_reference_for(keyword: 'kde', href: 'http://bugs.kde.org/:id', title: 'KDE bug #:id', type: 'bugzilla') { |x| yield x }
+        each_reference_for(keyword: 'kde', href: 'http://bugs.kde.org/:id', title: 'KDE bug #:id', type: 'bugzilla') { |x| yield x }
+        each_reference_for(keyword: 'cve', href: 'http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-:id', title: 'CVE-:id', type: 'cve') { |x| yield x }
       end
 
       # automatically set empty fields
@@ -109,12 +109,12 @@ module EnhanceRepo
           # figure out what the multiple packages are
           if update.packages.grep(/kde/).size > 1
             # assume it is a KDE update
-            update.title << "for KDE"
+            update.title << 'for KDE'
             # KDE 3 or KDE4
-            update.updateid = "KDE3" if update.packages.grep(/kde(.+)3$/).size > 1
-            update.updateid = "KDE4" if update.packages.grep(/kde(.+)4$/).size > 1
+            update.updateid = 'KDE3' if update.packages.grep(/kde(.+)3$/).size > 1
+            update.updateid = 'KDE4' if update.packages.grep(/kde(.+)4$/).size > 1
           elsif update.packages.grep(/kernel/).size > 1
-            update.title << "for the Linux kernel"
+            update.title << 'for the Linux kernel'
             update.updateid = 'kernel'
           end
         end

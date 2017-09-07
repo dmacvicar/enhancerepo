@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 #--
-# 
+#
 # enhancerepo is a rpm-md repository metadata tool.
 # Copyright (C) 2008, 2009 Novell Inc.
 # Author: Duncan Mac-Vicar P. <dmacvicar@suse.de>
@@ -38,7 +38,7 @@ module EnhanceRepo
       end
 
       def name
-        defined?(@name) ? @name : self.class.to_s.split("::").last.downcase
+        defined?(@name) ? @name : self.class.to_s.split('::').last.downcase
       end
 
       def metadata_filename

@@ -56,16 +56,16 @@ module EnhanceRepo
       attr_accessor :title
 
       def to_s
-       "#{type}##{referenceid}"
+        "#{type}##{referenceid}"
       end
 
       # initialize a reference, per default a novell
       # bugzilla type
       def initialize
-        @href = "http://bugzilla.novell.com"
-        @referenceid = "none"
-        @title = ""
-        @type = "bugzilla"
+        @href = 'http://bugzilla.novell.com'
+        @referenceid = 'none'
+        @title = ''
+        @type = 'bugzilla'
       end
     end
 
@@ -78,47 +78,47 @@ module EnhanceRepo
 
       attr_writer :updateid
       def updateid
-          @updateid ||= "unknown"
+        @updateid ||= 'unknown'
       end
       attr_writer :status
       def status
-          @status ||= "stable"
+        @status ||= 'stable'
       end
       attr_writer :from
       def from
-          @from ||= "#{ENV['USER']}@#{ENV['HOST']}"
+        @from ||= "#{ENV['USER']}@#{ENV['HOST']}"
       end
       attr_writer :type
       def type
-          @type ||= "optional"
+        @type ||= 'optional'
       end
       attr_writer :version
       def version
-          @version ||= 1
+        @version ||= 1
       end
       attr_writer :release
       def release
-          @release ||= "unknown"
+        @release ||= 'unknown'
       end
       attr_writer :issued
       def issued
-          @issued ||= Time.now.to_i
+        @issued ||= Time.now.to_i
       end
       attr_writer :references
       def references
-          @references ||= []
+        @references ||= []
       end
       attr_writer :description
       def description
-          @description ||= ""
+        @description ||= ''
       end
       attr_writer :title
       def title
-          @title ||= "untitled update"
+        @title ||= 'untitled update'
       end
       attr_writer :packages
       def packages
-          @packages ||= []
+        @packages ||= []
       end
 
       def initialize; end
@@ -135,7 +135,7 @@ module EnhanceRepo
 
       # write a update out
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+        builder = Builder::XmlMarkup.new(target: file, indent: 2)
         append_to_builder(builder)
       end
 
@@ -149,19 +149,19 @@ module EnhanceRepo
           # serialize attr_reader :eferences
           b.references do
             references.each do |r|
-              b.reference('href' => r.href, 'id' => r.referenceid, 'title' => r.title, 'type' => r.type )
+              b.reference('href' => r.href, 'id' => r.referenceid, 'title' => r.title, 'type' => r.type)
             end
           end
           # done with references
           b.pkglist do
             b.collection do
               packages.each do |pkg|
-                b.package('name' => pkg.name, 'arch'=> pkg.arch, 'version'=>pkg.version.v, 'release'=>pkg.version.r) do
+                b.package('name' => pkg.name, 'arch' => pkg.arch, 'version' => pkg.version.v, 'release' => pkg.version.r) do
                   b.filename(File.basename(pkg.path))
                 end
               end
             end # </collection>
-          end #</pkglist>
+          end # </pkglist>
           # done with the packagelist
         end
       end

@@ -27,24 +27,24 @@ module EnhanceRepo
     attr_accessor :includes
 
     def initialize
-      @name        = ""
-      @version     = ""
-      @release     = ""
-      @architecture = "noarch"
-      @summary     = Hash.new
-      @description = Hash.new
+      @name        = ''
+      @version     = ''
+      @release     = ''
+      @architecture = 'noarch'
+      @summary     = {}
+      @description = {}
       @icon        = nil
       @order       = 0
       @visible     = true
-      @category    = Hash.new
-      @supplements = Hash.new
-      @conflicts   = Hash.new
-      @provides    = Hash.new
-      @requires    = Hash.new
-      @recommends  = Hash.new
-      @suggests    = Hash.new
-      @extends     = Hash.new
-      @includes    = Hash.new
+      @category    = {}
+      @supplements = {}
+      @conflicts   = {}
+      @provides    = {}
+      @requires    = {}
+      @recommends  = {}
+      @suggests    = {}
+      @extends     = {}
+      @includes    = {}
     end
   end
 end

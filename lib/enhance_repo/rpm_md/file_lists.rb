@@ -52,9 +52,9 @@ module EnhanceRepo
       end
 
       def write_package(file, rpmfile)
-        b = Builder::XmlMarkup.new(:target=>file, :indent=>2, :initial=>2)
+        b = Builder::XmlMarkup.new(target: file, indent: 2, initial: 2)
         pkgid = PackageId.new(rpmfile)
-        b.package('pkgid'=>pkgid.checksum, 'name' => pkgid.name, 'arch'=> pkgid.arch ) do
+        b.package('pkgid' => pkgid.checksum, 'name' => pkgid.name, 'arch' => pkgid.arch) do
           b.version('epoch' => pkgid.version.e, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
           pkgid.files.each do |f|
             b.file f
@@ -65,10 +65,10 @@ module EnhanceRepo
 
       # write filelists.xml
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+        builder = Builder::XmlMarkup.new(target: file, indent: 2)
         builder.instruct!
-        builder.filelists( 'xmlns' => "http://linux.duke.edu/metadata/filelists",
-                           'packages'=> @rpmfiles.size ) do |_b|
+        builder.filelists('xmlns' => 'http://linux.duke.edu/metadata/filelists',
+                          'packages' => @rpmfiles.size) do |_b|
           @rpmfiles.each do |rpmfile|
             write_package(file, rpmfile)
           end

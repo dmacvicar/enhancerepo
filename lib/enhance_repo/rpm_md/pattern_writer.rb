@@ -60,10 +60,10 @@ module EnhanceRepo
           xml['rpm'].send(dep) do
             list.each do |pkg|
               kind = pattern.send(dep)[pkg]
-              if kind == "package"
-                xml['rpm'].entry( 'name' => pkg )
+              if kind == 'package'
+                xml['rpm'].entry('name' => pkg)
               else
-                xml['rpm'].entry( 'name' => "#{kind}:#{pkg}" )
+                xml['rpm'].entry('name' => "#{kind}:#{pkg}")
               end
             end
           end
@@ -71,9 +71,9 @@ module EnhanceRepo
       end
 
       def self.write_xml(pattern, io = STDOUT)
-        builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-          xml.pattern('xmlns' => "http://novell.com/package/metadata/suse/pattern",
-                      'xmlns:rpm' => "http://linux.duke.edu/metadata/rpm") do
+        builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+          xml.pattern('xmlns' => 'http://novell.com/package/metadata/suse/pattern',
+                      'xmlns:rpm' => 'http://linux.duke.edu/metadata/rpm') do
             xml.name pattern.name
             xml.arch pattern.architecture
             xml.version 'epoch' => '0', 'ver' => pattern.version, 'rel' => pattern.release
@@ -111,14 +111,14 @@ module EnhanceRepo
             unless pattern.extends.empty?
               xml.extends do
                 pattern.extends.each do |pkg, kind|
-                  xml.item( 'pattern' => pkg ) if kind == "pattern"
+                  xml.item('pattern' => pkg) if kind == 'pattern'
                 end
               end
             end
             unless pattern.includes.empty?
               xml.includes do
                 pattern.includes.each do |pkg, kind|
-                   xml.item( 'pattern' => pkg ) if kind == "pattern"
+                  xml.item('pattern' => pkg) if kind == 'pattern'
                 end
               end
             end

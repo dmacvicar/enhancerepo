@@ -61,8 +61,8 @@ module EnhanceRepo
       end
 
       def write(builder, _pkgid)
-        dirsizes = Hash.new
-        dircount = Hash.new
+        dirsizes = {}
+        dircount = {}
         `rpm -q --queryformat \"[%{FILENAMES} %{FILESIZES}\n]\" -p '#{@rpmfile}'`.each_line do |line|
           file, size = line.split
           dirsizes[File.dirname(file)] = 0 unless dirsizes.key?(File.dirname(file))
@@ -75,7 +75,7 @@ module EnhanceRepo
         builder.diskusage do |b|
           b.dirs do
             dirsizes.each do |k, v|
-              b.dir('name' => k, 'size' => v, 'count' => dircount[k] )
+              b.dir('name' => k, 'size' => v, 'count' => dircount[k])
             end
           end
         end
@@ -96,15 +96,13 @@ module EnhanceRepo
         # the following hash automatically creates a sub
         # hash for non found values
         # @properties = Hash.new { |h,v| h[v]= Hash.new }
-        @properties = Hash.new
+        @properties = {}
       end
 
       # add an attribute named name for a
       # package identified with pkgid
       def add_attribute(pkgid, prop)
-        unless @properties.key?(pkgid)
-          @properties.store(pkgid, Hash.new)
-        end
+        @properties.store(pkgid, {}) unless @properties.key?(pkgid)
         @properties[pkgid][prop.name] = prop
       end
 
@@ -126,7 +124,7 @@ module EnhanceRepo
 
       def add_keywords
         # add keywords
-        log.info "Adding repository keywords"
+        log.info 'Adding repository keywords'
         Dir["#{@dir}/**/*.keywords"].each do |keywordfile|
           base = File.basename(keywordfile, '.keywords')
           # =>  look for all rpms with that name in that dir
@@ -154,15 +152,15 @@ module EnhanceRepo
 
       # write an extension file like other.xml
       def write(file)
-        builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
+        builder = Builder::XmlMarkup.new(target: file, indent: 2)
         builder.instruct!
         builder.tag!(name) do |b|
           @properties.each do |pkgid, props|
-            #log.info "Dumping package #{pkgid.to_s}"
+            # log.info "Dumping package #{pkgid.to_s}"
             b.package('pkgid' => pkgid.checksum, 'name' => pkgid.name) do
-              b.version('ver' => pkgid.version.v, 'rel' => pkgid.version.r, 'arch' => pkgid.arch, 'epoch' => 0.to_s )
+              b.version('ver' => pkgid.version.v, 'rel' => pkgid.version.r, 'arch' => pkgid.arch, 'epoch' => 0.to_s)
               props.each do |_propname, prop|
-                #log.info "   -> property #{prop.name}"
+                # log.info "   -> property #{prop.name}"
                 prop.write(builder, pkgid)
               end
             end
@@ -172,7 +170,7 @@ module EnhanceRepo
 
       def add_disk_usage
         @diskusage_enabled = true
-        log.info "Calculating disk usage..."
+        log.info 'Calculating disk usage...'
         # build the pkgid hash
         Dir["#{@dir}/**/*.rpm"].each do |rpmfile|
           pkgid = PackageId.new(rpmfile)

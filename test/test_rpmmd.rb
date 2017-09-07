@@ -41,18 +41,18 @@ class RpmMd_test < Test::Unit::TestCase
   # end
 
   def test_disk_info
-    ARGV << "--outputdir" << File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}') << "--primary"
+    ARGV << '--outputdir' << File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}') << '--primary'
     config = EnhanceRepo::ConfigOpts.instance.parse_args!(@rpms1)
-    #config.outputdir = Pathname.new(File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}'))
-    #config.dir = @rpms1
+    # config.outputdir = Pathname.new(File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}'))
+    # config.dir = @rpms1
     @repo = EnhanceRepo::RpmMd::Repo.new(config)
     @repo.primary.read_packages
     out = StringIO.new
     @repo.primary.write(out)
-    #puts out.string
+    # puts out.string
   end
 
   def test_update_info
-    #config.generate_update = packages
+    # config.generate_update = packages
   end
 end

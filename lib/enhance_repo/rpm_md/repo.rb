@@ -61,9 +61,7 @@ module EnhanceRepo
         @index = Index.new
         repomdfile = File.join(@dir, @index.metadata_filename)
         # populate the index
-        if File.exist?(repomdfile)
-          @index.read_file(File.new(repomdfile))
-        end
+        @index.read_file(File.new(repomdfile)) if File.exist?(repomdfile)
 
         @primary = Primary.new(config.dir)
         @primary.indent = config.indent
@@ -81,12 +79,10 @@ module EnhanceRepo
       def sign(keyid)
         # check if the index is written to disk
         repomdfile = File.join(@dir, @index.metadata_filename)
-        unless File.exist?(repomdfile)
-          raise "#{repomdfile} does not exist."
-        end
+        raise "#{repomdfile} does not exist." unless File.exist?(repomdfile)
         # call gpg to sign the repository
         `gpg -sab -u #{keyid} -o '#{repomdfile}.asc' '#{repomdfile}'`
-        if not File.exist?("#{repomdfile}.asc")
+        if !File.exist?("#{repomdfile}.asc")
           log.info "Could't not generate signature #{repomdfile}.asc"
           exit(1)
         else
@@ -96,7 +92,7 @@ module EnhanceRepo
         # now export the public key
         `gpg --export -a -o '#{repomdfile}.key' #{keyid}`
 
-        if not File.exist?("#{repomdfile}.key")
+        if !File.exist?("#{repomdfile}.key")
           log.info "Could't not generate public key #{repomdfile}.key"
           exit(1)
         else
@@ -106,7 +102,7 @@ module EnhanceRepo
 
       def write
         datas = [@primary, @filelists, @other, @updateinfo,
-                 @susedata, @suseinfo, @deltainfo, @products, @patterns ]
+                 @susedata, @suseinfo, @deltainfo, @products, @patterns]
 
         # select the datas that are not empty
         # those need to be saved
@@ -121,14 +117,14 @@ module EnhanceRepo
         # now look for files that changed or dissapeared
         Dir.chdir(@dir) do
           # look all files except the index itself
-          metadata_files = Dir["repodata/*.xml*"].reject do |x|
+          metadata_files = Dir['repodata/*.xml*'].reject do |x|
             x =~ /#{@index.metadata_filename}/ ||
               x =~ /\.key$/ ||
               x =~ /\.asc$/
           end
           # remove datas in the index not present in the disk
           @index.resources.reject! do |resource|
-            reject = ! metadata_files.include?(resource.location)
+            reject = !metadata_files.include?(resource.location)
             log.info "Removing not existing #{resource.location} from index" if reject
             reject
           end

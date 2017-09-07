@@ -37,13 +37,13 @@ class UpdateInfo_test < Test::Unit::TestCase
     updateinfo = EnhanceRepo::RpmMd::UpdateInfo.new(config)
 
     Dir.mktmpdir do |dir|
-      updateinfo.generate_update(['a', 'b'], File.join(dir, 'repoparts'))
+      updateinfo.generate_update(%w[a b], File.join(dir, 'repoparts'))
       puts Dir[File.join(dir, '*')]
 
-      updateinfo.read_repoparts(:repoparts_path => File.join(dir, 'repoparts'))
+      updateinfo.read_repoparts(repoparts_path: File.join(dir, 'repoparts'))
 
-      assert ! updateinfo.empty?, "updateinfo can't be empty"
-      assert_equal 1, updateinfo.size, "updateinfo contains 1 update"
+      assert !updateinfo.empty?, "updateinfo can't be empty"
+      assert_equal 1, updateinfo.size, 'updateinfo contains 1 update'
 
       Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/updateinfo.xml.gz')) do |_expected_updateinfo|
         buffer = StringIO.new

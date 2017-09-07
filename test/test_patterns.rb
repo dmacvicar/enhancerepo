@@ -33,7 +33,7 @@ describe EnhanceRepo::RpmMd::Patterns do
     @patterns = EnhanceRepo::RpmMd::Patterns.new(@config)
   end
 
-  describe "pattern is serialized correctly" do
+  describe 'pattern is serialized correctly' do
     before do
       path = File.join(test_data('susetags-patterns'), 'Basis-Devel.pat.gz')
       Zlib::GzipReader.open(path) do |gz|
@@ -42,13 +42,13 @@ describe EnhanceRepo::RpmMd::Patterns do
       end
     end
 
-    it "should have the same xml structure as our template" do
+    it 'should have the same xml structure as our template' do
       expected = File.read(File.join(test_data('rpmmd-patterns'), 'Basis-Devel.xml'))
       expected.must_be_xml_equivalent_with @pattern.to_xml
     end
   end
 
-  #describe "generates yum patterns from susetags files" do
+  # describe "generates yum patterns from susetags files" do
 
   #  Dir.mktmpdir do |dir|
   #    before do
@@ -74,14 +74,12 @@ describe EnhanceRepo::RpmMd::Patterns do
   #   end
   # end
 
-  #end
+  # end
 
-  #end
+  # end
 end
 
-#patterns.read_repoparts(:repoparts_path => dir)
+# patterns.read_repoparts(:repoparts_path => dir)
 #      buffer = StringIO.new
 #      patterns.write(buffer)
 #      assert buffer.size > 0, "patterns file not created"
-
-

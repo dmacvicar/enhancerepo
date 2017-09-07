@@ -33,7 +33,7 @@ describe EnhanceRepo::RpmMd::DeltaInfo do
     @deltainfo.add_deltas
   end
 
-  it "should generate the expected xml" do
+  it 'should generate the expected xml' do
     @deltainfo.wont_be_empty
     @deltainfo.delta_count.must_equal 1
 

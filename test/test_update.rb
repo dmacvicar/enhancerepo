@@ -34,33 +34,33 @@ class Update_test < Test::Unit::TestCase
   def test_smart_fill_blanks
     update = EnhanceRepo::RpmMd::Update.new
 
-    update.description = "fix crash on exit"
-    #assert_equal "recommended", update
+    update.description = 'fix crash on exit'
+    # assert_equal "recommended", update
 
     # simple test
-    update.description = "bnc#1245 b.nc-4566 BNC 123 cve-3443-434 CVE-3333 bug 1234"
+    update.description = 'bnc#1245 b.nc-4566 BNC 123 cve-3443-434 CVE-3333 bug 1234'
     refs = []
-    update.each_reference_for(:keyword => 'bnc', :href => 'http://novell.com/:id', :title => 'novell bug #:id') do |r|
+    update.each_reference_for(keyword: 'bnc', href: 'http://novell.com/:id', title: 'novell bug #:id') do |r|
       refs << r
     end
     refs.each { |r| puts r.inspect }
-    assert_equal 3, refs.size, "3 references should be detected"
+    assert_equal 3, refs.size, '3 references should be detected'
 
     # test for FOO xxxx-yyyy
     refs = []
-    update.each_reference_for(:keyword => 'cve', :href => 'http://cve.com/:id', :title => 'cve advisory #:id') do |r|
+    update.each_reference_for(keyword: 'cve', href: 'http://cve.com/:id', title: 'cve advisory #:id') do |r|
       refs << r
     end
     refs.each { |r| puts r.inspect }
-    assert_equal 2, refs.size, "2 CVE references should be detected"
+    assert_equal 2, refs.size, '2 CVE references should be detected'
 
     # test for multiple keywords
     refs = []
-    update.each_reference_for(:keywords => ['bug', 'bnc'], :href => 'http://novell.com/:id', :title => 'bug #:id') do |r|
+    update.each_reference_for(keywords: %w[bug bnc], href: 'http://novell.com/:id', title: 'bug #:id') do |r|
       refs << r
     end
     refs.each { |r| puts r.inspect }
-    assert_equal 4, refs.size, "4 bugs should be detected"
+    assert_equal 4, refs.size, '4 bugs should be detected'
 
     # test the pre-configured reference detectors
     refs = []
@@ -69,6 +69,6 @@ class Update_test < Test::Unit::TestCase
     end
     puts
     refs.each { |r| puts r.inspect }
-    assert_equal 5, refs.size, "4 bugs should be detected"
+    assert_equal 5, refs.size, '4 bugs should be detected'
   end
 end

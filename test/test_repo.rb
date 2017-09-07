@@ -42,13 +42,13 @@ class Repo_test < Test::Unit::TestCase
       config.outputdir = dir
 
       repo = EnhanceRepo::RpmMd::Repo.new(config)
-      assert_equal 4, repo.index.resources.size, "repository index has 4 resources"
+      assert_equal 4, repo.index.resources.size, 'repository index has 4 resources'
       FileUtils.rm File.join(dir, 'repodata/filelists.xml.gz')
       repo.write
 
       # start again
       repo = EnhanceRepo::RpmMd::Repo.new(config)
-      assert_equal 3, repo.index.resources.size, "repository index has 3 resources, after deleting one"
+      assert_equal 3, repo.index.resources.size, 'repository index has 3 resources, after deleting one'
 
       ['newdata1.xml', 'newdata2.xml'].each do |newdata|
         Zlib::GzipWriter.open(File.join(dir, "repodata/#{newdata}.xml.gz")) do |f|
@@ -56,14 +56,14 @@ class Repo_test < Test::Unit::TestCase
         end
       end
 
-      File.open(File.join(dir, "repodata/newdata3.xml"), 'w') do |f|
+      File.open(File.join(dir, 'repodata/newdata3.xml'), 'w') do |f|
         f.write('<xml></xml>')
       end
 
       repo.write
 
       repo = EnhanceRepo::RpmMd::Repo.new(config)
-      assert_equal 6, repo.index.resources.size, "repository index has 6 resources, after adding three"
+      assert_equal 6, repo.index.resources.size, 'repository index has 6 resources, after adding three'
     end
   end
 end
