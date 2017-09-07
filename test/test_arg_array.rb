@@ -31,28 +31,20 @@ class ArrayWrapper_test < Minitest::Test
   def test_array_arg
     # write a temporary file and write
     orig_array = %w[barcelona paris newyork]
+    file_array = %w[lyon zebra wolf]
     Dir.mktmpdir do |dir|
       # Create a file
       file_name = File.join(dir, 'somefile.txt')
-      file_array = %w[lyon zebra wolf]
-      File.open(file_name, 'w+') do |f|
-        file_array.each do |element|
-          f.puts element
-        end
-      end
+      File.write(file_name, file_array.join('\n'))
 
-      # add the file name
-      array = orig_array
-      array.insert(1, file_name)
-
-      arg = EnhanceRepo::ArrayArg.new(array)
+      arg = EnhanceRepo::ArrayArg.new(orig_array + file_array)
 
       assert_equal(6, arg.size)
-      assert(!arg.include?(file_name), 'orginal file should not be included')
-      (orig_array + file_array).all? do |x|
-        assert arg.include?(x), "element '#{x}' should be included"
+      refute_includes arg, file_name
+      (orig_array + file_array).all? do |el|
+        assert_includes arg, el
       end
-      assert_equal('barcelona,lyon,zebra,wolf,paris,newyork', arg.join(','))
+      assert_equal(arg.to_a, orig_array + file_array)
     end
   end
 end

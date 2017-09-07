@@ -77,8 +77,9 @@ module EnhanceRepo
 
     # see Enumerable
     def each
-      block_given? ?
-        expanded.each { |x| yield x } : Enumerator.new(expanded)
+      return enum_for(:each) unless block_given?
+      expanded.each { |x| yield x }
+      self
     end
   end
 end
