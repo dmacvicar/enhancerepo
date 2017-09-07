@@ -1,5 +1,7 @@
 AllCops:
   Exclude:
     - 'test/data/**/*'
+    - 'vendor/**/*'
+
 
 inherit_from: .rubocop_todo.yml
