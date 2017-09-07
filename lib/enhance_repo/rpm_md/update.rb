@@ -77,47 +77,47 @@ module EnhanceRepo
       # update description
       include UpdateSmartFields
 
-      attr_accessor :updateid
+      attr_writer :updateid
       def updateid
           @updateid ||= "unknown"
       end
-      attr_accessor :status
+      attr_writer :status
       def status
           @status ||= "stable"
       end
-      attr_accessor :from
+      attr_writer :from
       def from
           @from ||= "#{ENV['USER']}@#{ENV['HOST']}"
       end
-      attr_accessor :type
+      attr_writer :type
       def type
           @type ||= "optional"
       end
-      attr_accessor :version
+      attr_writer :version
       def version
           @version ||= 1
       end
-      attr_accessor :release
+      attr_writer :release
       def release
           @release ||= "unknown"
       end
-      attr_accessor :issued
+      attr_writer :issued
       def issued
           @issued ||= Time.now.to_i
       end
-      attr_accessor :references
+      attr_writer :references
       def references
           @references ||= []
       end
-      attr_accessor :description
+      attr_writer :description
       def description
           @description ||= ""
       end
-      attr_accessor :title
+      attr_writer :title
       def title
           @title ||= "untitled update"
       end
-      attr_accessor :packages
+      attr_writer :packages
       def packages
           @packages ||= []
       end
@@ -149,16 +149,16 @@ module EnhanceRepo
           b.release(release)
           b.description(description)
           # serialize attr_reader :eferences
-          b.references do |b|
+          b.references do
             references.each do |r|
               b.reference('href' => r.href, 'id' => r.referenceid, 'title' => r.title, 'type' => r.type )
             end
           end
           # done with references
-          b.pkglist do |b|
-            b.collection do |b|
+          b.pkglist do
+            b.collection do
               packages.each do |pkg|
-                b.package('name' => pkg.name, 'arch'=> pkg.arch, 'version'=>pkg.version.v, 'release'=>pkg.version.r) do |b|
+                b.package('name' => pkg.name, 'arch'=> pkg.arch, 'version'=>pkg.version.v, 'release'=>pkg.version.r) do
                   b.filename(File.basename(pkg.path))
                 end
               end
