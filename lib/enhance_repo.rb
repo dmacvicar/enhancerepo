@@ -28,7 +28,6 @@ require 'enhance_repo/logger'
 require 'enhance_repo/config_opts'
 require 'enhance_repo/rpm_md'
 require 'enhance_repo/array_arg'
-require 'enhance_repo/cli'
 
 
 

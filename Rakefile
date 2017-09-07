@@ -1,49 +1,31 @@
-require "rake"
-require 'rdoc/task'
-require "rake/testtask"
-
-$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
-require "enhance_repo/version"
-
-task :build do
-  system "gem build enhancerepo.gemspec"
-end
-
-task :install => :build do
-  system "sudo gem install enhancerepo-#{EnhanceRepo::VERSION}.gem"
-end
-
-Rake::TestTask.new do |t|
-  t.libs << File.expand_path('../test', __FILE__)
-  t.libs << File.expand_path('../', __FILE__)
-  t.test_files = FileList['test/test*.rb']
-  t.verbose = true
-end
+$LOAD_PATH.push(File.join(File.dirname(__FILE__), 'lib'))
+require 'bundler/gem_tasks'
+require 'enhance_repo'
+require 'rake/testtask'
 
 extra_docs = ['README*', 'TODO*', 'CHANGELOG*']
 
+task default: [:test]
+Rake::TestTask.new do |t|
+  t.test_files = Dir.glob(File.join(Dir.pwd, '/test/test_*.rb'))
+  t.verbose = true if ENV['DEBUG']
+end
+
 begin
- require 'yard'
+  require 'yard'
   YARD::Rake::YardocTask.new(:doc) do |t|
     t.files   = ['lib/**/*.rb', *extra_docs]
+    t.options = ['--no-private']
   end
 rescue LoadError
-  STDERR.puts "Install yard if you want prettier docs"
+  STDERR.puts 'Install yard if you want prettier docs'
+  require 'rdoc/task'
   Rake::RDocTask.new(:doc) do |rdoc|
-    if File.exist?("VERSION.yml")
-      config = File.read("VERSION")
-      version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
-    else
-      version = ""
-    end
-    rdoc.rdoc_dir = "doc"
-    rdoc.title = "enhancerepo #{version}"
+    rdoc.rdoc_dir = 'doc'
+    rdoc.title = "enhancerepo #{EnhanceRepo::VERSION}"
     extra_docs.each { |ex| rdoc.rdoc_files.include ex }
   end
 end
-
-task :default => ["test"]
-
 
 desc "Insert GPL into all source files"
 task :GPL do
