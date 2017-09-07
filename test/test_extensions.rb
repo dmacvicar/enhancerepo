@@ -26,7 +26,7 @@
 #
 require_relative 'helper'
 
-class Extensions_test < Test::Unit::TestCase
+class Extensions_test < Minitest::Test
   def setup; end
 
   def test_void; end

@@ -26,10 +26,9 @@
 #
 require_relative 'helper'
 require 'pathname'
-require 'rubygems'
 require 'stringio'
 
-class RpmMd_test < Test::Unit::TestCase
+class RpmMd_test < Minitest::Test
   def setup
     #    $stderr << "RpmMd_test"
     rpms = Pathname.new(File.join(File.dirname(__FILE__), 'data', 'rpms'))
@@ -42,7 +41,8 @@ class RpmMd_test < Test::Unit::TestCase
 
   def test_disk_info
     ARGV << '--outputdir' << File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}') << '--primary'
-    config = EnhanceRepo::ConfigOpts.instance.parse_args!(@rpms1)
+    EnhanceRepo::ConfigOpts.instance.dir = @rpms1
+    config = EnhanceRepo::ConfigOpts.instance.parse_args!
     # config.outputdir = Pathname.new(File.join(Dir.tmpdir, 'enhancerepo#{Time.now.to_i}'))
     # config.dir = @rpms1
     @repo = EnhanceRepo::RpmMd::Repo.new(config)

@@ -28,7 +28,7 @@ require_relative 'helper'
 
 require 'stringio'
 
-class Update_test < Test::Unit::TestCase
+class Update_test < Minitest::Test
   def setup; end
 
   def test_smart_fill_blanks

@@ -27,7 +27,7 @@
 require_relative 'helper'
 require 'stringio'
 
-class ArrayWrapper_test < Test::Unit::TestCase
+class ArrayWrapper_test < Minitest::Test
   def test_array_arg
     # write a temporary file and write
     orig_array = %w[barcelona paris newyork]

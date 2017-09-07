@@ -28,7 +28,7 @@ require_relative 'helper'
 require 'stringio'
 require 'zlib'
 
-class Primary_test < Test::Unit::TestCase
+class Primary_test < Minitest::Test
   def setup
     #	  $stderr << "Primary_test"
   end

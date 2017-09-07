@@ -25,8 +25,6 @@
 #++
 #
 $LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
-require 'test/unit'
-require 'mocha'
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'active_support'

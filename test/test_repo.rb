@@ -30,7 +30,7 @@ require 'zlib'
 require 'nokogiri'
 require 'fileutils'
 
-class Repo_test < Test::Unit::TestCase
+class Repo_test < Minitest::Test
   def setup; end
 
   def test_reading_existing_repo
@@ -38,7 +38,8 @@ class Repo_test < Test::Unit::TestCase
       # copy the repodata of a repository to a temp directory
       FileUtils.cp_r File.join(test_data('rpms/repo-with-product/repodata')), dir
 
-      config = EnhanceRepo::ConfigOpts.instance.parse_args!(dir)
+      EnhanceRepo::ConfigOpts.instance.dir = dir
+      config = EnhanceRepo::ConfigOpts.instance.parse_args!
       config.outputdir = dir
 
       repo = EnhanceRepo::RpmMd::Repo.new(config)
