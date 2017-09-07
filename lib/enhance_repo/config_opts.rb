@@ -196,8 +196,10 @@ EOS
       opts = read_command_line
       read_opts(opts)
 
-      @dir = ARGV.shift
-      Trollop.die 'Need to specify target directory.' unless @dir
+      unless @dir
+        @dir = ARGV.shift
+        Trollop.die 'Need to specify target directory.' unless @dir
+      end
 
       if !File.exist?(@dir) || !File.directory?(@dir)
         Trollop.die "'#{@dir}' is not a valid directory."
