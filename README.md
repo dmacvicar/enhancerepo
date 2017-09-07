@@ -13,6 +13,12 @@ Reference implementation for future rpmmd extensions.
 
 requires ruby-rpm.
 
+## TODO
+
+ [ ] replace accessors and initialization with ActiveSupport's
+     attr_accessor_with_default or something similar.
+
+
 ## Authors
 
 * Duncan Mac-Vicar P. <dmacvicar@suse.de>
