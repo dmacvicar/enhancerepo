@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 require "enhance_repo/version"
@@ -29,11 +30,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency('diffy')
   s.add_development_dependency('equivalent-xml')
 
-  s.files        = Dir.glob("bin/*") + Dir.glob("lib/**/*") + %w(CHANGELOG.rdoc README.rdoc TODO.rdoc)
+  s.files        = Dir.glob("bin/*") + Dir.glob("lib/**/*") + %w[CHANGELOG.rdoc README.rdoc TODO.rdoc]
   s.require_path = 'lib'
 
   s.bindir = 'bin'
-  s.executables = Dir.glob('bin/*').map {|x| File.basename x}
+  s.executables = Dir.glob('bin/*').map { |x| File.basename x }
   s.default_executable = 'enhancerepo'
 
   s.post_install_message = <<-POST_INSTALL_MESSAGE

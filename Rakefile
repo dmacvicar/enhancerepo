@@ -5,7 +5,7 @@ require 'rake/testtask'
 
 extra_docs = ['README*', 'TODO*', 'CHANGELOG*']
 
-task default: [:test]
+task :default => [:test]
 Rake::TestTask.new do |t|
   t.test_files = Dir.glob(File.join(Dir.pwd, '/test/test_*.rb'))
   t.verbose = true if ENV['DEBUG']
@@ -34,7 +34,7 @@ task :GPL do
     File.open(filename, 'r+') do |file|
       lines = file.readlines      
       # Skip shebang line
-      i = (lines[0].index('#!') == 0) ? 1 : 0
+      i = lines[0].index('#!') == 0 ? 1 : 0
       # Already have header?
       next if lines[i].index('#--') == 0
       

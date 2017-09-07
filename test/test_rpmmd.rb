@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -29,9 +30,8 @@ require 'rubygems'
 require 'stringio'
 
 class RpmMd_test < Test::Unit::TestCase
-
   def setup
-#    $stderr << "RpmMd_test"
+    #    $stderr << "RpmMd_test"
     rpms = Pathname.new(File.join(File.dirname(__FILE__), 'data', 'rpms'))
     @rpms1 = rpms + 'update-test-11.1'
     @rpms3 = rpms + 'update-test-factory'

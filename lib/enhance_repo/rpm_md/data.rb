@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 # 
 # enhancerepo is a rpm-md repository metadata tool.
@@ -26,7 +27,6 @@
 
 module EnhanceRepo
   module RpmMd
-
     # represents a metadata unit
     class Data
       include Logger
@@ -50,6 +50,5 @@ module EnhanceRepo
         true
       end
     end
-
   end
 end

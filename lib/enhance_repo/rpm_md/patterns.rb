@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -39,9 +40,7 @@ require 'enhance_repo/pattern'
 
 module EnhanceRepo
   module RpmMd
-
     class Patterns < Data
-
       def initialize(config)
         @dir = config.dir
         @basedir = config.updatesbasedir
@@ -79,7 +78,7 @@ module EnhanceRepo
       def generate_patterns(files, outputdir)
         pats = []
         files.each do |file|
-          raise "#{file} does not exist" if not File.exist?(file)
+          raise "#{file} does not exist" unless File.exist?(file)
           Zlib::GzipReader.open(file) do |gz|
             pats += EnhanceRepo::Susetags::PatternReader.read_patterns_from_tags(gz)
           end
@@ -106,7 +105,7 @@ module EnhanceRepo
         patternsfile = File.join(@dir, metadata_filename)
 
         # we can't split without an patterns file
-        raise "#{patternsfile} does not exist" if not File.exist?(patternsfile)
+        raise "#{patternsfile} does not exist" unless File.exist?(patternsfile)
         Zlib::GzipReader.open(patternsfile) do |gz|
           document = REXML::Document.new(gz)
           root = document.root
@@ -121,7 +120,7 @@ module EnhanceRepo
             end
             version = 0
             updatefilename = ""
-            while ( File.exists?(patternfilename = File.join(outputdir, "pattern-#{name}_#{version.to_s}.xml") ) )
+            while File.exist?(patternfilename = File.join(outputdir, "pattern-#{name}_#{version}.xml") ) 
               version += 1
             end
             log.info "Saving pattern part to '#{patternfilename}'."
@@ -138,19 +137,18 @@ module EnhanceRepo
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
         builder.patterns('xmlns' => "http://novell.com/package/metadata/suse/pattern",
-                               'xmlns:rpm' => "http://linux.duke.edu/metadata/rpm") do |b|
+                         'xmlns:rpm' => "http://linux.duke.edu/metadata/rpm") do |_b|
           pattern_regex = Regexp.new('<pattern\s+xmlns.+>\s*$');
           @patterns.each do |pattern|
             File.open(pattern).each_line do |line|
-              if ! line.start_with?("<?xml")
-                if line.match(pattern_regex)
-                  # all single pattern have the namespace attributes
-                  # we can remove them in the combined file
-                  file << "<pattern>\n"
-                else
-                  file << line
-                end
-              end
+              next if line.start_with?("<?xml")
+              file << if line.match(pattern_regex)
+                # all single pattern have the namespace attributes
+                # we can remove them in the combined file
+                "<pattern>\n"
+                      else
+                line
+                      end
             end
           end
         end #done builder

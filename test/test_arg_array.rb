@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -27,14 +28,13 @@ require_relative 'helper'
 require 'stringio'
 
 class ArrayWrapper_test < Test::Unit::TestCase
-
   def test_array_arg
     # write a temporary file and write
-    orig_array = ['barcelona', 'paris', 'newyork' ]
+    orig_array = %w[barcelona paris newyork]
     Dir.mktmpdir do |dir|
       # Create a file
       file_name = File.join(dir, 'somefile.txt')
-      file_array = ['lyon', 'zebra', 'wolf']
+      file_array = %w[lyon zebra wolf]
       File.open(file_name, 'w+') do |f|
         file_array.each do |element|
           f.puts element
@@ -54,6 +54,5 @@ class ArrayWrapper_test < Test::Unit::TestCase
       end
       assert_equal("barcelona,lyon,zebra,wolf,paris,newyork", arg.join(','))
     end
-
   end
 end

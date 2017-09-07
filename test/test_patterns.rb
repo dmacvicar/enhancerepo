@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -27,7 +28,6 @@ require_relative 'helper'
 require 'stringio'
 
 describe EnhanceRepo::RpmMd::Patterns do
-
   before do
     @config = EnhanceRepo::ConfigOpts.instance.parse_args!(test_data('rpms/repo-1'))
     @patterns = EnhanceRepo::RpmMd::Patterns.new(@config)
@@ -44,7 +44,7 @@ describe EnhanceRepo::RpmMd::Patterns do
 
     it "should have the same xml structure as our template" do
       expected = File.read(File.join(test_data('rpmmd-patterns'), 'Basis-Devel.xml'))
-      expected.must_be_xml_equivalent_with  @pattern.to_xml
+      expected.must_be_xml_equivalent_with @pattern.to_xml
     end
   end
 
@@ -60,21 +60,21 @@ describe EnhanceRepo::RpmMd::Patterns do
   #      @desc_list << test_data('susetags-patterns/32bit-11-38.5.x86_64.pat.gz')
   #    end
 
-#      it "should write the patterns correctly" do
-#        @patterns.generate_patterns(@desc_list, @dir)
-#      end
+  #      it "should write the patterns correctly" do
+  #        @patterns.generate_patterns(@desc_list, @dir)
+  #      end
 
-     # ['pattern-multimedia_0', 'pattern-base_0', 'pattern-base-32bit_0',
-     #  'pattern-32bit_0'].each do |pat|
-     #   it "should generate the xml for #{pat}" do
-     #     written = File.open(File.join(@dir, "#{pat}.xml")).read
-     #     expected = File.open(test_data("rpmmd-patterns/#{pat}.xml")).read
-     #     expected.must_equal_xml_structure written
-     #     #expected.must_be_dom_equal_with written
-     #   end
-     # end
+  # ['pattern-multimedia_0', 'pattern-base_0', 'pattern-base-32bit_0',
+  #  'pattern-32bit_0'].each do |pat|
+  #   it "should generate the xml for #{pat}" do
+  #     written = File.open(File.join(@dir, "#{pat}.xml")).read
+  #     expected = File.open(test_data("rpmmd-patterns/#{pat}.xml")).read
+  #     expected.must_equal_xml_structure written
+  #     #expected.must_be_dom_equal_with written
+  #   end
+  # end
 
-    #end
+  #end
 
   #end
 end

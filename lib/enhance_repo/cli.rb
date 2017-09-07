@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -52,7 +53,7 @@ time = Benchmark.measure do
     repomd.susedata.add_keywords if config.keywords
     repomd.susedata.add_disk_usage if config.diskusage
 
-    if not config.generate_update.nil?
+    unless config.generate_update.nil?
       repomd.updateinfo.generate_update(config.generate_update, File.join(config.outputdir, 'repoparts') )
     end
 
@@ -60,7 +61,7 @@ time = Benchmark.measure do
     repomd.updateinfo.split_updates(File.join(config.outputdir, 'repoparts')) if config.split_updates
 
     repomd.patterns.split_patterns(File.join(config.outputdir, 'repoparts')) if config.split_patterns
-    if not config.generate_patterns.nil?
+    unless config.generate_patterns.nil?
       repomd.patterns.generate_patterns(config.generate_patterns, File.join(config.outputdir, 'repoparts'))
     end
     repomd.patterns.read_repoparts if config.patterns || ! config.generate_patterns.nil?
@@ -71,7 +72,7 @@ time = Benchmark.measure do
     repomd.products.read_packages if config.products
 
     # add expiration date
-    repomd.suseinfo.expire = config.expire if not config.expire.nil?
+    repomd.suseinfo.expire = config.expire unless config.expire.nil?
 
     # index if requested
     repomd.index if config.index
@@ -80,7 +81,7 @@ time = Benchmark.measure do
     repomd.write
 
     # perform signature of the repository
-    repomd.sign(config.signkey) if not config.signkey.nil?
+    repomd.sign(config.signkey) unless config.signkey.nil?
   rescue Exception => excp
     EnhanceRepo.logger.fatal excp.message
     if EnhanceRepo.enable_debug
@@ -90,6 +91,5 @@ time = Benchmark.measure do
       EnhanceRepo.logger.info "Pass --debug for more information..."
     end
   end
-
 end
 EnhanceRepo.logger.info(time) if config.benchmark

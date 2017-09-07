@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -29,7 +30,6 @@ require 'builder'
 
 module EnhanceRepo
   module RpmMd
-
     # represents a set non standard data tags
     # but it is not part of the standard, yet still associated
     # with a particular package (so with primary.xml semantics
@@ -41,6 +41,5 @@ module EnhanceRepo
         @name = name
       end
     end
-
   end
 end

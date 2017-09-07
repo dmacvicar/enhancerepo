@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -28,10 +29,8 @@ require 'enhance_repo/rpm_md/resource'
 
 module EnhanceRepo
   module RpmMd
-
     # represents the repomd index
     class Index < Data
-
       include EnhanceRepo::Logger
 
       attr_accessor :products, :keywords
@@ -76,10 +75,9 @@ module EnhanceRepo
         if File.extname(abspath) == '.gz'
           # we have a different openchecksum
           r.openchecksum = EnhanceRepo::ConfigOpts.instance.digest_class.hexdigest(Zlib::GzipReader.new(File.new(abspath)).read)
-          r.opensize = (Zlib::GzipReader.new(File.new(abspath)).read).bytesize
+          r.opensize = Zlib::GzipReader.new(File.new(abspath)).read.bytesize
         end
         add_resource(r)
-
       end
 
       # add resource
@@ -144,13 +142,8 @@ module EnhanceRepo
               b.tag!('database_version', resource.database_version) if resource.database_version
             end
           end
-
         end #builder
-
       end
-
     end
-
   end
-
 end

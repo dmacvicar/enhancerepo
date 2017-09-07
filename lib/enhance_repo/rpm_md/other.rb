@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -32,7 +33,6 @@ module EnhanceRepo
     # http://en.opensuse.org/Standards/Rpm_Metadata
     #
     class Other < Data
-
       def initialize(dir)
         @dir = dir
         @rpmfiles = []
@@ -63,8 +63,6 @@ module EnhanceRepo
           # next package
         end
       end
-
     end
-
   end
 end

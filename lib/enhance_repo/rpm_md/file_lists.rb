@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -26,7 +27,6 @@
 
 module EnhanceRepo
   module RpmMd
-
     # represents
     # filelist data
     #
@@ -34,7 +34,6 @@ module EnhanceRepo
     # http://en.opensuse.org/Standards/Rpm_Metadata
     #
     class FileLists < Data
-
       include Logger
 
       def initialize(dir)
@@ -69,15 +68,13 @@ module EnhanceRepo
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
         builder.filelists( 'xmlns' => "http://linux.duke.edu/metadata/filelists",
-                           'packages'=> @rpmfiles.size ) do |b|
+                           'packages'=> @rpmfiles.size ) do |_b|
           @rpmfiles.each do |rpmfile|
             write_package(file, rpmfile)
           end
           # next package
         end
       end
-
     end
-
   end
 end

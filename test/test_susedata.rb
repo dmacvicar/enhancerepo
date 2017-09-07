@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -28,7 +29,6 @@ require 'stringio'
 require 'zlib'
 
 describe EnhanceRepo::RpmMd::SuseData do
-
   describe "a generated susedata should be what is expected" do
     before do
       @susedata = EnhanceRepo::RpmMd::SuseData.new(test_data('rpms/repo-1'))
@@ -47,7 +47,6 @@ describe EnhanceRepo::RpmMd::SuseData do
 
     it "should generate the right xml" do
       Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/susedata.xml.gz')) do |expected_susedata|
-
         buffer = StringIO.new
         @susedata.write(buffer)
         assert_xml_equivalent(expected_susedata.read, buffer.string)

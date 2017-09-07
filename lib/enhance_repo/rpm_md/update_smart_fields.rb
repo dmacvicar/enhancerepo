@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -27,7 +28,6 @@
 
 module EnhanceRepo
   module RpmMd
-
     module UpdateSmartFields
       # detects references for the given
       # configuration
@@ -48,12 +48,12 @@ module EnhanceRepo
       def each_reference_for(opts={})
         update = self
         keywords = Set.new
-        keywords << opts[:keyword] if opts.has_key?(:keyword)
-        keywords = keywords.merge(opts[:keywords].to_set) if opts.has_key?(:keywords)
+        keywords << opts[:keyword] if opts.key?(:keyword)
+        keywords = keywords.merge(opts[:keywords].to_set) if opts.key?(:keywords)
 
         regexps = []
         keywords.each do |keyword|
-          specifier = keyword.each_char.map{|x| "#{x}\\\.?"}.join
+          specifier = keyword.each_char.map { |x| "#{x}\\\.?" }.join
           regexps << "#{specifier}[-|\\\s#|\\\s|#](\\\d+[-|\\\d+]*)"
         end
 
@@ -62,9 +62,9 @@ module EnhanceRepo
           references.each do |ref_id|
             ref = Reference.new
             ref.referenceid = ref_id.first
-            ref.href = opts[:href].gsub(/:id/, ref_id.join) if opts.has_key?(:href)
-            ref.title = opts[:title].gsub(/:id/, ref_id.join) if opts.has_key?(:title)
-            ref.type = opts[:type] if opts.has_key?(:type)
+            ref.href = opts[:href].gsub(/:id/, ref_id.join) if opts.key?(:href)
+            ref.title = opts[:title].gsub(/:id/, ref_id.join) if opts.key?(:title)
+            ref.type = opts[:type] if opts.key?(:type)
             yield ref
           end
         end
@@ -75,12 +75,12 @@ module EnhanceRepo
       # ones
       # in the update description
       def each_detected_reference
-        each_reference_for(:keyword => 'bnc', :href => 'http://bugzilla.novell.com/:id', :title => 'Novell bugzilla #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keywords => ['rh', 'rhbz'], :href => 'http://bugzilla.redhat.com/:id', :title => 'Redhat bugzilla #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'bgo', :href => 'http://bugzilla.gnome.org/:id', :title => 'Gnome bug #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) {|x| yield x}
-        each_reference_for(:keyword => 'cve', :href => 'http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-:id', :title => 'CVE-:id', :type => 'cve' ) {|x| yield x}
+        each_reference_for(:keyword => 'bnc', :href => 'http://bugzilla.novell.com/:id', :title => 'Novell bugzilla #:id', :type => 'bugzilla' ) { |x| yield x }
+        each_reference_for(:keywords => ['rh', 'rhbz'], :href => 'http://bugzilla.redhat.com/:id', :title => 'Redhat bugzilla #:id', :type => 'bugzilla' ) { |x| yield x }
+        each_reference_for(:keyword => 'bgo', :href => 'http://bugzilla.gnome.org/:id', :title => 'Gnome bug #:id', :type => 'bugzilla' ) { |x| yield x }
+        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) { |x| yield x }
+        each_reference_for(:keyword => 'kde', :href => 'http://bugs.kde.org/:id', :title => 'KDE bug #:id', :type => 'bugzilla' ) { |x| yield x }
+        each_reference_for(:keyword => 'cve', :href => 'http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-:id', :title => 'CVE-:id', :type => 'cve' ) { |x| yield x }
       end
 
       # automatically set empty fields
@@ -103,7 +103,7 @@ module EnhanceRepo
           # then name the fix according to the package, and the type
           update.title << "for #{update.packages.first.name}"
           update.updateid = update.packages.first.name
-        elsif update.packages.size < 1
+        elsif update.packages.empty?
           # do nothing, it is may be just a message
         else
           # figure out what the multiple packages are
@@ -122,7 +122,6 @@ module EnhanceRepo
         # now figure out and fill references
         each_detected_reference { |ref| update.references << ref }
       end
-
     end
   end
 end

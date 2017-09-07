@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -28,7 +29,6 @@ require 'stringio'
 require 'zlib'
 
 describe EnhanceRepo::RpmMd::Products do
-
   describe "a generated products should be what is expected" do
     before do
       @products = EnhanceRepo::RpmMd::Products.new(test_data('rpms/repo-with-prouct'))
@@ -44,7 +44,6 @@ describe EnhanceRepo::RpmMd::Products do
 
     it "should generate the right xml" do
       Zlib::GzipReader.open(test_data('rpms/repo-with-product/repodata/products.xml.gz')) do |expected_products|
-
         buffer = StringIO.new
         @products.write(buffer)
         assert_xml_equivalent(expected_products.read, buffer.string)

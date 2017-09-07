@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -30,13 +31,10 @@ require 'prettyprint'
 require 'stringio'
 
 module EnhanceRepo
-
   module RpmMd
-
     # helper to write out a pattern in
     # rpmmd format
     module PatternWriter
-
       def to_xml
         buffer = StringIO.new
         write_xml(buffer)
@@ -52,13 +50,13 @@ module EnhanceRepo
         list = pattern.send(dep).keys.sort do |a, b|
           puts a
           if pattern.send(dep)[a] == 'pattern' &&
-            pattern.send(dep)[b] != 'pattern'
+             pattern.send(dep)[b] != 'pattern'
             -1
           else
             a <=> b
           end
         end
-        if not list.empty?
+        unless list.empty?
           xml['rpm'].send(dep) do
             list.each do |pkg|
               kind = pattern.send(dep)[pkg]
@@ -85,21 +83,21 @@ module EnhanceRepo
               if lang.empty?
                 xml.summary text
               else
-                xml.summary text, 'lang' => "#{lang}"
+                xml.summary text, 'lang' => lang.to_s
               end
             end
             pattern.description.each do |lang, text|
               if lang.empty?
                 xml.description text
               else
-                xml.description text, 'lang' => "#{lang}"
+                xml.description text, 'lang' => lang.to_s
               end
             end
             pattern.category.each do |lang, text|
               if lang.empty?
                 xml.category text
               else
-                xml.category text, 'lang' => "#{lang}"
+                xml.category text, 'lang' => lang.to_s
               end
             end
             xml.uservisible if pattern.visible
@@ -110,14 +108,14 @@ module EnhanceRepo
             write_xml_dependency(xml, pattern, :recommends)
             write_xml_dependency(xml, pattern, :suggests)
 
-            if ! pattern.extends.empty?
+            unless pattern.extends.empty?
               xml.extends do
                 pattern.extends.each do |pkg, kind|
                   xml.item( 'pattern' => pkg ) if kind == "pattern"
                 end
               end
             end
-            if ! pattern.includes.empty?
+            unless pattern.includes.empty?
               xml.includes do
                 pattern.includes.each do |pkg, kind|
                    xml.item( 'pattern' => pkg ) if kind == "pattern"
@@ -129,6 +127,5 @@ module EnhanceRepo
         io << builder.to_xml
       end
     end
-
   end
 end

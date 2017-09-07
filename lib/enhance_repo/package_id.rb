@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -27,7 +28,6 @@
 require 'rpm'
 
 module EnhanceRepo
-
   # thin wrapper over rpm package
   class PackageId
     attr_accessor :checksum
@@ -84,9 +84,7 @@ module EnhanceRepo
     end
 
     def ident
-      "#{@rpm.to_s}.#{@rpm.arch}"
+      "#{@rpm}.#{@rpm.arch}"
     end
-
   end
-
 end

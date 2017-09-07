@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -26,7 +27,6 @@
 
 module EnhanceRepo
   module RpmMd
-
     class Property
       attr_accessor :name
       def initialize(name)
@@ -48,26 +48,25 @@ module EnhanceRepo
         @value = value
       end
 
-      def write(builder, pkgid)
+      def write(builder, _pkgid)
         builder.tag!(@name, @value)
       end
     end
 
     class DiskUsageProperty < Property
-
       def initialize(pkgid, rpmfile)
         super('diskusage')
         @pkgid = pkgid
         @rpmfile = rpmfile
       end
 
-      def write(builder, pkgid)
+      def write(builder, _pkgid)
         dirsizes = Hash.new
         dircount = Hash.new
         `rpm -q --queryformat \"[%{FILENAMES} %{FILESIZES}\n]\" -p '#{@rpmfile}'`.each_line do |line|
           file, size = line.split
-          dirsizes[File.dirname(file)] = 0 if not dirsizes.has_key?(File.dirname(file))
-          dircount[File.dirname(file)] = 0 if not dircount.has_key?(File.dirname(file))
+          dirsizes[File.dirname(file)] = 0 unless dirsizes.key?(File.dirname(file))
+          dircount[File.dirname(file)] = 0 unless dircount.key?(File.dirname(file))
 
           dirsizes[File.dirname(file)] += size.to_i
           dircount[File.dirname(file)] += 1
@@ -81,7 +80,6 @@ module EnhanceRepo
           end
         end
       end
-
     end
 
     # represents SUSE extensions to
@@ -91,7 +89,6 @@ module EnhanceRepo
     # http://en.opensuse.org/Standards/Rpm_Metadata#SUSE_primary_data_.28susedata.xml.29
     #
     class SuseData < Data
-
       def initialize(dir)
         @dir = dir
         @diskusage_enabled = false
@@ -100,13 +97,12 @@ module EnhanceRepo
         # hash for non found values
         # @properties = Hash.new { |h,v| h[v]= Hash.new }
         @properties = Hash.new
-
       end
 
       # add an attribute named name for a
       # package identified with pkgid
       def add_attribute(pkgid, prop)
-        if not @properties.has_key?(pkgid)
+        unless @properties.key?(pkgid)
           @properties.store(pkgid, Hash.new)
         end
         @properties[pkgid][prop.name] = prop
@@ -117,13 +113,12 @@ module EnhanceRepo
         Dir["#{@dir}/**/*.eula"].each do |eulafile|
           base = File.basename(eulafile, '.eula')
           # =>  look for all rpms with that name in that dir
-          Dir["#{File.dirname(eulafile)}/#{base}*.rpm"].each do | rpmfile |
+          Dir["#{File.dirname(eulafile)}/#{base}*.rpm"].each do |rpmfile|
             pkgid = PackageId.new(rpmfile)
-            if pkgid.matches(base)
-              eulacontent = File.new(eulafile).read
-              add_attribute(pkgid, ValueProperty.new('eula', eulacontent))
-              log.info "Adding eula: #{eulafile.to_s} to #{pkgid.to_s}"
-            end
+            next unless pkgid.matches(base)
+            eulacontent = File.new(eulafile).read
+            add_attribute(pkgid, ValueProperty.new('eula', eulacontent))
+            log.info "Adding eula: #{eulafile} to #{pkgid}"
           end
         end
         # end of directory iteration
@@ -135,16 +130,15 @@ module EnhanceRepo
         Dir["#{@dir}/**/*.keywords"].each do |keywordfile|
           base = File.basename(keywordfile, '.keywords')
           # =>  look for all rpms with that name in that dir
-          Dir["#{File.dirname(keywordfile)}/#{base}*.rpm"].each do | rpmfile |
+          Dir["#{File.dirname(keywordfile)}/#{base}*.rpm"].each do |rpmfile|
             pkgid = PackageId.new(rpmfile)
-            if pkgid.matches(base)
-              f = File.new(keywordfile)
-              f.each_line do |line|
-                keyword = line.chop
-                add_attribute(pkgid, ValueProperty.new('keyword', keyword)) if not keyword.empty?
-              end
-              log.info "`-> adding keyword: #{keywordfile.to_s} to #{pkgid.to_s}"
+            next unless pkgid.matches(base)
+            f = File.new(keywordfile)
+            f.each_line do |line|
+              keyword = line.chop
+              add_attribute(pkgid, ValueProperty.new('keyword', keyword)) unless keyword.empty?
             end
+            log.info "`-> adding keyword: #{keywordfile} to #{pkgid}"
           end
         end
         # end of directory iteration
@@ -167,7 +161,7 @@ module EnhanceRepo
             #log.info "Dumping package #{pkgid.to_s}"
             b.package('pkgid' => pkgid.checksum, 'name' => pkgid.name) do
               b.version('ver' => pkgid.version.v, 'rel' => pkgid.version.r, 'arch' => pkgid.arch, 'epoch' => 0.to_s )
-              props.each do |propname, prop|
+              props.each do |_propname, prop|
                 #log.info "   -> property #{prop.name}"
                 prop.write(builder, pkgid)
               end
@@ -185,8 +179,6 @@ module EnhanceRepo
           add_attribute(pkgid, DiskUsageProperty.new(pkgid, rpmfile))
         end
       end
-
     end
-
   end
 end

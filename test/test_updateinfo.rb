@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -27,9 +28,8 @@ require_relative 'helper'
 require 'stringio'
 
 class UpdateInfo_test < Test::Unit::TestCase
-
   def setup
-#	  $stderr << "UpdateInfo_test"
+    #	  $stderr << "UpdateInfo_test"
   end
 
   def test_xml_output
@@ -45,13 +45,11 @@ class UpdateInfo_test < Test::Unit::TestCase
       assert ! updateinfo.empty?, "updateinfo can't be empty"
       assert_equal 1, updateinfo.size, "updateinfo contains 1 update"
 
-      Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/updateinfo.xml.gz')) do |expected_updateinfo|
+      Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/updateinfo.xml.gz')) do |_expected_updateinfo|
         buffer = StringIO.new
         updateinfo.write(buffer)
-#        assert_xml_equal(expected_updateinfo.read, buffer.string)
+        #        assert_xml_equal(expected_updateinfo.read, buffer.string)
       end
-
     end
-
   end
 end

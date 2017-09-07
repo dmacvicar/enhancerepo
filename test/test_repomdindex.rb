@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -26,7 +27,6 @@
 require_relative 'helper'
 
 describe EnhanceRepo::RpmMd::Index do
-
   before do
     @index = EnhanceRepo::RpmMd::Index.new
   end

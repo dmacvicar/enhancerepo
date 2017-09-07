@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -27,7 +28,6 @@ require_relative 'helper'
 require 'stringio'
 
 describe EnhanceRepo::RpmMd::DeltaInfo do
-
   before do
     @deltainfo = EnhanceRepo::RpmMd::DeltaInfo.new(test_data('rpms/repo-1'))
     @deltainfo.add_deltas
@@ -38,7 +38,6 @@ describe EnhanceRepo::RpmMd::DeltaInfo do
     @deltainfo.delta_count.must_equal 1
 
     Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/deltainfo.xml.gz')) do |expected_deltainfo|
-
       buffer = StringIO.new
       @deltainfo.write(buffer)
 

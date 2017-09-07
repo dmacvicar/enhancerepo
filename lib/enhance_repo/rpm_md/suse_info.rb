@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -29,7 +30,6 @@ require 'builder'
 
 module EnhanceRepo
   module RpmMd
-
     # represents SUSE extensions to repository
     # metadata (not associated with packages)
     #
@@ -37,7 +37,6 @@ module EnhanceRepo
     # http://en.opensuse.org/Standards/Rpm_Metadata#SUSE_repository_info_.28suseinfo.xml.29
     #
     class SuseInfo < Data
-
       # expiration time
       # the generated value is
       # still calculated from repomd.xml
@@ -62,9 +61,9 @@ module EnhanceRepo
         builder.instruct!
         builder.suseinfo do
           # add expire tag
-          b.expire(@expire.to_i.to_s) if not @expire.nil?
+          b.expire(@expire.to_i.to_s) unless @expire.nil?
 
-          if not @keywords.empty?
+          unless @keywords.empty?
             b.keywords do
               @keywords.each do |k|
                 b.k(k)
@@ -72,7 +71,7 @@ module EnhanceRepo
             end
           end
           
-          if not @products.empty?
+          unless @products.empty?
             b.products do
               @products.each do |p|
                 b.id(p)
@@ -82,6 +81,5 @@ module EnhanceRepo
         end
       end
     end
-
   end
 end

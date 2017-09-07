@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -44,11 +45,9 @@ require 'enhance_repo/rpm_md/index'
 
 module EnhanceRepo
   module RpmMd
-
     include REXML
 
     class Repo
-
       include Logger
 
       attr_accessor :index
@@ -82,12 +81,12 @@ module EnhanceRepo
       def sign(keyid)
         # check if the index is written to disk
         repomdfile = File.join(@dir, @index.metadata_filename)
-        if not File.exist?(repomdfile)
+        unless File.exist?(repomdfile)
           raise "#{repomdfile} does not exist."
         end
         # call gpg to sign the repository
         `gpg -sab -u #{keyid} -o '#{repomdfile}.asc' '#{repomdfile}'`
-        if not File.exists?("#{repomdfile}.asc")
+        if not File.exist?("#{repomdfile}.asc")
           log.info "Could't not generate signature #{repomdfile}.asc"
           exit(1)
         else
@@ -97,7 +96,7 @@ module EnhanceRepo
         # now export the public key
         `gpg --export -a -o '#{repomdfile}.key' #{keyid}`
 
-        if not File.exists?("#{repomdfile}.key")
+        if not File.exist?("#{repomdfile}.key")
           log.info "Could't not generate public key #{repomdfile}.key"
           exit(1)
         else
@@ -106,13 +105,12 @@ module EnhanceRepo
       end
 
       def write
-
         datas = [@primary, @filelists, @other, @updateinfo,
                  @susedata, @suseinfo, @deltainfo, @products, @patterns ]
 
         # select the datas that are not empty
         # those need to be saved
-        non_empty_data = datas.reject { |x| x.empty? }
+        non_empty_data = datas.reject(&:empty?)
         # files present in the index, which were changed
         changed_files = []
         # files present on disk, but not in the index
@@ -124,9 +122,9 @@ module EnhanceRepo
         Dir.chdir(@dir) do
           # look all files except the index itself
           metadata_files = Dir["repodata/*.xml*"].reject do |x|
-            x  =~ /#{@index.metadata_filename}/ ||
-            x =~ /\.key$/ ||
-            x =~ /\.asc$/
+            x =~ /#{@index.metadata_filename}/ ||
+              x =~ /\.key$/ ||
+              x =~ /\.asc$/
           end
           # remove datas in the index not present in the disk
           @index.resources.reject! do |resource|
@@ -135,10 +133,10 @@ module EnhanceRepo
             reject
           end
 
-          non_empty_files = non_empty_data.map { |x| x.metadata_filename }
+          non_empty_files = non_empty_data.map(&:metadata_filename)
           # ignore it if it is already in the non_empty_list
           # as it will be added to the index anyway
-          metadata_files.reject!{ |x| non_empty_files.include?(x) }
+          metadata_files.reject! { |x| non_empty_files.include?(x) }
           metadata_files.each do |metadata_file|
             # find the indexed resource for this file
             indexed_resource = @index.resources.select { |x| x.location == metadata_file }.first
@@ -176,7 +174,7 @@ module EnhanceRepo
         end
 
         # now write the index
-        if !File.exist?(File.dirname(File.join(@outputdir, @index.metadata_filename)))
+        unless File.exist?(File.dirname(File.join(@outputdir, @index.metadata_filename)))
           FileUtils.mkdir_p(File.dirname(File.join(@outputdir, @index.metadata_filename)))
         end
         File.open(File.join(@outputdir, @index.metadata_filename), 'w') do |f|
@@ -191,7 +189,7 @@ module EnhanceRepo
         filename = Pathname.new(File.join(@outputdir, data.metadata_filename))
         FileUtils.mkdir_p filename.dirname
         log.info "Saving #{filename} .."
-        if not filename.dirname.exist?
+        unless filename.dirname.exist?
           log.info "Creating non existing #{filename.dirname} .."
           filename.dirname.mkpath
         end
@@ -200,8 +198,6 @@ module EnhanceRepo
           data.write(gz)
         end
       end
-
     end
-
   end
 end

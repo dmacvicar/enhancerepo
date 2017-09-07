@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -39,7 +40,6 @@ require 'enhance_repo/rpm_md/update_smart_fields'
 
 module EnhanceRepo
   module RpmMd
-
     #
     # Represents a reference to a external bugreport
     # feature or issue for a software update
@@ -72,7 +72,6 @@ module EnhanceRepo
     # represents one update, which can consist of various packages
     # and references
     class Update
-
       # methods to automatically grab data from the
       # update description
       include UpdateSmartFields
@@ -122,8 +121,7 @@ module EnhanceRepo
           @packages ||= []
       end
 
-      def initialize
-      end
+      def initialize; end
 
       # an update is not empty if it
       # updates something
@@ -167,8 +165,6 @@ module EnhanceRepo
           # done with the packagelist
         end
       end
-
     end
-
   end
 end

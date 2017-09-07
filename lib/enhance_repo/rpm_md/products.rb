@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -30,11 +31,9 @@ require 'nokogiri'
 
 module EnhanceRepo
   module RpmMd
-
     # products.xml metadata generator
     # reads the release files from a repository
     class Products < Data
-
       # Holder for products we read from the
       # release files
       class ProductData
@@ -72,7 +71,7 @@ module EnhanceRepo
           #print doc.to_s
           product = ProductData.new
           # set attributes of the product based on the xml data
-          [:name, :version, :release, :arch, :vendor, :summary, :description].each do |attr|
+          %i[name version release arch vendor summary description].each do |attr|
             product.send("#{attr}=".to_sym, doc.root.xpath("./#{attr}").text)
           end
           products << product
@@ -83,16 +82,16 @@ module EnhanceRepo
 
       # scan the products from the rpm files in the repository
       def read_packages
-#        log.info "Looking for product release packages"
+        #        log.info "Looking for product release packages"
         Dir["#{@dir}/**/*-release-*.rpm", "#{@dir}/**/*-migration-*.rpm"].each do |rpmfile|
           pkg = RPM::Package.new(rpmfile)
           # we dont care for packages not providing a product
-          next if pkg.provides.select{|x| x.name == "product()"}.empty?
+          next if pkg.provides.select { |x| x.name == "product()" }.empty?
           log.info "Found product release package #{rpmfile}"
           # this package contains a product
           # go over each product file
-          pkg.files.map {|x| x.to_s }.each do |path|
-            next if not ( File.extname(path) == ".prod" && File.dirname(path) == "/etc/products.d" )
+          pkg.files.map(&:to_s).each do |path|
+            next unless ( File.extname(path) == ".prod" && File.dirname(path) == "/etc/products.d" )
             # we have a product file. Extract it
             log.info "`-> product file : #{path}"
             products_in_file_in_rpm(File.expand_path(rpmfile), File.expand_path(path)) do |product|
@@ -133,8 +132,6 @@ module EnhanceRepo
         #io.write(builder.to_xml)
         io.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
-
     end
-
   end
 end

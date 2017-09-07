@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -30,9 +31,7 @@ require 'nokogiri'
 require 'fileutils'
 
 class Repo_test < Test::Unit::TestCase
-
-  def setup
-  end
+  def setup; end
 
   def test_reading_existing_repo
     Dir.mktmpdir do |dir|

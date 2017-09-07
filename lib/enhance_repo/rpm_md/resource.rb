@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -26,7 +27,6 @@
 
 module EnhanceRepo
   module RpmMd
-
     # represents a resource in repomd.xml
     class Resource
       attr_accessor :type
@@ -40,6 +40,5 @@ module EnhanceRepo
         false
       end
     end
-
   end
 end

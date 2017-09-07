@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -38,9 +39,7 @@ require 'enhance_repo/rpm_md/update'
 
 module EnhanceRepo
   module RpmMd
-
     class UpdateInfo < Data
-
       def initialize(config)
         @dir = config.dir
         @basedir = config.updatesbasedir
@@ -77,7 +76,7 @@ module EnhanceRepo
       # outputdir is the directory where to save the patch to.
       def generate_update(packages, outputdir)
         # make a hash name -> array of packages
-        log.info "Generating update part to #{outputdir} for packages #{packages.join(", ")}"
+        log.info "Generating update part to #{outputdir} for packages #{packages.join(', ')}"
         package_index = {}
 
         # look all rpms in the old packages base directory plus
@@ -106,11 +105,11 @@ module EnhanceRepo
           rpm = PackageId.new(rpmfile)
           # now that we have the real name, reject if it is not part
           # of the requested packages to generate updates for
-          next if not packages.include?(rpm.name)
+          next unless packages.include?(rpm.name)
 
-          package_index[rpm.name] = Array.new if not package_index.has_key?(rpm.name)
+          package_index[rpm.name] = Array.new unless package_index.key?(rpm.name)
           # add the rpm if there is no other rpm with the same version
-          package_index[rpm.name] << rpm if not package_index[rpm.name].select { |x| x.version == rpm.version && x.name == rpm.name }.first
+          package_index[rpm.name] << rpm unless package_index[rpm.name].select { |x| x.version == rpm.version && x.name == rpm.name }.first
         end
 
         log.info "`-> indexed #{package_index.size} unique packages from #{rpmfiles.size} rpms"
@@ -118,7 +117,7 @@ module EnhanceRepo
         # do our package hash include every package?
         packages.reject! do |pkg|
           reject = false
-          if not package_index.has_key?(pkg)
+          unless package_index.key?(pkg)
             log.warn "`-> the package '#{pkg}' is not available in the repository."
             reject = true
           end
@@ -130,7 +129,7 @@ module EnhanceRepo
         packages.each do |pkgname|
           pkglist = package_index[pkgname]
           log.info "`-> #{pkglist.size} versions for '#{pkgname}'"
-          log.debug "    #{package_index[pkgname].map {|x| x.version}.join(", ")}"
+          log.debug "    #{package_index[pkgname].map(&:version).join(', ')}"
           # sort them by version
           pkglist.sort! { |a,b| a.version <=> b.version }
           pkglist.reverse!
@@ -155,7 +154,6 @@ module EnhanceRepo
             # jump to next pkgname
             next
           end
-
         end
 
         # do not save it if there are no packages
@@ -174,7 +172,7 @@ module EnhanceRepo
 
         FileUtils.mkdir_p outputdir
         # increase version until version is available
-        while ( File.exists?(filename = File.join(outputdir, update.suggested_filename + ".xml") ))
+        while File.exist?(filename = File.join(outputdir, update.suggested_filename + ".xml") )
           update.version += 1
         end
         log.info "Saving update part to '#{filename}'."
@@ -197,7 +195,7 @@ module EnhanceRepo
         updateinfofile = File.join(@dir, metadata_filename)
 
         # we can't split without an updateinfo file
-        raise "#{updateinfofile} does not exist" if not File.exist?(updateinfofile)
+        raise "#{updateinfofile} does not exist" unless File.exist?(updateinfofile)
         Zlib::GzipReader.open(updateinfofile) do |gz|
           document = REXML::Document.new(gz)
           root = document.root
@@ -212,7 +210,7 @@ module EnhanceRepo
             end
             version = 0
             updatefilename = ""
-            while ( File.exists?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version.to_s}.xml") ) )
+            while File.exist?(updatefilename = File.join(outputdir, "update-#{id}_splited_#{version}.xml") ) 
               version += 1
             end
             log.info "Saving update part to '#{updatefilename}'."
@@ -228,7 +226,7 @@ module EnhanceRepo
       def write(file)
         builder = Builder::XmlMarkup.new(:target=>file, :indent=>2)
         builder.instruct!
-        builder.updates do |b|
+        builder.updates do |_b|
           @updates.each do |update|
             File.open(update) do |f|
               file << f.read
@@ -237,8 +235,6 @@ module EnhanceRepo
           end
         end #done builder
       end
-
     end
-
   end
 end

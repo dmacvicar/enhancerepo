@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -30,7 +31,6 @@ require 'enhance_repo/array_arg'
 require 'singleton'
 
 module EnhanceRepo
-
   # Configuration class to hold the options
   # passed from the command line to the
   # components doing the work
@@ -88,7 +88,7 @@ EOS
         opt :digest_type, 'Algorithm used to compute the digests. Default SHA1',
             :type => :string
 
-  # === SUSE specific package data (susedata.xml)
+        # === SUSE specific package data (susedata.xml)
 
         opt :eulas,
             'Reads packagename.eula files and add the information to susedata.xml',
@@ -121,14 +121,14 @@ EOS
             ' won\'t create them. See --create-deltas for deltas'\
             'creation.'
 
-  # === Product information support
+        # === Product information support
 
         opt :products,
             'Reads release packages and generating product'\
             ' information in products.xml based on the information'\
             ' contained in the .prod files included in the packages.'
 
-  # === Pattern information support
+        # === Pattern information support
 
         opt :patterns,
             'Add patterns from pattern-*.xml files and generate'\
@@ -184,7 +184,6 @@ EOS
     def outputdir
       return @dir if @outputdir.nil?
       return @outputdir
-
     end
 
     def initialize
@@ -199,14 +198,14 @@ EOS
 
       @dir = ARGV.shift
       unless @dir
-        Trollop::die "Need to specify target directory."
+        Trollop.die "Need to specify target directory."
       end
 
       if !File.exist?(@dir) || !File.directory?(@dir)
-        Trollop::die "'#{@dir}' is not a valid directory."
+        Trollop.die "'#{@dir}' is not a valid directory."
       end
       if !File.directory?(File.join(@dir, "repodata") ) && !(opts[:primary] || opts[:help])
-        Trollop::die "'#{@dir}' is not a valid repository directory"
+        Trollop.die "'#{@dir}' is not a valid repository directory"
       end
       #dump
       self
@@ -258,7 +257,7 @@ EOS
       logger.info "benchmark #{@benchmark}"
       logger.info "patterns #{@patterns}"
       logger.info "split_patterns #{@split_patterns}"
-      if not @generate_patterns.nil?
+      unless @generate_patterns.nil?
         @generate_patterns.each do |p|
           logger.info "generate_patterns #{p}"
         end
@@ -266,7 +265,6 @@ EOS
       logger.info "updatesbasedir #{@updatesbasedir}"
       logger.info "outputdir #{@outputdir}"
       logger.info "dir #{@dir}"
-
     end
 
     private
@@ -274,8 +272,8 @@ EOS
     def allocate_digest(digest_name)
       return ['sha', Digest::SHA1] unless digest_name
 
-      valid_names = %w(sha sha1 sha2 sha256 md5)
-      if !valid_names.include?(digest_name.downcase)
+      valid_names = %w[sha sha1 sha2 sha256 md5]
+      unless valid_names.include?(digest_name.downcase)
         warn "Invalid digest type #{digest_name}"
         warn "Accepted types: #{valid_names.join(', ')}"
         exit 1
@@ -290,7 +288,5 @@ EOS
         ['md5', Digest::MD5]
       end
     end
-
-
   end
 end

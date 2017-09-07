@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -29,7 +30,6 @@ require 'zlib'
 require 'nokogiri'
 
 describe EnhanceRepo::RpmMd::Index do
-
   before do
     @index = EnhanceRepo::RpmMd::Index.new
     @repomdfile = File.join(test_data('rpms/repo-with-product'), @index.metadata_filename)

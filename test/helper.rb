@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -42,9 +43,7 @@ def test_data(name)
 end
 
 module MiniTest::Assertions
-
-  def assert_xml_equivalent(expected, actual, message = nil)
-
+  def assert_xml_equivalent(expected, actual, _message = nil)
     expected = Nokogiri::XML(expected) do |config|
       config.default_xml.noblanks
     end
@@ -55,7 +54,8 @@ module MiniTest::Assertions
     equal = EquivalentXml.equivalent?(expected, actual,
                                       opts = {
                                         :element_order => false,
-                                        :normalize_whitespace => true })
+                                        :normalize_whitespace => true 
+                                      })
 
     diff = Diffy::Diff.new(expected.to_xml(:indent => 2), actual.to_xml(:indent => 2)).to_s(:color)
     assert equal, diff

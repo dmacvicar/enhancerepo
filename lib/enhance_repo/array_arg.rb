@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -24,7 +25,6 @@
 #++
 #
 module EnhanceRepo
-
   # Helper class to turn an array like:
   # ['a', 'b', '/foo/file.txt', 'd'] into an
   # array containing the content of file.txt
@@ -32,7 +32,6 @@ module EnhanceRepo
   # file name
   #
   class ArrayArg
-
     include Enumerable
 
     # initialize the wrapper with an array
@@ -49,7 +48,7 @@ module EnhanceRepo
       File.open(file) do |f|
         f.each_line do |line|
           stripped_line = line.strip
-          ret <<  stripped_line if not stripped_line.empty?
+          ret << stripped_line unless stripped_line.empty?
         end
       end
       ret
@@ -60,7 +59,7 @@ module EnhanceRepo
       return @expanded_cache if @expanded_cache
       ret = []
       @array.each do |element|
-        if File.exist?(element) && (!File.directory?(element))
+        if File.exist?(element) && !File.directory?(element)
           EnhanceRepo.logger.info "Expanding the content of file '#{element}'..."
           ret += expand_file(element)
         else
@@ -81,7 +80,6 @@ module EnhanceRepo
       block_given? ?
         expanded.each { |x| yield x } : Enumerator.new(expanded)
     end
-
   end
 end
 

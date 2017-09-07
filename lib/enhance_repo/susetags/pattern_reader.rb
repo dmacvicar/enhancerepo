@@ -3,11 +3,8 @@
 require 'enhance_repo/pattern'
 
 module EnhanceRepo
-
   module Susetags
-
     module PatternReader
-
       def self.read_patterns_from_tags(io)
         pats = []
         pattern = nil
@@ -30,7 +27,7 @@ module EnhanceRepo
         io.each_line do |line|
           if line.start_with?("=Pat:")
             # save the previous one
-            pats << pattern if not pattern.nil?
+            pats << pattern unless pattern.nil?
             # a new patern starts here
             pattern = Pattern.new
             v = line.split(/:\s*/, 2)
@@ -41,10 +38,10 @@ module EnhanceRepo
             pattern.architecture = a[3] if a.length >= 4
           elsif line.start_with?("=Cat")
             v = line.match(/=Cat\.?(\w*):\s*(.*)$/)
-            pattern.category["#{v[1]}"] = v[2].chomp
+            pattern.category[(v[1]).to_s] = v[2].chomp
           elsif line.start_with?("=Sum")
             v = line.match(/=Sum\.?(\w*):\s*(.*)$/)
-            pattern.summary["#{v[1]}"] = v[2].chomp
+            pattern.summary[(v[1]).to_s] = v[2].chomp
           elsif line.start_with?("=Ico:")
             v = line.split(/:\s*/, 2)
             pattern.icon = v[1].chomp
@@ -52,11 +49,11 @@ module EnhanceRepo
             v = line.split(/:\s*/, 2)
             pattern.order = v[1].chomp.to_i
           elsif line.start_with?("=Vis:")
-            if line.include?("true")
-              pattern.visible = true
-            else
-              pattern.visible = false
-            end
+            pattern.visible = if line.include?("true")
+              true
+                              else
+              false
+                              end
           elsif line.start_with?("+Des")
             in_des = true
             cur_lang = line.match(/\+Des\.?(\w*):/)[1]
@@ -137,10 +134,9 @@ module EnhanceRepo
           end
         end
         # the last pattern
-        pats << pattern if not pattern.nil?
+        pats << pattern unless pattern.nil?
         pats
       end
-
     end
   end
 end

@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -28,9 +29,7 @@ require_relative 'helper'
 require 'stringio'
 
 class Update_test < Test::Unit::TestCase
-
-  def setup
-  end
+  def setup; end
 
   def test_smart_fill_blanks
     update = EnhanceRepo::RpmMd::Update.new
@@ -71,7 +70,5 @@ class Update_test < Test::Unit::TestCase
     puts
     refs.each { |r| puts r.inspect }
     assert_equal 5, refs.size, "4 bugs should be detected"
-
   end
-
 end

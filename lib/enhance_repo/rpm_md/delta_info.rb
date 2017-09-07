@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -33,7 +34,6 @@ require 'pathname'
 
 module EnhanceRepo
   module RpmMd
-
     include REXML
 
     class DeltaRpm < PackageId
@@ -43,7 +43,7 @@ module EnhanceRepo
         super(filename)
         `applydeltarpm -i '#{filename}'`.each_line do |line|
           key, value = line.chop.split(':')
-          value.gsub!(/ /, '')
+          value.delete!(' ')
           @sequence = value if key == "sequence"
           @sourcerpm = value if key == "source rpm"
         end
@@ -56,11 +56,9 @@ module EnhanceRepo
       def eql?(other)
         ident == other.ident
       end
-
     end
 
     class DeltaInfo < Data
-
       def initialize(dir)
         @dir = dir
         # here we store known deltas
@@ -108,55 +106,51 @@ module EnhanceRepo
           #puts "Delta: #{rpmfile}"
           rpm = PackageId.new(rpmfile)
 
-          pkgs[rpm.name] = Array.new if not pkgs.has_key?(rpm.name)
+          pkgs[rpm.name] = Array.new unless pkgs.key?(rpm.name)
           pkgs[rpm.name] << rpm
         end
 
         # now that we have al packages, sort them by version
-        pkgs.each do |pkgname, pkglist|
-
+        pkgs.each do |_pkgname, pkglist|
           pkglist.sort! { |a,b| a.version <=> b.version }
           pkglist.reverse!
           # now that the list is sorted, the new rpm is the first
           newpkg = pkglist.shift
           c = 0
-          if not pkglist.empty?
-            for pkg in pkglist
-              break if c == n
-              # do not create a delta for the same package
-              next if newpkg.version == pkg.version
-              # do not create a delta for different archs
-              next if newpkg.arch != pkg.arch
-              oldpkg = pkg
-              # use the same dir as the new rpm
-              log.info "`-> creating delta - #{oldpkg.to_s} -> #{newpkg.to_s} (#{c+1}/#{n})"
-              # calculate directory where to save the delta. Use the newpkg
-              # relative to the origin directory,
-              # this only works because we know the rpm is inside @dir
-              subdir = Pathname.new(newpkg.path).relative_path_from(Pathname.new(@dir)).dirname
-              # calculate the deltarpm name
-              deltafile = File.join(outputdir, subdir, delta_package_name(oldpkg,newpkg))
-              FileUtils.mkdir_p File.dirname(deltafile)
-              #puts "makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}"
-              `makedeltarpm '#{oldpkg.path}' '#{newpkg.path}' '#{deltafile}'`
-              c += 1
-            end
+          next if pkglist.empty?
+          for pkg in pkglist
+            break if c == n
+            # do not create a delta for the same package
+            next if newpkg.version == pkg.version
+            # do not create a delta for different archs
+            next if newpkg.arch != pkg.arch
+            oldpkg = pkg
+            # use the same dir as the new rpm
+            log.info "`-> creating delta - #{oldpkg} -> #{newpkg} (#{c+1}/#{n})"
+            # calculate directory where to save the delta. Use the newpkg
+            # relative to the origin directory,
+            # this only works because we know the rpm is inside @dir
+            subdir = Pathname.new(newpkg.path).relative_path_from(Pathname.new(@dir)).dirname
+            # calculate the deltarpm name
+            deltafile = File.join(outputdir, subdir, delta_package_name(oldpkg,newpkg))
+            FileUtils.mkdir_p File.dirname(deltafile)
+            #puts "makedeltarpm #{oldpkg.path} #{newpkg.path} #{deltafile}"
+            `makedeltarpm '#{oldpkg.path}' '#{newpkg.path}' '#{deltafile}'`
+            c += 1
           end
-
         end
-
       end
 
       # figure out the name of a delta rpm
       def delta_package_name(oldpkg, newpkg)
         deltarpm = ""
-        if ( oldpkg.version.v == newpkg.version.v )
+        deltarpm = if ( oldpkg.version.v == newpkg.version.v )
           # if the version is the same, then it is specified only once, and the range
           # is used for the releases
-          deltarpm = "#{oldpkg.name}-#{oldpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
-        else
-          deltarpm = "#{oldpkg.name}-#{oldpkg.version.v}_#{newpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
-        end
+          "#{oldpkg.name}-#{oldpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
+                   else
+          "#{oldpkg.name}-#{oldpkg.version.v}_#{newpkg.version.v}-#{oldpkg.version.r}_#{newpkg.version.r}.#{oldpkg.arch}.delta.rpm"
+                   end
       end
 
       def add_deltas
@@ -166,7 +160,6 @@ module EnhanceRepo
           @deltas[delta] = Array.new if @deltas[delta].nil?
           @deltas[delta] << delta
         end
-
       end
 
       # write a update out
@@ -198,8 +191,6 @@ module EnhanceRepo
         # ready builder
         file.write(builder.doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
       end
-
     end
-
   end
 end

@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -26,10 +27,7 @@
 require_relative 'helper'
 
 class Extensions_test < Test::Unit::TestCase
-  def setup
-  end
+  def setup; end
 
-  def test_void
-  end
-
+  def test_void; end
 end

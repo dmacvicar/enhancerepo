@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -31,7 +32,6 @@ module EnhanceRepo
   # http://en.opensuse.org/Standards/Rpm_Metadata
   #
   class Other
-
     def initialize(dir)
       @dir = dir
       @rpmfiles = []
@@ -55,7 +55,7 @@ module EnhanceRepo
         puts ch
       end
       exit
-      b.package('pkgid'=>pkgid.checksum, 'name' => pkgid.name, 'arch'=>pkgid.arch ) do | b |
+      b.package('pkgid'=>pkgid.checksum, 'name' => pkgid.name, 'arch'=>pkgid.arch ) do |b|
         b.version('epoch' => pkgid.version.e, 'ver' => pkgid.version.v, 'rel' => pkgid.version.r)
         pkgid.files.each do |f|
           b.file f
@@ -75,7 +75,5 @@ module EnhanceRepo
       # next package
       #end
     end
-
   end
-
 end

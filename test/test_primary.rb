@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -28,9 +29,8 @@ require 'stringio'
 require 'zlib'
 
 class Primary_test < Test::Unit::TestCase
-
   def setup
-#	  $stderr << "Primary_test"
+    #	  $stderr << "Primary_test"
   end
 
   def test_xml_output
@@ -40,12 +40,11 @@ class Primary_test < Test::Unit::TestCase
     assert ! primary.empty?
     assert_equal 3, primary.size
 
-    Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/primary.xml.gz')) do |expected_primary|
-
+    Zlib::GzipReader.open(test_data('rpms/repo-1/repodata/primary.xml.gz')) do |_expected_primary|
       buffer = StringIO.new
       primary.write(buffer)
-#      assert_equal(expected_primary.read, buffer.string)
-#     assert_xml_equal(expected_primary, buffer.string)
+      #      assert_equal(expected_primary.read, buffer.string)
+      #     assert_xml_equal(expected_primary, buffer.string)
     end
   end
 end

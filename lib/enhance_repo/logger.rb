@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #--
 #
 # enhancerepo is a rpm-md repository metadata tool.
@@ -25,7 +26,6 @@
 #
 
 module EnhanceRepo
-
   def self.enable_logger
     # support both log4r and ruby logger
     begin
@@ -42,7 +42,7 @@ module EnhanceRepo
   end
 
   def self.using_log4r?
-    (! (Object.const_get(:Log4r) rescue nil).nil?)
+    ! (Object.const_get(:Log4r) rescue nil).nil?
   end
 
   def self.enable_debug
@@ -64,5 +64,4 @@ module EnhanceRepo
       EnhanceRepo.logger
     end
   end
-
 end

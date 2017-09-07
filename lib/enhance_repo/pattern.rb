@@ -3,9 +3,7 @@
 require 'enhance_repo/rpm_md/pattern_writer'
 
 module EnhanceRepo
-
   class Pattern
-
     # include serialization
     include RpmMd::PatternWriter
 
@@ -48,6 +46,5 @@ module EnhanceRepo
       @extends     = Hash.new
       @includes    = Hash.new
     end
-
   end
 end
