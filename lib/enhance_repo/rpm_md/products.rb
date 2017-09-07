@@ -90,7 +90,7 @@ module EnhanceRepo
           log.info "Found product release package #{rpmfile}"
           # this package contains a product
           # go over each product file
-          pkg.files.map(&:to_s).each do |path|
+          pkg.files.map(&:path).each do |path|
             next unless File.extname(path) == '.prod' && File.dirname(path) == '/etc/products.d'
             # we have a product file. Extract it
             log.info "`-> product file : #{path}"
