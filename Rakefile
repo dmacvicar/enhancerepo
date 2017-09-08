@@ -3,7 +3,7 @@ require 'bundler/gem_tasks'
 require 'enhance_repo'
 require 'rake/testtask'
 
-extra_docs = ['README*', 'TODO*', 'CHANGELOG*']
+extra_docs = ['README.md']
 
 task default: [:test]
 Rake::TestTask.new do |t|

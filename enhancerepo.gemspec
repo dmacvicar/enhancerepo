@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('diffy')
   s.add_development_dependency('equivalent-xml')
 
-  s.files        = Dir.glob('bin/*') + Dir.glob('lib/**/*') + %w[CHANGELOG.rdoc README.rdoc TODO.rdoc]
+  s.files        = Dir.glob('bin/*') + Dir.glob('lib/**/*') + %w[README.md]
   s.require_path = 'lib'
 
   s.bindir = 'bin'
